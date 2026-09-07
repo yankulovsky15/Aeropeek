@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -16,6 +16,11 @@
     <ApplicationIcon>aeropeek.ico</ApplicationIcon>
     <AssemblyTitle>Aeropeek</AssemblyTitle>
     <Product>Aeropeek</Product>
+
+    <!-- .NET embarque ses messages d'erreur dans treize langues. L'application
+         etant en francais, les douze autres pesaient 8 Mo dans l'archive de
+         publication sans que personne ne les lise jamais. -->
+    <SatelliteResourceLanguages>fr</SatelliteResourceLanguages>
   </PropertyGroup>
 
   <ItemGroup>
