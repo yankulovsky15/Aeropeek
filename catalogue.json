@@ -1,0 +1,336 @@
+﻿{
+  "version": 1,
+  "tweaks": [
+    {
+      "id": "gamedvr",
+      "nom": "Enregistrement vidéo en arrière-plan",
+      "explication": "La barre de jeu Xbox enregistre tes parties en continu, même sans que tu le demandes.",
+      "consequence": "Tu perds l'enregistrement automatique des derniers instants de jeu (Win+Alt+G).",
+      "gain": "jusqu'à +8 % sur les 1% lows",
+      "categorie": "performance",
+      "applicable": {
+        "buildMin": 19041
+      },
+      "operations": [
+        {
+          "hive": "HKCU",
+          "cle": "System\\GameConfigStore",
+          "valeur": "GameDVR_Enabled",
+          "type": "dword",
+          "vers": 0
+        },
+        {
+          "hive": "HKCU",
+          "cle": "Software\\Microsoft\\Windows\\CurrentVersion\\GameDVR",
+          "valeur": "AppCaptureEnabled",
+          "type": "dword",
+          "vers": 0
+        },
+        {
+          "hive": "HKLM",
+          "cle": "SOFTWARE\\Policies\\Microsoft\\Windows\\GameDVR",
+          "valeur": "AllowGameDVR",
+          "type": "dword",
+          "vers": 0
+        }
+      ]
+    },
+    {
+      "id": "mode-jeu",
+      "nom": "Mode Jeu de Windows",
+      "explication": "Windows réserve des ressources au jeu au premier plan et retarde certaines tâches de fond, comme l'installation de pilotes.",
+      "consequence": "Aucune. Les rares cas de régression datent des premières versions de Windows 10.",
+      "gain": "faible mais jamais négatif sur Windows 11",
+      "categorie": "performance",
+      "operations": [
+        {
+          "hive": "HKCU",
+          "cle": "Software\\Microsoft\\GameBar",
+          "valeur": "AutoGameModeEnabled",
+          "type": "dword",
+          "vers": 1
+        },
+        {
+          "hive": "HKCU",
+          "cle": "Software\\Microsoft\\GameBar",
+          "valeur": "AllowAutoGameMode",
+          "type": "dword",
+          "vers": 1
+        }
+      ]
+    },
+    {
+      "id": "priorite-premier-plan",
+      "nom": "Priorité à l'application au premier plan",
+      "explication": "Donne davantage de temps processeur à la fenêtre active au détriment de l'arrière-plan. C'est le réglage que d'autres outils appellent « profil système » sans jamais dire ce qu'il fait.",
+      "consequence": "Les tâches de fond — compilation, encodage, téléchargement — deviennent un peu plus lentes pendant que tu joues.",
+      "gain": "à vérifier au benchmark : mesurable, mais pas systématiquement positif",
+      "categorie": "performance",
+      "operations": [
+        {
+          "hive": "HKLM",
+          "cle": "SYSTEM\\CurrentControlSet\\Control\\PriorityControl",
+          "valeur": "Win32PrioritySeparation",
+          "type": "dword",
+          "vers": 38
+        }
+      ]
+    },
+    {
+      "id": "applis-arriere-plan",
+      "nom": "Applications du Store en arrière-plan",
+      "explication": "Empêche les applications issues du Microsoft Store de s'exécuter quand elles ne sont pas au premier plan. Ne concerne ni Chrome, ni Discord, ni aucun programme classique.",
+      "consequence": "Plus de notifications ni de synchronisation en arrière-plan pour ces applications : Courrier, Calendrier, Photos.",
+      "gain": "nul si tu n'utilises pas d'applications du Store",
+      "categorie": "performance",
+      "operations": [
+        {
+          "hive": "HKCU",
+          "cle": "Software\\Microsoft\\Windows\\CurrentVersion\\BackgroundAccessApplications",
+          "valeur": "GlobalUserDisabled",
+          "type": "dword",
+          "vers": 1
+        },
+        {
+          "hive": "HKLM",
+          "cle": "SOFTWARE\\Policies\\Microsoft\\Windows\\AppPrivacy",
+          "valeur": "LetAppsRunInBackground",
+          "type": "dword",
+          "vers": 2
+        }
+      ]
+    },
+    {
+      "id": "wpbt",
+      "nom": "Exécution de programmes par le firmware (WPBT)",
+      "explication": "Windows Platform Binary Table permet à la carte mère de faire exécuter un programme par Windows à chaque démarrage. C'est le mécanisme par lequel certains constructeurs réinstallent leurs logiciels même après un formatage complet.",
+      "consequence": "Aucune sur un PC assemblé. Sur une machine de marque, un utilitaire constructeur peut cesser de se réinstaller — ce qui est généralement le but recherché.",
+      "gain": "aucun gain de performance — hygiène et maîtrise de sa machine",
+      "categorie": "confidentialite",
+      "redemarrage": true,
+      "operations": [
+        {
+          "hive": "HKLM",
+          "cle": "SYSTEM\\CurrentControlSet\\Control\\Session Manager",
+          "valeur": "DisableWpbtExecution",
+          "type": "dword",
+          "vers": 1
+        }
+      ]
+    },
+    {
+      "id": "vbs",
+      "nom": "Sécurité basée sur la virtualisation (VBS)",
+      "explication": "Windows s'exécute en permanence sous hyperviseur. Ce réglage n'a d'intérêt que si un service l'utilise réellement — Credential Guard, l'intégrité de la mémoire, Hyper-V, WSL, Docker ou Windows Sandbox.",
+      "consequence": "À remettre avant d'installer WSL, Docker ou Windows Sandbox. Windows peut le réactiver après une mise à jour majeure de version.",
+      "gain": "quelques pourcents — bien moins que l'intégrité de la mémoire",
+      "categorie": "performance",
+      "redemarrage": true,
+      "operations": [
+        {
+          "hive": "HKLM",
+          "cle": "SYSTEM\\CurrentControlSet\\Control\\DeviceGuard",
+          "valeur": "EnableVirtualizationBasedSecurity",
+          "type": "dword",
+          "vers": 0
+        }
+      ]
+    },
+    {
+      "id": "gamebar",
+      "nom": "Barre de jeu Xbox",
+      "explication": "La surcouche qui s'ouvre avec Win+G reste chargée pendant que tu joues.",
+      "consequence": "Win+G n'ouvre plus rien. Les captures d'écran passent par un autre outil.",
+      "gain": "quelques dixièmes de pourcent",
+      "categorie": "performance",
+      "operations": [
+        {
+          "hive": "HKCU",
+          "cle": "Software\\Microsoft\\GameBar",
+          "valeur": "UseNexusForGameBarEnabled",
+          "type": "dword",
+          "vers": 0
+        },
+        {
+          "hive": "HKCU",
+          "cle": "Software\\Microsoft\\GameBar",
+          "valeur": "ShowStartupPanel",
+          "type": "dword",
+          "vers": 0
+        }
+      ]
+    },
+    {
+      "id": "mpo",
+      "nom": "Superposition d'affichage (MPO)",
+      "explication": "Windows compose l'image en plusieurs couches matérielles. Sur beaucoup de configurations, ça provoque des micro-saccades en plein écran fenêtré.",
+      "consequence": "Consommation vidéo légèrement supérieure au repos. Redémarrage nécessaire.",
+      "gain": "jusqu'à +11 % sur les 1% lows",
+      "categorie": "performance",
+      "redemarrage": true,
+      "applicable": {
+        "gpu": "nvidia"
+      },
+      "operations": [
+        {
+          "hive": "HKLM",
+          "cle": "SOFTWARE\\Microsoft\\Windows\\Dwm",
+          "valeur": "OverlayTestMode",
+          "type": "dword",
+          "vers": 5
+        }
+      ]
+    },
+    {
+      "id": "souris-acceleration",
+      "nom": "Accélération de la souris",
+      "explication": "Windows amplifie tes mouvements rapides, ce qui rend la visée non reproductible d'un geste à l'autre.",
+      "consequence": "Le pointeur du bureau paraît plus lent au début. C'est le comportement voulu en jeu.",
+      "gain": "pas de fps, mais de la régularité de visée",
+      "categorie": "performance",
+      "operations": [
+        {
+          "hive": "HKCU",
+          "cle": "Control Panel\\Mouse",
+          "valeur": "MouseSpeed",
+          "type": "string",
+          "vers": "0"
+        },
+        {
+          "hive": "HKCU",
+          "cle": "Control Panel\\Mouse",
+          "valeur": "MouseThreshold1",
+          "type": "string",
+          "vers": "0"
+        },
+        {
+          "hive": "HKCU",
+          "cle": "Control Panel\\Mouse",
+          "valeur": "MouseThreshold2",
+          "type": "string",
+          "vers": "0"
+        }
+      ]
+    },
+    {
+      "id": "delivery-optimization",
+      "nom": "Partage des mises à jour Windows en P2P",
+      "explication": "Ton PC envoie les mises à jour Windows à d'autres PC sur Internet. C'est ce qui pèse le plus sur ton ping en match.",
+      "consequence": "Les mises à jour se téléchargent uniquement depuis Microsoft, parfois un peu plus lentement.",
+      "gain": "latence : plusieurs ms de ping en moins",
+      "categorie": "reseau",
+      "operations": [
+        {
+          "hive": "HKLM",
+          "cle": "SOFTWARE\\Policies\\Microsoft\\Windows\\DeliveryOptimization",
+          "valeur": "DODownloadMode",
+          "type": "dword",
+          "vers": 0
+        }
+      ]
+    },
+    {
+      "id": "telemetrie",
+      "nom": "Télémétrie Windows",
+      "explication": "Réduit la collecte de données d'usage au minimum autorisé par ton édition de Windows.",
+      "consequence": "Aucune sur l'usage courant.",
+      "gain": "aucun gain de performance — confidentialité uniquement",
+      "categorie": "confidentialite",
+      "operations": [
+        {
+          "hive": "HKLM",
+          "cle": "SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection",
+          "valeur": "AllowTelemetry",
+          "type": "dword",
+          "vers": 0
+        },
+        {
+          "hive": "HKCU",
+          "cle": "Software\\Microsoft\\Windows\\CurrentVersion\\Privacy",
+          "valeur": "TailoredExperiencesWithDiagnosticDataEnabled",
+          "type": "dword",
+          "vers": 0
+        }
+      ]
+    },
+    {
+      "id": "id-publicite",
+      "nom": "Identifiant de publicité",
+      "explication": "Empêche les applications d'utiliser un identifiant unique pour te cibler.",
+      "consequence": "Aucune.",
+      "gain": "aucun gain de performance — confidentialité uniquement",
+      "categorie": "confidentialite",
+      "operations": [
+        {
+          "hive": "HKCU",
+          "cle": "Software\\Microsoft\\Windows\\CurrentVersion\\AdvertisingInfo",
+          "valeur": "Enabled",
+          "type": "dword",
+          "vers": 0
+        }
+      ]
+    },
+    {
+      "id": "bing-recherche",
+      "nom": "Bing dans la recherche du menu Démarrer",
+      "explication": "La recherche locale interroge aussi Internet, ce qui la ralentit et l'encombre de résultats web.",
+      "consequence": "La recherche ne renvoie plus que des résultats locaux.",
+      "gain": "aucun gain en jeu — confort",
+      "categorie": "confidentialite",
+      "operations": [
+        {
+          "hive": "HKCU",
+          "cle": "Software\\Microsoft\\Windows\\CurrentVersion\\Search",
+          "valeur": "BingSearchEnabled",
+          "type": "dword",
+          "vers": 0
+        },
+        {
+          "hive": "HKCU",
+          "cle": "Software\\Policies\\Microsoft\\Windows\\Explorer",
+          "valeur": "DisableSearchBoxSuggestions",
+          "type": "dword",
+          "vers": 1
+        }
+      ]
+    },
+    {
+      "id": "reinstallation-silencieuse",
+      "nom": "Réinstallation silencieuse d'applications",
+      "explication": "Windows réinstalle tout seul des applications promotionnelles après les mises à jour. C'est ce qui fait revenir ce que tu viens de désinstaller.",
+      "consequence": "Aucune, hormis l'absence de suggestions dans le menu Démarrer.",
+      "gain": "aucun gain en jeu — évite le retour des applications supprimées",
+      "categorie": "confidentialite",
+      "operations": [
+        {
+          "hive": "HKCU",
+          "cle": "Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager",
+          "valeur": "SilentInstalledAppsEnabled",
+          "type": "dword",
+          "vers": 0
+        },
+        {
+          "hive": "HKCU",
+          "cle": "Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager",
+          "valeur": "PreInstalledAppsEnabled",
+          "type": "dword",
+          "vers": 0
+        },
+        {
+          "hive": "HKCU",
+          "cle": "Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager",
+          "valeur": "OemPreInstalledAppsEnabled",
+          "type": "dword",
+          "vers": 0
+        },
+        {
+          "hive": "HKCU",
+          "cle": "Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager",
+          "valeur": "SubscribedContent-338388Enabled",
+          "type": "dword",
+          "vers": 0
+        }
+      ]
+    }
+  ]
+}

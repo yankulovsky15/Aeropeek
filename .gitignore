@@ -1,0 +1,20 @@
+# Sorties de compilation .NET
+bin/
+obj/
+
+# Dossier de publication : régénéré par « dotnet publish -c Release -o dist »
+dist/
+
+# Fichiers propres à un poste ou à un éditeur
+*.user
+*.suo
+.vs/
+.vscode/
+*.userprefs
+
+# Journaux et mesures produits par l'application.
+# Ils vivent normalement dans %LOCALAPPDATA%\Aeropeek, jamais ici — cette ligne
+# n'est qu'un filet de sécurité si un test en dépose une copie dans le projet.
+journal.json
+settings.json
+captures/

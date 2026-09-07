@@ -1,0 +1,10 @@
+# Normalisation des fins de ligne. Le projet avait des fichiers en LF et
+# d'autres en CRLF ; sans cette règle, un contributeur sur Linux ou macOS
+# produirait des diffs entiers là où il n'a changé qu'une ligne.
+* text=auto eol=crlf
+
+# Binaires : jamais convertis, jamais affichés en diff.
+*.exe   binary
+*.dll   binary
+*.ico   binary
+*.png   binary

@@ -1,0 +1,9 @@
+Aeropeek
+Copyright 2026 Dimitri Yankulovsky
+
+Ce produit inclut des logiciels développés par des tiers.
+Le détail des licences se trouve dans THIRD-PARTY-NOTICES.txt.
+
+  - Intel PresentMon (tools/PresentMon.exe)
+    Copyright (C) 2017-2024 Intel Corporation
+    Licence MIT — https://github.com/GameTechDev/PresentMon
