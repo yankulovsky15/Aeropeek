@@ -540,8 +540,8 @@ public partial class MainWindow : Window
                 Verdict.Bloque => (BadFg, BadBg, "Bloqué"),
                 _ => t.Category switch
                 {
-                    "reseau" => (InfoFg, InfoBg, "Réseau"),
-                    "confidentialite" => (MuteFg, MuteBg, "Confidentialité"),
+                    "network" => (InfoFg, InfoBg, "Réseau"),
+                    "privacy" => (MuteFg, MuteBg, "Confidentialité"),
                     _ => (WarnFg, WarnBg, "Performance")
                 }
             };
