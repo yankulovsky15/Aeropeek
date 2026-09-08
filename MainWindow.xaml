@@ -516,7 +516,7 @@
                 <ToggleButton x:Name="ChkAuto" Style="{StaticResource SwitchSm}" Click="Option_Toggle"
                               VerticalAlignment="Center"
                               ToolTip="Turns itself on when CS2 starts, and off when it closes."/>
-                <TextBlock Text="Automatique au lancement de CS2" FontSize="12.5" Margin="9,0,24,0"
+                <TextBlock Text="Automatic when CS2 starts" FontSize="12.5" Margin="9,0,24,0"
                            Foreground="{StaticResource Ink2}" VerticalAlignment="Center"/>
                 <ToggleButton x:Name="ChkPriority" Style="{StaticResource SwitchSm}" IsChecked="True"
                               Click="Option_Toggle" VerticalAlignment="Center"

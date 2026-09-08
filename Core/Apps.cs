@@ -147,7 +147,7 @@ public static class AppOps
     /// </summary>
     public static OpRecord? Close(string processName, string label)
     {
-        if (!IsAllowed(processName)) throw new InvalidOperationException($"Application protégée : {processName}");
+        if (!IsAllowed(processName)) throw new InvalidOperationException($"Protected application: {processName}");
 
         var procs = Process.GetProcessesByName(processName);
         if (procs.Length == 0) return null;
@@ -177,7 +177,7 @@ public static class AppOps
         {
             Kind = "app-closed",
             TweakId = "mode-match",
-            Description = "Application fermée : " + label,
+            Description = "Application closed: " + label,
             ServiceName = processName,
             WasRunning = true,
             BackupPath = path ?? ""
@@ -230,7 +230,7 @@ public static class AppOps
         {
             Kind = "priority",
             TweakId = "mode-match",
-            Description = $"Priorité de {processName}.exe : {target}",
+            Description = $"Priority of {processName}.exe: {target}",
             ServiceName = processName,
             PreviousValue = previous.ToString(),
             NewValue = target.ToString()

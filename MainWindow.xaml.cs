@@ -265,7 +265,7 @@ public partial class MainWindow : Window
         // chargement plutôt que de laisser un écran vide se remplir tout seul.
         if (!Settings.Current.WelcomeSeen) ShowWelcome(animate: false);
 
-        DiagSummary.Text = "Lecture de la configuration…";
+        DiagSummary.Text = "Reading your configuration…";
         BtnScan.IsEnabled = false;
         Veil(DiagVeil, true);
 
@@ -436,7 +436,7 @@ public partial class MainWindow : Window
             {
                 int n = GameAffinity.Apply(GameAffinity.AllCores(_sys.Cpu.LogicalCores));
                 MessageBox.Show(n > 0
-                    ? "CS2 peut de nouveau utiliser tous les cœurs."
+                    ? "CS2 can use every core again."
                     : "CS2 no longer seems to be running.", "Aeropeek");
                 break;
             }
@@ -503,7 +503,7 @@ public partial class MainWindow : Window
                 if (!Nvidia.OpenControlPanel())
                     MessageBox.Show(
                         "The NVIDIA Control Panel was not found." + Environment.NewLine + Environment.NewLine +
-                        "Il s'ouvre aussi par un clic droit sur le bureau, ou depuis le Microsoft Store " +
+                        "It also opens from a right-click on the desktop, or from the Microsoft Store " +
                         "if it isn't installed.",
                         "Aeropeek", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
@@ -551,7 +551,7 @@ public partial class MainWindow : Window
             if (!string.IsNullOrWhiteSpace(t.Consequence))
             {
                 if (note.Length > 0) note.Append("  ·  ");
-                note.Append("Ce que tu perds : ").Append(t.Consequence);
+                note.Append("What you give up: ").Append(t.Consequence);
             }
             if (t.NeedsRestart)
             {
@@ -719,7 +719,7 @@ public partial class MainWindow : Window
                             : "This file is not signed by its author: Aeropeek can only verify "
                               + "where it was downloaded from, not what it contains.")
                         + Environment.NewLine + Environment.NewLine
-                        + "Ce que cet outil modifiera n'entrera pas dans le journal d'Aeropeek et ne "
+                        + "What this tool changes will not enter Aeropeek's journal and "
                         + "cannot be undone from this application." + Environment.NewLine + Environment.NewLine
                         + "Continuer ?",
                         u.Title, MessageBoxButton.YesNo, MessageBoxImage.Warning);
@@ -763,7 +763,7 @@ public partial class MainWindow : Window
             Kind = a.Wireless ? "Sans fil" : "Filaire",
             Icon = Geometry.Parse(a.Wireless ? IconWifi : IconEthernet),
             Servers = a.DnsText,
-            Source = a.FromDhcp ? "fournis par la box" : "set manually"
+            Source = a.FromDhcp ? "handed out by the router" : "set manually"
         }).ToList();
 
         DnsSummary.Text = _adapters.Count switch
@@ -829,7 +829,7 @@ public partial class MainWindow : Window
     async void DnsTest_Click(object sender, RoutedEventArgs e)
     {
         BtnDnsTest.IsEnabled = false;
-        DnsSummary.Text = "Test des serveurs en cours…";
+        DnsSummary.Text = "Testing the servers…";
         Veil(DnsVeil, true);
         try
         {
@@ -900,13 +900,13 @@ public partial class MainWindow : Window
 
         if (!IsIPv4(primary))
         {
-            CustomDnsHint.Text = "Le serveur principal n'est pas une adresse IPv4 valide.";
+            CustomDnsHint.Text = "The primary server is not a valid IPv4 address.";
             CustomDnsHint.Foreground = BadFg;
             return;
         }
         if (secondary.Length > 0 && !IsIPv4(secondary))
         {
-            CustomDnsHint.Text = "Le serveur secondaire n'est pas une adresse IPv4 valide.";
+            CustomDnsHint.Text = "The secondary server is not a valid IPv4 address.";
             CustomDnsHint.Foreground = BadFg;
             return;
         }
@@ -1004,7 +1004,7 @@ public partial class MainWindow : Window
 
                 string desc = s.Available
                     ? s.Target.Description
-                    : "Cet emplacement n'existe pas sur ta machine.";
+                    : "This location does not exist on your machine.";
 
                 return new CleanVm
                 {
@@ -1148,7 +1148,7 @@ public partial class MainWindow : Window
         {
             Model = a,
             Note = a.Active
-                ? $"Consomme du processeur en ce moment. {a.Instances} processus."
+                ? $"Using processor time right now. {a.Instances} processes."
                 : $"{a.Instances} processes, idle. Closing it frees memory, not processor time.",
             Memory = a.MemoryText,
             Cpu = a.Active ? $"{a.CpuPercent:0.0} % processeur" : "au repos",
@@ -1200,8 +1200,8 @@ public partial class MainWindow : Window
 
         int idle = _services.Count - _services.Count(s => s.Impact == ServiceImpact.Reel);
         IdleLink.Text = _showIdleServices
-            ? "Masquer les services sans effet"
-            : $"Afficher les {idle} services sans effet sur le jeu";
+            ? "Hide the services with no effect"
+            : $"Show the {idle} services with no effect on the game";
         IdleLink.Visibility = idle > 0 ? Visibility.Visible : Visibility.Collapsed;
 
         ServicesList.ItemsSource = shown.Select(s =>
@@ -1325,7 +1325,7 @@ public partial class MainWindow : Window
             if (_match.SuspendedServices > 0) done.Add($"{_match.SuspendedServices} service(s) suspendu(s)");
 
             MatchDetail.Text = (done.Count > 0 ? string.Join(" · ", done) + "." : "Nothing could be suspended.")
-                             + " Coupe l'interrupteur pour tout remettre.";
+                             + " Flip the switch to put everything back.";
             MatchHero.BorderBrush = AccFg;
             SwMatch.IsEnabled = true;
         }
@@ -1501,7 +1501,7 @@ public partial class MainWindow : Window
         {
             int inDelay = left - seconds;
             BenchStatus.Text = inDelay > 0
-                ? $"Retourne dans le jeu — enregistrement dans {inDelay} s"
+                ? $"Get back in the game — recording in {inDelay} s"
                 : $"Enregistrement — {left} s restantes";
         }
         Tick();
@@ -1664,7 +1664,7 @@ public partial class MainWindow : Window
         BenchList.ItemsSource = rows;
         DrawChart();
         if (rows.Count == 0)
-            BenchStatus.Text = "Aucune mesure. Lance CS2, entre en jeu, puis capture.";
+            BenchStatus.Text = "No runs yet. Start CS2, get into a match, then capture.";
     }
 
     /// <summary>
@@ -1747,7 +1747,7 @@ public partial class MainWindow : Window
             + "The exact state that came before will be restored"
             + (vm.Ids.Count > 1 ? $", for all {vm.Ids.Count} writes of this tweak." : ".")
             + " Nothing else is touched.",
-            "Annuler une modification", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            "Undo a change", MessageBoxButton.YesNo, MessageBoxImage.Warning);
         if (answer != MessageBoxResult.Yes) return;
 
         int done = _journal.RevertRecords(vm.Ids);
@@ -1774,7 +1774,7 @@ public partial class MainWindow : Window
         var answer = MessageBox.Show(
             $"Undo the {_journal.TotalRecords} change(s) Aeropeek applied?\n\n" +
             "Every value returns to exactly the state it had before — including not existing at all.",
-            "Tout annuler", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            "Undo everything", MessageBoxButton.YesNo, MessageBoxImage.Question);
         if (answer != MessageBoxResult.Yes) return;
 
         int n = _journal.RevertEverything();
@@ -1907,7 +1907,7 @@ public partial class MainWindow : Window
 
         RestoreDetail.Text = state.Problem
             ?? $"Windows reserves {state.DiskPercent}% of the disk for restore points and deletes "
-             + "les plus anciens quand cette part est atteinte.";
+             + "the oldest ones once that share is reached.";
 
         BtnRestoreCreate.IsEnabled = state.Enabled;
 
@@ -1941,7 +1941,7 @@ public partial class MainWindow : Window
         RestoreEmpty.Text = !state.Enabled
             ? "Turn on the protection above to start creating points."
             : "No points yet. Create one now — this is the best moment, "
-            + "pendant que la machine fonctionne comme tu le veux.";
+            + "while the machine works the way you want it to.";
     }
 
     async void RestoreFix_Click(object sender, RoutedEventArgs e)
@@ -1995,7 +1995,7 @@ public partial class MainWindow : Window
         if ((sender as Button)?.Tag is not RestoreVm vm) return;
 
         var answer = MessageBox.Show(
-            $"Supprimer le point « {vm.Description} » du {vm.When} ?" + Environment.NewLine + Environment.NewLine
+            $"Delete the point “{vm.Description}” from {vm.When}?" + Environment.NewLine + Environment.NewLine
             + "This deletion is permanent: you will not be able to return to that state.",
             "Supprimer un point", MessageBoxButton.YesNo, MessageBoxImage.Warning);
         if (answer != MessageBoxResult.Yes) return;
@@ -2012,16 +2012,16 @@ public partial class MainWindow : Window
         if (_points.Count == 0) return;
 
         var answer = MessageBox.Show(
-            $"Supprimer les {_points.Count} points de restauration ?" + Environment.NewLine + Environment.NewLine
+            $"Delete all {_points.Count} restore points?" + Environment.NewLine + Environment.NewLine
             + "The machine will have no way back at all, including the points Windows created "
             + "before updates. This is permanent.",
             "Tout supprimer", MessageBoxButton.YesNo, MessageBoxImage.Warning);
         if (answer != MessageBoxResult.Yes) return;
 
         Veil(RestoreVeil, true);
-        RestoreVeil.Content = "Suppression des points…";
+        RestoreVeil.Content = "Deleting points…";
         var (deleted, failed) = await Task.Run(() => Restore.DeleteAll(_points));
-        RestoreVeil.Content = "Lecture des points de restauration…";
+        RestoreVeil.Content = "Reading restore points…";
         Veil(RestoreVeil, false);
 
         MessageBox.Show(

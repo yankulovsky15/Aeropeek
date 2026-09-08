@@ -146,7 +146,7 @@ public static class Diagnostics
     {
         ("HypervisorEnforcedCodeIntegrity", "memory integrity"),
         ("WindowsHello",                    "Windows Hello (enhanced secure sign-in)"),
-        ("KernelShadowStacks",              "protection de la pile noyau"),
+        ("KernelShadowStacks",              "kernel stack protection"),
         ("KeyGuard",                        "KeyGuard"),
         ("CredentialGuard",                 "Credential Guard")
     };
@@ -452,11 +452,11 @@ public static class Diagnostics
         // Aucune recherche : on énonce ce qu'on sait, sans rien supposer.
         var severity = Severity.Info;
         string detail = installed + " Aeropeek does not know whether a newer version exists: "
-                      + "il faut le lui demander, car cela suppose d'interroger NVIDIA.";
+                      + "you have to ask it to, because that means querying NVIDIA.";
 
         if (!nvidia)
         {
-            detail = installed + " La recherche automatique n'est disponible que pour les cartes NVIDIA.";
+            detail = installed + " Automatic lookup is only available for NVIDIA cards.";
             return new CheckResult("gpu-driver", "Pilote graphique", severity, value, detail);
         }
 
@@ -498,7 +498,7 @@ public static class Diagnostics
 
         if (fastest != null && fastest.Rank > disk.Rank)
             return new CheckResult("game-drive", "Disque du jeu", Severity.Warn, value,
-                $"CS2 est sur un {disk.Label} alors que cette machine dispose d'un {fastest.Label} ({fastest.Name}).",
+                $"CS2 sits on a {disk.Label} while this machine has a {fastest.Label} ({fastest.Name}).",
                 "The difference shows up mostly in load times, little in game. Worth moving if you have the room.");
 
         return new CheckResult("game-drive", "Disque du jeu", Severity.Ok, value,
@@ -525,8 +525,8 @@ public static class Diagnostics
         string detail = string.Join(Environment.NewLine, lines);
         string advice = "Of the five settings it reads, Aeropeek writes only one: power management, "
                       + "whose value table is documented and whose effect is measurable. For the others, the driver "
-                      + "donne le nom de l'option mais pas le sens de ses valeurs — l'application ne devine pas, "
-                      + "et renvoie au panneau NVIDIA.";
+                      + "gives the option's name but not the meaning of its values — the application does not guess, "
+                      + "and points you to the NVIDIA panel.";
 
         if (power is { Optimal: false })
             return new CheckResult("nvidia", "Graphics driver settings", Severity.Warn,
@@ -566,9 +566,9 @@ public static class Diagnostics
         if (live == t.PerformanceMask)
             return new CheckResult("cpu", "Cœurs du processeur", Severity.Ok,
                 "Pinned to the P-cores",
-                $"CS2 tourne sur les processeurs {range} uniquement : aucun thread ne part sur les cœurs efficients.",
+                $"CS2 runs on processors {range} only: no thread lands on the efficiency cores.",
                 "Affinity is lost when the game closes — you will have to apply it again next session.",
-                "affinite-tous", "Rendre tous les cœurs");
+                "affinite-tous", "Give back every core");
 
         return new CheckResult("cpu", "Cœurs du processeur", Severity.Info,
             $"{t.PerformanceCores} P-cores + {t.EfficiencyCores} E-cores",
@@ -678,7 +678,7 @@ public static class Diagnostics
         string detail = "Sur secteur : " + string.Join(", ", facts) + ".";
 
         var issues = new List<string>();
-        if (minCores is > 0 and < 100) issues.Add("le parking de cœurs est actif");
+        if (minCores is > 0 and < 100) issues.Add("core parking is active");
         if (usbSuspend == 1) issues.Add("USB selective suspend is enabled");
 
         if (issues.Count == 0)
@@ -693,8 +693,8 @@ public static class Diagnostics
                 "power-panel", "Manage plans");
 
         return new CheckResult("power", "Plan d'alimentation", Severity.Warn, name,
-            detail + " Sur un poste fixe, " + string.Join(" et ", issues) + " with no real benefit.",
-            "Effet modeste — quelques images sur les transitions courtes, et un peu de latence souris si la suspension USB "
+            detail + " On a desktop, " + string.Join(" et ", issues) + " with no real benefit.",
+            "Modest effect — a few frames on short transitions, and some mouse latency if USB suspend "
             + "affects your receiver.",
             "power-panel", "Manage plans");
     }
@@ -786,7 +786,7 @@ public static class Diagnostics
         if (apps.Count == 0)
             return new CheckResult("overlays", "Surcouches", Severity.Ok,
                 "None running",
-                "Aucune application connue pour s'accrocher aux jeux ne tourne : ni Discord, ni RivaTuner, "
+                "None of the applications known to hook into games is running: no Discord, no RivaTuner, "
                 + "ni Overwolf, ni iCUE, ni Razer Synapse.");
 
         string why = access == SystemProfile.ModuleAccess.Denied

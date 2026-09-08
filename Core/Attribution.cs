@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using System.Text.Json;
 
 namespace Aeropeek.Core;
@@ -35,8 +35,8 @@ public sealed class Attribution
     public string Verdict => !Significant
         ? "sans effet mesurable ici"
         : DeltaLow1Pct > 0
-            ? $"mesuré ici : +{DeltaLow1Pct:0.0} % sur les 1% lows"
-            : $"mesuré ici : {DeltaLow1Pct:0.0} % sur les 1% lows";
+            ? $"measured here: +{DeltaLow1Pct:0.0}% on the 1% lows"
+            : $"measured here: {DeltaLow1Pct:0.0}% on the 1% lows";
 }
 
 public sealed class AttributionStore

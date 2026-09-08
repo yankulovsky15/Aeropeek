@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using System.Management;
 using System.Net.Http;
 using System.Text.RegularExpressions;
@@ -194,14 +194,14 @@ public static class Drivers
             if (!gpuName.Contains("NVIDIA", StringComparison.OrdinalIgnoreCase)
                 && !gpuName.Contains("GeForce", StringComparison.OrdinalIgnoreCase))
             {
-                LastLookupError = "La recherche automatique n'est disponible que pour les cartes NVIDIA.";
+                LastLookupError = "Automatic lookup is only available for NVIDIA cards.";
                 return null;
             }
 
             // « NVIDIA GeForce RTX 4070 » → série « RTX 40 », modèle « RTX 4070 »
             var model = System.Text.RegularExpressions.Regex.Match(gpuName, @"(RTX|GTX)\s*(\d{3,4})\s*(Ti\s*SUPER|SUPER|Ti)?",
                 System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-            if (!model.Success) { LastLookupError = "Modèle de carte non reconnu."; return null; }
+            if (!model.Success) { LastLookupError = "Card model not recognised."; return null; }
 
             string family = model.Groups[1].Value.ToUpperInvariant();
             string number = model.Groups[2].Value;
@@ -216,13 +216,13 @@ public static class Drivers
                 n => n.Contains(seriesKey, StringComparison.OrdinalIgnoreCase)
                      && !n.Contains("Notebook", StringComparison.OrdinalIgnoreCase)
                      && !n.Contains("Laptop", StringComparison.OrdinalIgnoreCase), ct);
-            if (psid == null) { LastLookupError = "Série de carte introuvable chez NVIDIA."; return null; }
+            if (psid == null) { LastLookupError = "Card series not found at NVIDIA."; return null; }
 
             string wanted = $"{family} {number}" + (suffix.Length > 0 ? " " + suffix : "");
             int? pfid = await LookupIdAsync(
                 $"https://www.nvidia.com/Download/API/lookupValueSearch.aspx?TypeID=3&ParentID={psid}",
                 n => Normalise(n).EndsWith(Normalise(wanted), StringComparison.OrdinalIgnoreCase), ct);
-            if (pfid == null) { LastLookupError = "Modèle de carte introuvable chez NVIDIA."; return null; }
+            if (pfid == null) { LastLookupError = "Card model not found at NVIDIA."; return null; }
 
             int lang = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "fr" ? 1036 : 1033;
             var url = "https://gfwsl.geforce.com/services_toolkit/services/com/nvidia/services/AjaxDriverService.php"
@@ -231,7 +231,7 @@ public static class Drivers
 
             using var doc = System.Text.Json.JsonDocument.Parse(await Http.GetStringAsync(url, ct));
             if (!doc.RootElement.TryGetProperty("IDS", out var ids) || ids.GetArrayLength() == 0)
-            { LastLookupError = "NVIDIA n'a renvoyé aucun pilote pour cette carte."; return null; }
+            { LastLookupError = "NVIDIA returned no driver for this card."; return null; }
 
             var info = ids[0].GetProperty("downloadInfo");
             Latest = new LatestDriver(
@@ -242,7 +242,7 @@ public static class Drivers
         }
         catch (Exception ex)
         {
-            LastLookupError = "La recherche a échoué : " + ex.Message;
+            LastLookupError = "The lookup failed: " + ex.Message;
             return null;
         }
     }

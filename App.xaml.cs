@@ -1,4 +1,4 @@
-using System.Windows;
+﻿using System.Windows;
 
 namespace Aeropeek;
 
@@ -23,10 +23,10 @@ public partial class App : Application
             {
                 _reporting = true;
                 MessageBox.Show(
-                    "Aeropeek a rencontré une erreur inattendue :\n\n" + args.Exception.Message +
-                    "\n\nRien n'a été modifié par cette action. Le journal reste intact et " +
-                    "« Tout annuler » fonctionne toujours.\n\n" +
-                    "Ce message ne se répètera pas pour la même erreur.",
+                    "Aeropeek hit an unexpected error:\n\n" + args.Exception.Message +
+                    "\n\nNothing was changed by this action. The journal is intact and " +
+                    "“Undo everything” still works.\n\n" +
+                    "This message will not repeat for the same error.",
                     "Aeropeek", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
             finally { _reporting = false; }

@@ -11,11 +11,11 @@ public sealed record RestorePoint(uint Sequence, string Description, DateTime Cr
     public string TypeLabel => Type switch
     {
         0 => "Installation d'application",
-        1 => "Désinstallation d'application",
-        7 => "Point de contrôle",
+        1 => "Application uninstall",
+        7 => "Checkpoint",
         10 => "Installation de pilote",
-        12 => "Modification de réglages",
-        13 => "Opération annulée",
+        12 => "Settings change",
+        13 => "Operation undone",
         _ => $"Type {Type}"
     };
 }
@@ -60,7 +60,7 @@ public static class Restore
             using var k = Registry.LocalMachine.OpenSubKey(SrKey);
             if (k?.GetValue("SystemRestorePointCreationFrequency") is int f) freq = f;
             if (k?.GetValue("DisableSR") is int d && d == 1)
-                return new State(true, false, "La protection du système est désactivée.", 0, freq);
+                return new State(true, false, "System protection is disabled.", 0, freq);
         }
         catch { }
 
@@ -86,13 +86,13 @@ public static class Restore
             // WMI ne lève pas UnauthorizedAccessException : il encode le refus
             // dans son propre code d'erreur.
             return new State(true, false,
-                "Accès refusé. Aeropeek doit tourner en administrateur pour lire les points de restauration.",
+                "Access denied. Aeropeek must run as administrator to read restore points.",
                 percent, freq);
         }
         catch (Exception ex)
         {
             return new State(false, false,
-                "La restauration système ne répond pas sur cette machine : " + ex.Message, percent, freq);
+                "System Restore is not responding on this machine: " + ex.Message, percent, freq);
         }
     }
 
@@ -148,9 +148,9 @@ public static class Restore
 
     static string Explain(uint code) => code switch
     {
-        1058 => "Le service de restauration système est désactivé sur cette machine.",
-        1359 => "Windows a refusé la création. Un point a peut-être déjà été créé très récemment.",
-        _ => $"Windows a refusé la création du point de restauration (code {code})."
+        1058 => "The System Restore service is disabled on this machine.",
+        1359 => "Windows refused the creation. A point may already have been created very recently.",
+        _ => $"Windows refused to create the restore point (code {code})."
     };
 
     // ---------- activation de la protection ----------
@@ -175,7 +175,7 @@ public static class Restore
         var result = cls.InvokeMethod("Enable", args, null);
         uint code = Convert.ToUInt32(result?["ReturnValue"] ?? 1u);
         if (code != 0)
-            throw new InvalidOperationException($"Windows a refusé d'activer la protection (code {code}).");
+            throw new InvalidOperationException($"Windows refused to enable protection (code {code}).");
     }
 
     /// <summary>
@@ -185,7 +185,7 @@ public static class Restore
     public static OpRecord AllowFrequentPoints() =>
         RegistryOps.Apply("HKLM", SrKey, "SystemRestorePointCreationFrequency", 0,
                           RegistryValueKind.DWord, "restauration-frequence",
-                          "Autoriser plusieurs points de restauration par jour");
+                          "Allow several restore points per day");
 
     // ---------- suppression ----------
 
@@ -222,7 +222,7 @@ public static class Restore
         var result = cls.InvokeMethod("Restore", args, null);
         uint code = Convert.ToUInt32(result?["ReturnValue"] ?? 1u);
         if (code != 0)
-            throw new InvalidOperationException($"Windows a refusé la restauration (code {code}).");
+            throw new InvalidOperationException($"Windows refused the restore (code {code}).");
     }
 
     public static void Reboot()

@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -151,7 +151,7 @@ public sealed class Journal
         }
         session.Records.Clear();
         session.Closed ??= DateTimeOffset.Now;
-        session.Label = session.Label + " (annulée)";
+        session.Label = session.Label + " (undone)";
         Save();
         return done;
     }

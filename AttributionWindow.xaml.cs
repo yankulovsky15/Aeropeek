@@ -1,4 +1,4 @@
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
@@ -61,10 +61,10 @@ public partial class AttributionWindow : Window
 
         if (_tweak.NeedsRestart)
         {
-            StepText.Text = "Ce réglage ne peut pas être mesuré ainsi.";
-            HintText.Text = "Il ne prend effet qu'après un redémarrage de Windows. Une comparaison "
-                          + "dans la même session ne mesurerait rien. Il faut mesurer avant, redémarrer, "
-                          + "puis mesurer à nouveau — l'onglet Benchmark s'en charge.";
+            StepText.Text = "This tweak cannot be measured this way.";
+            HintText.Text = "It only takes effect after Windows restarts. A comparison "
+                          + "within the same session would measure nothing. Measure first, restart, "
+                          + "then measure again — the Benchmark tab handles that.";
             BtnPrimary.Content = "Fermer";
             BtnSecondary.Visibility = Visibility.Collapsed;
             _phase = 3;
@@ -73,22 +73,22 @@ public partial class AttributionWindow : Window
 
         if (!Benchmark.IsRunning("cs2"))
         {
-            StepText.Text = "CS2 n'est pas lancé.";
-            HintText.Text = "Lance le jeu et mets-toi en partie, puis rouvre cette fenêtre. "
-                          + "Les deux mesures doivent se faire dans des conditions comparables.";
+            StepText.Text = "CS2 isn't running.";
+            HintText.Text = "Start the game, get into a match, then open this window again. "
+                          + "Both runs have to happen under comparable conditions.";
             BtnPrimary.Content = "Fermer";
             BtnSecondary.Visibility = Visibility.Collapsed;
             _phase = 3;
             return;
         }
 
-        StepText.Text = "Deux mesures de 60 secondes, séparées par l'application du réglage.";
+        StepText.Text = "Two 60-second runs, with the tweak applied in between.";
         HintText.Text = _tweakApplied
-            ? "Le réglage est actuellement appliqué : il sera d'abord retiré pour établir la référence, "
-              + "puis remis. Reste en jeu du début à la fin — environ deux minutes trente."
-            : "Reste en jeu du début à la fin, sur la même carte et dans des conditions semblables. "
+            ? "The tweak is currently applied: it will first be removed to establish the baseline, "
+              + "then put back. Stay in game from start to finish — about two and a half minutes."
+            : "Stay in game from start to finish, on the same map and under similar conditions. "
               + "Environ deux minutes trente au total.";
-        FootNote.Text = "Rien n'est conservé si tu annules.";
+        FootNote.Text = "Nothing is kept if you cancel.";
     }
 
     // ---------- déroulé ----------
@@ -107,17 +107,17 @@ public partial class AttributionWindow : Window
             // référence : le réglage doit être absent
             if (_tweak.IsApplied())
             {
-                StepText.Text = "Retrait temporaire du réglage…";
-                HintText.Text = "Nécessaire pour établir la référence.";
+                StepText.Text = "Temporarily removing the tweak…";
+                HintText.Text = "Needed to establish the baseline.";
                 _journal.RevertTweak(_tweak.Id);
                 Changed = true;
                 await Task.Delay(1200);
             }
 
             _phase = 1;
-            _baseline = await Capture("Mesure 1 sur 2 — sans le réglage");
+            _baseline = await Capture("Run 1 of 2 — without the tweak");
 
-            StepText.Text = "Application du réglage…";
+            StepText.Text = "Applying the tweak…";
             HintText.Text = "";
             _tweak.Apply(_journal);
             Changed = true;
@@ -125,7 +125,7 @@ public partial class AttributionWindow : Window
             await Task.Delay(1500);
 
             _phase = 2;
-            _tweaked = await Capture("Mesure 2 sur 2 — avec le réglage");
+            _tweaked = await Capture("Run 2 of 2 — with the tweak");
 
             ShowResult();
         }
@@ -138,7 +138,7 @@ public partial class AttributionWindow : Window
         }
         catch (Exception ex)
         {
-            StepText.Text = "La mesure a échoué.";
+            StepText.Text = "The measurement failed.";
             HintText.Text = ex.Message;
             _phase = 3;
             BtnPrimary.Content = "Fermer";
@@ -164,8 +164,8 @@ public partial class AttributionWindow : Window
         {
             int inDelay = left - CaptureSeconds;
             HintText.Text = inDelay > 0
-                ? $"Retourne dans le jeu — l'enregistrement démarre dans {inDelay} s"
-                : $"Enregistrement — {left} s restantes. Ne quitte pas le jeu.";
+                ? $"Get back in the game — recording starts in {inDelay} s"
+                : $"Recording — {left} s left. Don't leave the game.";
             BarFill.Width = Math.Max(0, Bar.ActualWidth * (total - left) / total);
         }
         Tick();
@@ -200,34 +200,34 @@ public partial class AttributionWindow : Window
 
         if (!a.Significant)
         {
-            VerdictText.Text = "Aucun effet mesurable sur ta machine.";
+            VerdictText.Text = "No measurable effect on your machine.";
             VerdictText.Foreground = B("#7C8FA4");
-            VerdictNote.Text = $"L'écart est de {a.DeltaLow1Pct:+0.0;-0.0} %, sous le seuil de 2 % en dessous duquel "
-                             + "deux parties consécutives varient déjà d'elles-mêmes. Ce n'est pas un échec de la mesure : "
-                             + "c'est la réponse.";
+            VerdictNote.Text = $"The difference is {a.DeltaLow1Pct:+0.0;-0.0}%, below the 2% threshold under which "
+                             + "two consecutive matches already vary on their own. This is not a failed measurement: "
+                             + "it is the answer.";
         }
         else if (a.DeltaLow1Pct > 0)
         {
-            VerdictText.Text = $"Gain réel : +{a.DeltaLow1Pct:0.0} % sur les 1% lows.";
+            VerdictText.Text = $"Real gain: +{a.DeltaLow1Pct:0.0}% on the 1% lows.";
             VerdictText.Foreground = B("#4FBF8B");
             VerdictNote.Text = $"FPS moyen : {a.BaselineAvg:0} → {a.TweakedAvg:0} ({a.DeltaAvgPct:+0.0;-0.0} %). "
-                             + "Mesure conservée : la carte du réglage affichera désormais ce chiffre plutôt qu'une estimation.";
+                             + "Measurement kept: the tweak's card will now show this figure instead of an estimate.";
         }
         else
         {
-            VerdictText.Text = $"Ce réglage te fait perdre {Math.Abs(a.DeltaLow1Pct):0.0} %.";
+            VerdictText.Text = $"This tweak costs you {Math.Abs(a.DeltaLow1Pct):0.0}%.";
             VerdictText.Foreground = B("#F2726A");
-            VerdictNote.Text = "Sur ta configuration, il vaut mieux ne pas l'appliquer. "
-                             + "Le bouton ci-dessous le retire.";
+            VerdictNote.Text = "On your configuration you are better off not applying it. "
+                             + "The button below removes it.";
         }
 
         ResultCard.Visibility = Visibility.Visible;
-        StepText.Text = "Mesure terminée.";
-        HintText.Text = $"{a.Frames} images analysées au total.";
+        StepText.Text = "Measurement finished.";
+        HintText.Text = $"{a.Frames} frames analysed in total.";
         FootNote.Text = "";
 
         _phase = 3;
-        BtnPrimary.Content = "Garder le réglage";
+        BtnPrimary.Content = "Keep the tweak";
         BtnSecondary.Content = "Le retirer";
         BtnSecondary.Visibility = Visibility.Visible;
     }

@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
 using System.Runtime.InteropServices;
@@ -35,7 +35,7 @@ public static class External
     public static async Task<int> FetchAndRunAsync(Utility u, IProgress<string> log, CancellationToken ct)
     {
         if (string.IsNullOrEmpty(u.Url))
-            throw new InvalidOperationException("Aucune source n'est définie pour cet outil.");
+            throw new InvalidOperationException("No source is defined for this tool.");
 
         Directory.CreateDirectory(ToolsDir);
         string name = Path.GetFileName(new Uri(u.Url).LocalPath);
@@ -50,12 +50,12 @@ public static class External
 
         if (reuse)
         {
-            log.Report($"Copie locale du {existing.LastWriteTime:dd/MM/yyyy à HH\\hmm} réutilisée "
+            log.Report($"Local copy from {existing.LastWriteTime:yyyy-MM-dd HH:mm} reused "
                      + $"({Size(existing.Length)}).");
         }
         else
         {
-            log.Report(existing.Exists ? "Copie locale trop ancienne, téléchargement…" : "Téléchargement…");
+            log.Report(existing.Exists ? "Local copy too old, downloading…" : "Downloading…");
             await DownloadAsync(u.Url, path, log, ct);
         }
 
@@ -68,23 +68,23 @@ public static class External
         {
             if (!trusted)
                 throw new InvalidOperationException(
-                    "La signature du fichier téléchargé n'est pas valide. Rien n'a été exécuté.");
+                    "The downloaded file's signature is not valid. Nothing was run.");
 
             if (subject == null || subject.IndexOf(u.Signer, StringComparison.OrdinalIgnoreCase) < 0)
                 throw new InvalidOperationException(
-                    $"Le fichier est signé par « {subject ?? "signataire inconnu"} », "
-                    + $"et non par « {u.Signer} » comme attendu. Rien n'a été exécuté.");
+                    $"The file is signed by “{subject ?? "signataire inconnu"} », "
+                    + $"and not by “{u.Signer}” as expected. Nothing was run.");
 
-            log.Report($"Signature vérifiée : {subject}");
+            log.Report($"Signature verified: {subject}");
         }
         else if (trusted && subject != null)
         {
-            log.Report($"Fichier signé par : {subject}");
+            log.Report($"File signed by: {subject}");
         }
         else
         {
-            log.Report("Ce fichier n'est pas signé : Aeropeek ne peut pas vérifier qu'il vient bien");
-            log.Report("de son auteur. Tu l'exécutes sur la foi de son adresse de téléchargement.");
+            log.Report("This file is not signed: Aeropeek cannot verify that it really comes");
+            log.Report("from its author. You run it on the strength of its download address alone.");
         }
 
         log.Report("");
@@ -93,9 +93,9 @@ public static class External
         Start(path);
 
         log.Report("");
-        log.Report("L'outil s'exécute maintenant dans sa propre fenêtre.");
-        log.Report("Ce qu'il modifiera n'apparaîtra pas dans le journal d'Aeropeek");
-        log.Report("et ne pourra pas être annulé depuis cette application.");
+        log.Report("The tool now runs in its own window.");
+        log.Report("What it changes will not appear in Aeropeek's journal");
+        log.Report("and cannot be undone from this application.");
         return 0;
     }
 
@@ -109,7 +109,7 @@ public static class External
         {
             resp.EnsureSuccessStatusCode();
             long? total = resp.Content.Headers.ContentLength;
-            if (total is > 0) log.Report($"Taille annoncée : {Size(total.Value)}");
+            if (total is > 0) log.Report($"Advertised size: {Size(total.Value)}");
 
             await using var src = await resp.Content.ReadAsStreamAsync(ct);
             await using var dst = File.Create(tmp);
@@ -132,7 +132,7 @@ public static class External
         }
 
         File.Move(tmp, path, overwrite: true);
-        log.Report($"Reçu : {Size(new FileInfo(path).Length)}");
+        log.Report($"Received: {Size(new FileInfo(path).Length)}");
     }
 
     /// <summary>

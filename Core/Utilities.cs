@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace Aeropeek.Core;
@@ -47,66 +47,66 @@ public static class Utilities
     public static readonly Utility[] All =
     {
         new("cleanmgr", "Nettoyage de disque Windows",
-            "Ouvre l'outil de Microsoft. Il propose des emplacements qu'Aeropeek ne touche pas, comme les points de restauration.",
+            "Opens Microsoft's own tool. It offers locations Aeropeek does not touch, such as restore points.",
             "cleanmgr", "cleanmgr.exe", Array.Empty<string>(),
             UtilityKind.Launch, "Ouvrir", IcoDisk),
 
-        new("msinfo32", "Informations système",
-            "Le rapport détaillé de Windows : matériel, pilotes, composants, environnement logiciel.",
+        new("msinfo32", "System information",
+            "Windows' detailed report: hardware, drivers, components, software environment.",
             "msinfo32", "msinfo32.exe", Array.Empty<string>(),
             UtilityKind.Launch, "Ouvrir", IcoScreen),
 
-        new("gpu-restart", "Redémarrer le pilote graphique",
-            "Réinitialise le pilote sans redémarrer le PC. Utile quand l'affichage se fige ou scintille.",
+        new("gpu-restart", "Restart the graphics driver",
+            "Resets the driver without rebooting the PC. Useful when the display freezes or flickers.",
             "Win + Ctrl + Maj + B", "", Array.Empty<string>(),
-            UtilityKind.DriverRestart, "Redémarrer", IcoGpu,
-            "L'écran devient noir une seconde. Ferme tes jeux avant : certains ne survivent pas à la réinitialisation."),
+            UtilityKind.DriverRestart, "Restart", IcoGpu,
+            "The screen goes black for a second. Close your games first: some do not survive the reset."),
 
         new("flushdns", "Vider le cache DNS",
-            "Efface les correspondances nom-adresse mémorisées. À faire quand un site reste injoignable alors qu'il fonctionne ailleurs.",
+            "Clears the remembered name-to-address mappings. Worth doing when a site stays unreachable while it works elsewhere.",
             "ipconfig /flushdns", "ipconfig.exe", new[] { "/flushdns" },
             UtilityKind.Run, "Vider", IcoGlobe),
 
-        new("sfc", "Vérificateur des fichiers système",
-            "Contrôle l'intégrité des fichiers de Windows et répare ceux qui sont abîmés.",
+        new("sfc", "System File Checker",
+            "Checks the integrity of Windows files and repairs damaged ones.",
             "sfc /scannow", "sfc.exe", new[] { "/scannow" },
-            UtilityKind.Run, "Vérifier", IcoWrench,
-            "Compte cinq à quinze minutes. Laisse la fenêtre ouverte jusqu'au bout."),
+            UtilityKind.Run, "Check", IcoWrench,
+            "Allow five to fifteen minutes. Leave the window open to the end."),
 
-        new("dism", "Réparation de l'image Windows",
-            "Répare le magasin de composants dont dépend le vérificateur de fichiers. À lancer quand celui-ci échoue.",
+        new("dism", "Windows image repair",
+            "Repairs the component store the file checker depends on. Run it when that one fails.",
             "DISM /Online /Cleanup-Image /RestoreHealth", "dism.exe",
             new[] { "/Online", "/Cleanup-Image", "/RestoreHealth" },
-            UtilityKind.Run, "Réparer", IcoShield,
-            "Nécessite une connexion Internet et peut prendre plus de quinze minutes."),
+            UtilityKind.Run, "Repair", IcoShield,
+            "Needs an internet connection and can take more than fifteen minutes."),
 
-        new("chkdsk", "Vérification du disque",
-            "Analyse le système de fichiers à la recherche d'erreurs. Lecture seule : rien n'est modifié.",
+        new("chkdsk", "Disk check",
+            "Scans the file system for errors. Read-only: nothing is changed.",
             "chkdsk C:", "chkdsk.exe", new[] { @"C:" },
             UtilityKind.Run, "Analyser", IcoSearch,
-            "En lecture seule. Une réparation réelle demanderait un redémarrage, qu'Aeropeek ne déclenche pas."),
+            "Read-only. A real repair would require a restart, which Aeropeek does not trigger."),
 
         // --- outils tiers ---
         // Ils font ce qu'Aeropeek ne fait pas, et le font hors de son journal.
         // La carte le dit, et le dialogue de confirmation le redit.
 
         new("oosu10", "O&O ShutUp10++",
-            "L'outil de confidentialité de référence pour Windows : des centaines de réglages de télémétrie, "
-            + "bien au-delà des quatre que gère Aeropeek. Portable, gratuit, aucune installation.",
+            "The reference privacy tool for Windows: hundreds of telemetry settings, "
+            + "far beyond the four Aeropeek handles. Portable, free, no installation.",
             "oo-software.com", "", Array.Empty<string>(),
             UtilityKind.External, "Lancer", IcoEye,
-            "Environ 76 Mo au premier lancement. Ses modifications n'apparaîtront pas dans le journal d'Aeropeek "
-            + "et ne pourront pas être annulées d'ici : sers-toi de sa propre fonction de restauration.",
+            "About 76 MB on first run. Its changes will not appear in Aeropeek's journal "
+            + "and cannot be undone from here: use its own restore function.",
             "https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe",
             "O&O Software"),
 
         new("winutil", "Windows Utility de Chris Titus",
-            "Le couteau suisse Windows : installation groupée de logiciels, réparations système, "
-            + "politique de mises à jour, et une longue liste d'ajustements qu'Aeropeek ne couvre pas.",
+            "The Windows swiss army knife: bulk software installation, system repairs, "
+            + "update policy, and a long list of adjustments Aeropeek does not cover.",
             "christitus.com", "", Array.Empty<string>(),
             UtilityKind.External, "Lancer", IcoBox,
-            "Script PowerShell non signé : Aeropeek vérifie l'adresse de téléchargement, pas l'auteur. "
-            + "Ses modifications échappent au journal. Crée un point de restauration avant, il le propose.",
+            "Unsigned PowerShell script: Aeropeek verifies the download address, not the author. "
+            + "Its changes escape the journal. Create a restore point first — it offers to.",
             "https://github.com/ChrisTitusTech/winutil/releases/latest/download/winutil.ps1")
     };
 
@@ -136,7 +136,7 @@ public static class Utilities
         foreach (var a in u.Args) psi.ArgumentList.Add(a);
 
         using var proc = Process.Start(psi)
-            ?? throw new InvalidOperationException("La commande n'a pas pu être lancée.");
+            ?? throw new InvalidOperationException("The command could not be started.");
 
         using var reg = ct.Register(() => { try { if (!proc.HasExited) proc.Kill(true); } catch { } });
 

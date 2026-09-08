@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Text.Json;
@@ -82,9 +82,9 @@ public static class Benchmark
                                                     CancellationToken ct = default)
     {
         if (!ToolAvailable)
-            throw new FileNotFoundException("PresentMon est introuvable à côté de l'application.", ToolPath);
+            throw new FileNotFoundException("PresentMon cannot be found next to the application.", ToolPath);
         if (!IsRunning(processName))
-            throw new InvalidOperationException($"{processName}.exe n'est pas lancé.");
+            throw new InvalidOperationException($"{processName}.exe is not running.");
 
         var dir = Path.Combine(Journal.Directory, "captures");
         Directory.CreateDirectory(dir);
@@ -109,7 +109,7 @@ public static class Benchmark
             "--v2_metrics"
         }) psi.ArgumentList.Add(a);
 
-        using var proc = Process.Start(psi) ?? throw new InvalidOperationException("PresentMon n'a pas démarré.");
+        using var proc = Process.Start(psi) ?? throw new InvalidOperationException("PresentMon did not start.");
         var err = proc.StandardError.ReadToEndAsync(ct);
         var outp = proc.StandardOutput.ReadToEndAsync(ct);
 
@@ -128,13 +128,13 @@ public static class Benchmark
             var why = Shorten(await err);
             if (string.IsNullOrEmpty(why)) why = Shorten(await outp);
             throw new InvalidOperationException(
-                "PresentMon n'a produit aucune donnée." + (why.Length > 0 ? "\n\n" + why : ""));
+                "PresentMon produced no data." + (why.Length > 0 ? "\n\n" + why : ""));
         }
 
         var times = ParseFrameTimes(csv);
         if (times.Count < 30)
             throw new InvalidOperationException(
-                $"Trop peu d'images capturées ({times.Count}). Le jeu était-il bien au premier plan et en train de rendre ?");
+                $"Too few frames captured ({times.Count}). Was the game really in the foreground and rendering?");
 
         return Summarise(times, processName, label);
     }

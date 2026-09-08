@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using Microsoft.Win32;
 
 namespace Aeropeek.Core;
@@ -52,46 +52,46 @@ public static class Cleanup
 
     public static readonly CleanTarget[] Targets =
     {
-        new("shaders-nvidia", "Lié aux jeux", "Cache de shaders NVIDIA",
-            "Reconstruit tout seul. C'est aussi le correctif quand des saccades viennent d'un cache abîmé.",
+        new("shaders-nvidia", "Game-related", "Cache de shaders NVIDIA",
+            "Rebuilds itself. It is also the fix when stutter comes from a damaged cache.",
             CleanRisk.Safe, true,
             () => Existing(Env(@"%LOCALAPPDATA%\NVIDIA\DXCache"), Env(@"%LOCALAPPDATA%\NVIDIA\GLCache"),
                            Env(@"%LOCALAPPDATA%\NVIDIA Corporation\NV_Cache"))),
 
-        new("shaders-steam", "Lié aux jeux", "Cache de shaders Steam",
-            "Contient aussi les shaders des jeux désinstallés. Retéléchargé au besoin.",
+        new("shaders-steam", "Game-related", "Cache de shaders Steam",
+            "Also holds shaders for uninstalled games. Re-downloaded when needed.",
             CleanRisk.Safe, true,
             () => Existing(SteamPath() is { } s ? Path.Combine(s, "steamapps", "shadercache") : null)),
 
-        new("temp", "Système", "Fichiers temporaires",
-            "Dossiers Temp de Windows et de ta session. Les fichiers en cours d'utilisation sont ignorés.",
+        new("temp", "System", "Fichiers temporaires",
+            "Windows and per-session Temp folders. Files in use are skipped.",
             CleanRisk.Safe, true,
             () => Existing(Env(@"%TEMP%"), Env(@"%SystemRoot%\Temp"))),
 
-        new("thumbnails", "Système", "Vignettes de l'Explorateur",
-            "Miniatures mises en cache. Reconstruites à l'affichage suivant, un peu plus lentement.",
+        new("thumbnails", "System", "Vignettes de l'Explorateur",
+            "Cached thumbnails. Rebuilt the next time they're shown, a little more slowly.",
             CleanRisk.Safe, false,
             () => Existing(Env(@"%LOCALAPPDATA%\Microsoft\Windows\Explorer"))),
 
-        new("crashdumps", "Système", "Rapports d'erreur et vidages mémoire",
-            "Traces des plantages passés. Sans intérêt une fois le problème résolu.",
+        new("crashdumps", "System", "Error reports and memory dumps",
+            "Traces of past crashes. Of no use once the problem is solved.",
             CleanRisk.Safe, true,
             () => Existing(Env(@"%LOCALAPPDATA%\CrashDumps"),
                            Env(@"%ProgramData%\Microsoft\Windows\WER\ReportQueue"),
                            Env(@"%ProgramData%\Microsoft\Windows\WER\ReportArchive"))),
 
-        new("windows-update", "Système", "Cache de Windows Update",
-            "Installateurs déjà appliqués. Windows les retéléchargera si une mise à jour est en attente.",
+        new("windows-update", "System", "Cache de Windows Update",
+            "Installers already applied. Windows re-downloads them if an update is pending.",
             CleanRisk.Check, false,
             () => Existing(Env(@"%SystemRoot%\SoftwareDistribution\Download"))),
 
-        new("delivery", "Système", "Cache de partage des mises à jour",
-            "Morceaux de mises à jour conservés pour être envoyés à d'autres PC.",
+        new("delivery", "System", "Update sharing cache",
+            "Chunks of updates kept to be uploaded to other PCs.",
             CleanRisk.Safe, false,
             () => Existing(Env(@"%SystemRoot%\ServiceProfiles\NetworkService\AppData\Local\Microsoft\Windows\DeliveryOptimization\Cache"))),
 
-        new("windows-old", "Système", "Ancienne version de Windows",
-            "Dossier Windows.old. Le supprimer empêche définitivement de revenir à la version précédente.",
+        new("windows-old", "System", "Ancienne version de Windows",
+            "The Windows.old folder. Deleting it permanently prevents rolling back to the previous version.",
             CleanRisk.NoReturn, false,
             () => Existing(Env(@"%SystemDrive%\Windows.old")))
     };
@@ -199,6 +199,6 @@ public static class Cleanup
         Description = "Nettoyage : " + target.Title,
         SubKey = string.Join(" · ", target.Paths()),
         PreviousValue = CleanScan.Human(outcome.Freed),
-        NewValue = $"{outcome.Deleted} fichier(s) supprimé(s), {outcome.Skipped} ignoré(s)"
+        NewValue = $"{outcome.Deleted} file(s) deleted, {outcome.Skipped} skipped"
     };
 }

@@ -1,4 +1,4 @@
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using Windows.Management.Deployment;
 
 namespace Aeropeek.Core;
@@ -77,80 +77,80 @@ public static class Bloatware
     static readonly (string Prefix, string Label, string Category, string Note, bool Game)[] Catalogue =
     {
         ("Microsoft.XboxGamingOverlay",       "Barre de jeu Xbox", "Jeu",
-         "S'accroche au processus du jeu pour la superposition Win+G et l'enregistrement. C'est la seule de cette liste qui coûte des images.", true),
+         "Hooks into the game process for the Win+G overlay and recording. The only one on this list that costs frames.", true),
         ("Microsoft.XboxGameOverlay",         "Superposition Xbox", "Jeu",
-         "Composant de la barre de jeu. Inutile sans elle.", true),
+         "A Game Bar component. Useless without it.", true),
         ("Microsoft.XboxSpeechToTextOverlay", "Sous-titres Xbox", "Jeu",
-         "Transcription vocale de la barre de jeu.", false),
+         "Game Bar voice transcription.", false),
         ("Microsoft.Xbox.TCUI",               "Interface Xbox Live", "Jeu",
-         "Fenêtres d'invitation et de profil Xbox Live. Quelques jeux du Store s'en servent.", false),
+         "Xbox Live invite and profile windows. A few Store games use them.", false),
         ("Microsoft.GamingApp",               "Application Xbox", "Jeu",
-         "Nécessaire pour installer et lancer les jeux du Game Pass. À garder si tu y es abonné.", false),
+         "Required to install and launch Game Pass titles. Keep it if you subscribe.", false),
 
         ("Microsoft.549981C3F5F10",           "Cortana", "Assistant",
-         "L'assistant vocal, abandonné par Microsoft.", false),
+         "The voice assistant, abandoned by Microsoft.", false),
         ("Microsoft.Copilot",                 "Copilot", "Assistant",
          "L'assistant Copilot de Windows.", false),
-        ("Microsoft.Windows.Ai.Copilot",      "Copilot (composant système)", "Assistant",
-         "Fournisseur Copilot intégré au système.", false),
+        ("Microsoft.Windows.Ai.Copilot",      "Copilot (system component)", "Assistant",
+         "The Copilot provider built into the system.", false),
 
-        ("Microsoft.BingNews",                "Actualités", "Bing",
-         "L'application Actualités et le widget associé.", false),
-        ("Microsoft.BingWeather",             "Météo", "Bing",
-         "L'application Météo et le widget associé.", false),
+        ("Microsoft.BingNews",                "News", "Bing",
+         "The News app and its widget.", false),
+        ("Microsoft.BingWeather",             "Weather", "Bing",
+         "The Weather app and its widget.", false),
         ("Microsoft.BingSearch",              "Recherche web Bing", "Bing",
-         "Résultats web dans le menu Démarrer.", false),
+         "Web results in the Start menu.", false),
         ("Microsoft.BingFinance",             "Finance", "Bing", "Application Finance.", false),
         ("Microsoft.BingSports",              "Sport", "Bing", "Application Sport.", false),
 
         ("Microsoft.MicrosoftSolitaireCollection", "Solitaire", "Divertissement",
-         "La collection Solitaire, avec ses publicités.", false),
-        ("Microsoft.ZuneMusic",               "Lecteur multimédia", "Divertissement",
-         "Le lecteur de musique de Windows. Retire l'application par défaut pour les fichiers audio.", false),
+         "The Solitaire collection, ads included.", false),
+        ("Microsoft.ZuneMusic",               "Media Player", "Divertissement",
+         "Windows' music player. Removes the default app for audio files.", false),
         ("Microsoft.ZuneVideo",               "Films et TV", "Divertissement",
-         "Le lecteur vidéo de Windows. Retire l'application par défaut pour les fichiers vidéo.", false),
+         "Windows' video player. Removes the default app for video files.", false),
         ("Clipchamp.Clipchamp",               "Clipchamp", "Divertissement",
-         "L'éditeur vidéo préinstallé.", false),
-        ("SpotifyAB.SpotifyMusic",            "Spotify (préinstallé)", "Divertissement",
-         "La version du Store installée automatiquement. Sans effet sur une installation faite par toi.", false),
+         "The preinstalled video editor.", false),
+        ("SpotifyAB.SpotifyMusic",            "Spotify (preinstalled)", "Divertissement",
+         "The Store version installed automatically. No effect on one you installed yourself.", false),
 
         ("Microsoft.MicrosoftOfficeHub",      "Microsoft 365 (raccourci)", "Bureautique",
-         "Le raccourci publicitaire vers Office, pas Office lui-même.", false),
+         "The promotional shortcut to Office, not Office itself.", false),
         ("Microsoft.Office.OneNote",          "OneNote (version Store)", "Bureautique",
-         "La version Store de OneNote.", false),
+         "The Store version of OneNote.", false),
         ("Microsoft.OutlookForWindows",       "Nouvel Outlook", "Bureautique",
-         "La nouvelle application Courrier de Windows.", false),
-        ("Microsoft.Todos",                   "To Do", "Bureautique", "Les listes de tâches Microsoft.", false),
+         "The new Windows Mail app.", false),
+        ("Microsoft.Todos",                   "To Do", "Bureautique", "Microsoft's task lists.", false),
         ("MicrosoftTeams",                    "Teams (personnel)", "Bureautique",
-         "La version grand public de Teams, préinstallée. Sans effet sur Teams professionnel.", false),
+         "The consumer version of Teams, preinstalled. No effect on Teams for work.", false),
         ("MSTeams",                           "Teams", "Bureautique",
          "La nouvelle application Teams.", false),
-        ("Microsoft.SkypeApp",                "Skype", "Bureautique", "Skype préinstallé.", false),
+        ("Microsoft.SkypeApp",                "Skype", "Bureautique", "Preinstalled Skype.", false),
         ("Microsoft.PowerAutomateDesktop",    "Power Automate", "Bureautique",
          "L'outil d'automatisation de Microsoft.", false),
 
-        ("Microsoft.People",                  "Contacts", "Système",
-         "Le carnet d'adresses de Windows.", false),
-        ("Microsoft.YourPhone",               "Mobile connecté", "Système",
-         "La liaison avec le téléphone. À garder si tu l'utilises.", false),
-        ("Microsoft.WindowsMaps",             "Cartes", "Système", "L'application Cartes.", false),
-        ("Microsoft.WindowsFeedbackHub",      "Concentrateur de commentaires", "Système",
-         "L'outil de retour à Microsoft.", false),
-        ("Microsoft.GetHelp",                 "Obtenir de l'aide", "Système",
+        ("Microsoft.People",                  "Contacts", "System",
+         "The Windows address book.", false),
+        ("Microsoft.YourPhone",               "Phone Link", "System",
+         "The link to your phone. Keep it if you use it.", false),
+        ("Microsoft.WindowsMaps",             "Cartes", "System", "L'application Cartes.", false),
+        ("Microsoft.WindowsFeedbackHub",      "Concentrateur de commentaires", "System",
+         "The feedback tool for Microsoft.", false),
+        ("Microsoft.GetHelp",                 "Obtenir de l'aide", "System",
          "L'assistance Microsoft.", false),
-        ("Microsoft.Getstarted",              "Conseils", "Système",
-         "Les conseils d'utilisation de Windows.", false),
-        ("Microsoft.MixedReality.Portal",     "Réalité mixte", "Système",
-         "Le portail de réalité mixte, abandonné.", false),
-        ("Microsoft.Wallet",                  "Portefeuille", "Système", "Le portefeuille Microsoft.", false),
-        ("Microsoft.WindowsAlarms",           "Horloge", "Système",
-         "Alarmes, minuteur et chronomètre.", false),
-        ("Microsoft.WindowsSoundRecorder",    "Enregistreur vocal", "Système",
+        ("Microsoft.Getstarted",              "Conseils", "System",
+         "The Windows tips app.", false),
+        ("Microsoft.MixedReality.Portal",     "Mixed Reality", "System",
+         "The Mixed Reality portal, abandoned.", false),
+        ("Microsoft.Wallet",                  "Portefeuille", "System", "Le portefeuille Microsoft.", false),
+        ("Microsoft.WindowsAlarms",           "Horloge", "System",
+         "Alarms, timer and stopwatch.", false),
+        ("Microsoft.WindowsSoundRecorder",    "Enregistreur vocal", "System",
          "L'enregistreur audio de Windows.", false),
-        ("Microsoft.QuickAssist",             "Assistance rapide", "Système",
-         "La prise en main à distance de Microsoft.", false),
-        ("Microsoft.Windows.DevHome",         "Dev Home", "Système",
-         "Le tableau de bord destiné aux développeurs.", false)
+        ("Microsoft.QuickAssist",             "Assistance rapide", "System",
+         "Microsoft's remote assistance tool.", false),
+        ("Microsoft.Windows.DevHome",         "Dev Home", "System",
+         "The dashboard aimed at developers.", false)
     };
 
     public static bool Available
@@ -224,7 +224,7 @@ public static class Bloatware
     public static OpRecord Remove(StoreApp app)
     {
         if (IsUntouchable(app.FamilyName))
-            throw new InvalidOperationException($"Application protégée : {app.Label}");
+            throw new InvalidOperationException($"Protected application: {app.Label}");
 
         var pm = new PackageManager();
 
@@ -247,7 +247,7 @@ public static class Bloatware
         {
             Kind = "appx-removed",
             TweakId = "applications",
-            Description = "Application supprimée : " + app.Label,
+            Description = "Application removed: " + app.Label,
             ServiceName = app.FamilyName,
             PreviousValue = app.FullName
         };
@@ -264,15 +264,15 @@ public static class Bloatware
     /// </summary>
     public static readonly (string Value, string Label)[] ReinstallValues =
     {
-        ("SilentInstalledAppsEnabled",         "Installation silencieuse d'applications suggérées"),
-        ("PreInstalledAppsEnabled",            "Applications préinstallées au premier démarrage"),
-        ("OemPreInstalledAppsEnabled",         "Applications préinstallées par le constructeur"),
-        ("ContentDeliveryAllowed",             "Contenu proposé par Microsoft"),
-        ("SubscribedContent-338388Enabled",    "Suggestions dans le menu Démarrer"),
-        ("SubscribedContent-338389Enabled",    "Suggestions de conseils et astuces"),
-        ("SubscribedContent-353698Enabled",    "Suggestions dans la chronologie"),
-        ("SubscribedContent-310093Enabled",    "Suggestions à l'ouverture de session"),
-        ("SystemPaneSuggestionsEnabled",       "Suggestions dans le volet système")
+        ("SilentInstalledAppsEnabled",         "Silent installation of suggested apps"),
+        ("PreInstalledAppsEnabled",            "Apps preinstalled on first boot"),
+        ("OemPreInstalledAppsEnabled",         "Apps preinstalled by the manufacturer"),
+        ("ContentDeliveryAllowed",             "Content suggested by Microsoft"),
+        ("SubscribedContent-338388Enabled",    "Suggestions in the Start menu"),
+        ("SubscribedContent-338389Enabled",    "Tips and tricks suggestions"),
+        ("SubscribedContent-353698Enabled",    "Suggestions in the timeline"),
+        ("SubscribedContent-310093Enabled",    "Suggestions at sign-in"),
+        ("SystemPaneSuggestionsEnabled",       "Suggestions in the settings pane")
     };
 
     /// <summary>Nombre de ces valeurs encore actives.</summary>

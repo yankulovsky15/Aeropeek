@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -123,7 +123,7 @@ public static class PowerOps
     {
         var previous = ActivePlan();
         var (code, output) = Run("/setactive", target.ToString());
-        if (code != 0) throw new InvalidOperationException("Changement de plan refusé. " + Shorten(output));
+        if (code != 0) throw new InvalidOperationException("Plan switch refused. " + Shorten(output));
 
         return new OpRecord
         {
@@ -138,12 +138,12 @@ public static class PowerOps
     public static OpRecord SetSetting(string subgroup, string setting, int value, string description)
     {
         if (!IsAllowed(subgroup, setting))
-            throw new InvalidOperationException("Paramètre d'alimentation non autorisé.");
+            throw new InvalidOperationException("Power setting not allowed.");
 
         int? previous = ReadSetting(subgroup, setting);
 
         var (code, output) = Run("/setacvalueindex", "SCHEME_CURRENT", subgroup, setting, value.ToString());
-        if (code != 0) throw new InvalidOperationException("Écriture refusée. " + Shorten(output));
+        if (code != 0) throw new InvalidOperationException("Write refused. " + Shorten(output));
         Run("/setactive", "SCHEME_CURRENT");   // sans ça le changement n'est pas appliqué
 
         return new OpRecord
@@ -187,11 +187,11 @@ public static class PowerOps
         if (existing != null) return (existing.Id, false);
 
         var (code, output) = Run("/duplicatescheme", UltimateTemplate.ToString());
-        if (code != 0) throw new InvalidOperationException("Création du plan refusée. " + Shorten(output));
+        if (code != 0) throw new InvalidOperationException("Plan creation refused. " + Shorten(output));
 
         var m = Regex.Match(output, @"([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})");
         if (!m.Success || !Guid.TryParse(m.Groups[1].Value, out var g))
-            throw new InvalidOperationException("Plan créé mais identifiant illisible.");
+            throw new InvalidOperationException("Plan created but its identifier is unreadable.");
         return (g, true);
     }
 
@@ -202,20 +202,20 @@ public static class PowerOps
     public static OpRecord DeletePlan(Guid id, string name)
     {
         if (ActivePlan()?.Id == id)
-            throw new InvalidOperationException("Impossible de supprimer le plan actif.");
+            throw new InvalidOperationException("The active plan cannot be deleted.");
 
         Directory.CreateDirectory(BackupDir);
         var backup = Path.Combine(BackupDir, id.ToString("N") + ".pow");
         Run("/export", backup, id.ToString());
 
         var (code, output) = Run("/delete", id.ToString());
-        if (code != 0) throw new InvalidOperationException("Suppression refusée. " + Shorten(output));
+        if (code != 0) throw new InvalidOperationException("Deletion refused. " + Shorten(output));
 
         return new OpRecord
         {
             Kind = "power-plan-deleted",
             TweakId = "alimentation",
-            Description = "Plan d'alimentation supprimé : " + name,
+            Description = "Power plan deleted: " + name,
             PreviousValue = id.ToString(),
             BackupPath = File.Exists(backup) ? backup : ""
         };

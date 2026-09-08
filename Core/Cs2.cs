@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.Win32;
@@ -153,26 +153,26 @@ public static class Cs2
         int borderless = Int(v, "setting.nowindowborder");
 
         if (full == 1 && borderless == 0)
-            list.Add(new Cs2Finding("mode", "Mode d'affichage", "Plein écran exclusif", Cs2Verdict.Bon,
-                "Le jeu possède l'écran : c'est le chemin le plus court entre une image calculée et une image affichée."));
+            list.Add(new Cs2Finding("mode", "Mode d'affichage", "Exclusive fullscreen", Cs2Verdict.Bon,
+                "The game owns the display: the shortest path between a rendered frame and a shown frame."));
         else if (full == 1 && borderless == 1)
-            list.Add(new Cs2Finding("mode", "Mode d'affichage", "Plein écran fenêtré", Cs2Verdict.AAmeliorer,
-                "Tes images passent par le compositeur de Windows avant d'arriver à l'écran. Cela ajoute typiquement une image de latence.",
-                "Options → Vidéo → Mode d'affichage → Plein écran. Tu perdras l'alt-tab instantané ; c'est le compromis."));
+            list.Add(new Cs2Finding("mode", "Mode d'affichage", "Borderless fullscreen", Cs2Verdict.AAmeliorer,
+                "Your frames pass through the Windows compositor before reaching the screen. That typically adds one frame of latency.",
+                "Settings → Video → Display Mode → Fullscreen. You lose instant alt-tab; that is the trade."));
         else if (full == 0)
-            list.Add(new Cs2Finding("mode", "Mode d'affichage", "Fenêtré", Cs2Verdict.AAmeliorer,
-                "Le mode fenêtré ajoute la latence du compositeur et ne réserve pas l'écran au jeu.",
-                "Options → Vidéo → Mode d'affichage → Plein écran."));
+            list.Add(new Cs2Finding("mode", "Mode d'affichage", "Windowed", Cs2Verdict.AAmeliorer,
+                "Windowed mode adds compositor latency and does not reserve the display for the game.",
+                "Settings → Video → Display Mode → Fullscreen."));
 
         // --- synchronisation verticale ---
         int vsync = Int(v, "setting.mat_vsync");
         if (vsync == 0)
-            list.Add(new Cs2Finding("vsync", "Synchronisation verticale", "Désactivée", Cs2Verdict.Bon,
-                "Aucune image n'attend le balayage de l'écran."));
+            list.Add(new Cs2Finding("vsync", "Synchronisation verticale", "Off", Cs2Verdict.Bon,
+                "No frame waits for the display scan-out."));
         else if (vsync == 1)
-            list.Add(new Cs2Finding("vsync", "Synchronisation verticale", "Activée", Cs2Verdict.AAmeliorer,
-                "Chaque image attend le balayage de l'écran. C'est la source de latence la plus coûteuse des réglages vidéo.",
-                "Options → Vidéo → Attendre la synchronisation verticale → Désactivé."));
+            list.Add(new Cs2Finding("vsync", "Synchronisation verticale", "On", Cs2Verdict.AAmeliorer,
+                "Every frame waits for the display scan-out. It is the costliest source of latency among the video settings.",
+                "Settings → Video → Wait for Vertical Sync → Disabled."));
 
         // --- NVIDIA Reflex : n'a de sens que sur une carte NVIDIA ---
         bool nvidia = sys.GpuNames.Any(g => g.Contains("NVIDIA", StringComparison.OrdinalIgnoreCase));
@@ -181,15 +181,15 @@ public static class Cs2
         {
             list.Add(reflex switch
             {
-                0 => new Cs2Finding("reflex", "NVIDIA Reflex", "Désactivé", Cs2Verdict.AAmeliorer,
-                        "Reflex empêche la file d'attente d'images de se remplir devant le GPU. C'est le réglage qui réduit le plus la latence dans CS2, et il ne coûte pas d'images.",
-                        "Options → Vidéo → Mode de latence faible NVIDIA Reflex → Activé."),
-                1 => new Cs2Finding("reflex", "NVIDIA Reflex", "Activé", Cs2Verdict.Bon,
-                        "La file d'attente d'images reste courte : c'est le bon réglage."),
-                2 => new Cs2Finding("reflex", "NVIDIA Reflex", "Activé + Boost", Cs2Verdict.Bon,
-                        "Le Boost maintient les fréquences du GPU quand il attend le processeur. Il consomme davantage sans rien apporter quand le GPU n'est pas le facteur limitant — ce qui est le cas dans CS2 la plupart du temps."),
+                0 => new Cs2Finding("reflex", "NVIDIA Reflex", "Off", Cs2Verdict.AAmeliorer,
+                        "Reflex stops the frame queue from filling up ahead of the GPU. It is the single biggest latency reduction in CS2, and it costs no frames.",
+                        "Settings → Video → NVIDIA Reflex Low Latency → Enabled."),
+                1 => new Cs2Finding("reflex", "NVIDIA Reflex", "On", Cs2Verdict.Bon,
+                        "The frame queue stays short: this is the right setting."),
+                2 => new Cs2Finding("reflex", "NVIDIA Reflex", "On + Boost", Cs2Verdict.Bon,
+                        "Boost holds GPU clocks up while it waits on the processor. It draws more power for nothing when the GPU isn't the limiting factor — which in CS2 is most of the time."),
                 _ => new Cs2Finding("reflex", "NVIDIA Reflex", $"valeur {reflex}", Cs2Verdict.Inconnu,
-                        "Valeur non documentée : Aeropeek ne l'interprète pas.")
+                        "Undocumented value: Aeropeek does not interpret it.")
             });
         }
 
@@ -202,11 +202,11 @@ public static class Cs2
             var screen = sys.Displays.FirstOrDefault(d => d.IsPrimary) ?? sys.Displays.FirstOrDefault();
 
             if (screen != null && screen.RefreshHz > 0 && gameHz < screen.RefreshHz - 1)
-                list.Add(new Cs2Finding("hz", "Fréquence demandée par le jeu", $"{gameHz} Hz", Cs2Verdict.AAmeliorer,
-                    $"Le jeu demande {gameHz} Hz alors que ton écran tourne à {screen.RefreshHz} Hz sur le bureau.",
-                    "Options → Vidéo → Taux de rafraîchissement → la valeur la plus haute."));
+                list.Add(new Cs2Finding("hz", "Refresh rate requested by the game", $"{gameHz} Hz", Cs2Verdict.AAmeliorer,
+                    $"The game asks for {gameHz} Hz while your display runs at {screen.RefreshHz} Hz on the desktop.",
+                    "Settings → Video → Refresh Rate → the highest value."));
             else
-                list.Add(new Cs2Finding("hz", "Fréquence demandée par le jeu", $"{gameHz} Hz", Cs2Verdict.Bon,
+                list.Add(new Cs2Finding("hz", "Refresh rate requested by the game", $"{gameHz} Hz", Cs2Verdict.Bon,
                     screen == null ? "" : $"Identique au bureau ({screen.RefreshHz} Hz)."));
         }
 
@@ -217,30 +217,30 @@ public static class Cs2
         {
             var screen = sys.Displays.FirstOrDefault(d => d.IsPrimary) ?? sys.Displays.FirstOrDefault();
             string note = screen != null && (w != screen.Width || h != screen.Height)
-                ? $"Inférieure à la définition native de l'écran ({screen.Width}×{screen.Height}). C'est un choix courant en CS2 : moins de pixels à calculer, et des modèles plus larges si l'image est étirée par le pilote."
-                : "Définition native de l'écran.";
-            list.Add(new Cs2Finding("res", "Définition", $"{w} × {h}", Cs2Verdict.Info, note));
+                ? $"Below the display's native resolution ({screen.Width}×{screen.Height}). A common choice in CS2: fewer pixels to render, and wider models if the driver stretches the image."
+                : "The display's native resolution.";
+            list.Add(new Cs2Finding("res", "Resolution", $"{w} × {h}", Cs2Verdict.Info, note));
         }
 
         // --- anticrénelage ---
         int msaa = Int(v, "setting.msaa_samples");
         if (msaa >= 0)
         {
-            string label = msaa switch { 0 => "Désactivé", 2 => "2×", 4 => "4×", 8 => "8×", _ => $"{msaa}×" };
-            list.Add(new Cs2Finding("msaa", "Anticrénelage (MSAA)", label, Cs2Verdict.Info,
+            string label = msaa switch { 0 => "Off", 2 => "2×", 4 => "4×", 8 => "8×", _ => $"{msaa}×" };
+            list.Add(new Cs2Finding("msaa", "Anti-aliasing (MSAA)", label, Cs2Verdict.Info,
                 msaa >= 2
-                    ? "Coûte des images uniquement quand la carte graphique est le facteur limitant. Dans CS2, c'est presque toujours le processeur qui l'est : regarde l'onglet Benchmark avant d'y toucher."
-                    : "Aucun coût graphique."));
+                    ? "Costs frames only when the graphics card is the limiting factor. In CS2 the processor almost always is: check the Benchmark tab before touching it."
+                    : "No graphics cost."));
         }
 
         // --- comportement à l'alt-tab ---
         int minimize = Int(v, "setting.fullscreen_min_on_focus_loss");
         if (minimize >= 0)
-            list.Add(new Cs2Finding("alttab", "Réduction à l'alt-tab", minimize == 1 ? "Activée" : "Désactivée",
+            list.Add(new Cs2Finding("alttab", "Minimise on alt-tab", minimize == 1 ? "On" : "Off",
                 Cs2Verdict.Info,
                 minimize == 1
-                    ? "Le jeu se réduit quand tu changes de fenêtre. Nécessaire en plein écran exclusif, pénible sur deux écrans."
-                    : "Le jeu reste affiché quand tu changes de fenêtre."));
+                    ? "The game minimises when you switch windows. Necessary in exclusive fullscreen, annoying on two monitors."
+                    : "The game stays on screen when you switch windows."));
 
         return list;
     }
@@ -255,35 +255,35 @@ public static class Cs2
     static readonly Dictionary<string, (string Meaning, bool Effective)> Known =
         new(StringComparer.OrdinalIgnoreCase)
     {
-        ["-novid"]                      = ("Passe la vidéo d'introduction Valve", true),
-        ["-console"]                    = ("Ouvre la console au démarrage", true),
-        ["-high"]                       = ("Lance le jeu en priorité haute", true),
-        ["-fullscreen"]                 = ("Force le plein écran", true),
-        ["-windowed"]                   = ("Force le mode fenêtré", true),
+        ["-novid"]                      = ("Skips the Valve intro video", true),
+        ["-console"]                    = ("Opens the console at startup", true),
+        ["-high"]                       = ("Starts the game at high priority", true),
+        ["-fullscreen"]                 = ("Forces fullscreen", true),
+        ["-windowed"]                   = ("Forces windowed mode", true),
         ["-w"]                          = ("Force la largeur de l'image", true),
         ["-h"]                          = ("Force la hauteur de l'image", true),
-        ["-language"]                   = ("Force la langue du jeu", true),
-        ["-allow_third_party_software"] = ("Autorise les surcouches externes à s'accrocher au jeu", true),
-        ["-insecure"]                   = ("Désactive le VAC — aucun serveur officiel accessible", true),
-        ["-vulkan"]                     = ("Utilise le rendu Vulkan au lieu de Direct3D", true),
-        ["-tools"]                      = ("Ouvre les outils de développement au lieu du jeu", true),
-        ["-sw"]                         = ("Force le mode fenêtré", true),
-        ["-noborder"]                   = ("Fenêtre sans bordure", true),
+        ["-language"]                   = ("Forces the game language", true),
+        ["-allow_third_party_software"] = ("Allows external overlays to hook into the game", true),
+        ["-insecure"]                   = ("Disables VAC — no official server reachable", true),
+        ["-vulkan"]                     = ("Uses Vulkan rendering instead of Direct3D", true),
+        ["-tools"]                      = ("Opens the developer tools instead of the game", true),
+        ["-sw"]                         = ("Forces windowed mode", true),
+        ["-noborder"]                   = ("Borderless window", true),
 
         // Héritées de CS:GO. Le jeu les accepte sans rien en faire.
-        ["-nojoy"]          = ("Sans effet dans CS2 — l'option a disparu avec Source 2", false),
-        ["-forcenovsync"]   = ("Sans effet dans CS2 — la synchronisation verticale se règle dans les options vidéo", false),
-        ["-threads"]        = ("Sans effet dans CS2 — Source 2 répartit ses threads lui-même", false),
-        ["-tickrate"]       = ("Sans effet dans CS2 — les serveurs fonctionnent en sous-tick", false),
-        ["-d3d9ex"]         = ("Sans effet dans CS2 — Direct3D 9 n'existe plus dans Source 2", false),
-        ["-disable_d3d9ex"] = ("Sans effet dans CS2 — Direct3D 9 n'existe plus dans Source 2", false),
-        ["-nod3d9ex"]       = ("Sans effet dans CS2 — Direct3D 9 n'existe plus dans Source 2", false),
-        ["-softparticles"]  = ("Sans effet dans CS2 — option de Source 1", false),
-        ["-freq"]           = ("Sans effet dans CS2 — la fréquence se règle dans les options vidéo", false),
-        ["-refresh"]        = ("Sans effet dans CS2 — la fréquence se règle dans les options vidéo", false),
-        ["-processheap"]    = ("Sans effet dans CS2 — option de Source 1", false),
-        ["-limitvsconst"]   = ("Sans effet dans CS2 — option de Source 1", false),
-        ["-noaafonts"]      = ("Sans effet dans CS2 — option de Source 1", false)
+        ["-nojoy"]          = ("No effect in CS2 — the option disappeared with Source 2", false),
+        ["-forcenovsync"]   = ("No effect in CS2 — vertical sync is set in the video options", false),
+        ["-threads"]        = ("No effect in CS2 — Source 2 spreads its threads itself", false),
+        ["-tickrate"]       = ("No effect in CS2 — servers run on sub-tick", false),
+        ["-d3d9ex"]         = ("No effect in CS2 — Direct3D 9 no longer exists in Source 2", false),
+        ["-disable_d3d9ex"] = ("No effect in CS2 — Direct3D 9 no longer exists in Source 2", false),
+        ["-nod3d9ex"]       = ("No effect in CS2 — Direct3D 9 no longer exists in Source 2", false),
+        ["-softparticles"]  = ("No effect in CS2 — a Source 1 option", false),
+        ["-freq"]           = ("No effect in CS2 — the refresh rate is set in the video options", false),
+        ["-refresh"]        = ("No effect in CS2 — the refresh rate is set in the video options", false),
+        ["-processheap"]    = ("No effect in CS2 — a Source 1 option", false),
+        ["-limitvsconst"]   = ("No effect in CS2 — a Source 1 option", false),
+        ["-noaafonts"]      = ("No effect in CS2 — a Source 1 option", false)
     };
 
     /// <summary>Options de lancement actuellement enregistrées par Steam pour CS2.</summary>
@@ -310,7 +310,7 @@ public static class Cs2
             // +exec autoexec, +fps_max 0 : les commandes console sont exécutées telles quelles
             if (raw.StartsWith('+'))
             {
-                list.Add(new LaunchToken(raw, "Commande console exécutée au démarrage", true));
+                list.Add(new LaunchToken(raw, "Console command run at startup", true));
                 continue;
             }
 
@@ -323,11 +323,11 @@ public static class Cs2
             // Valeur d'une option précédente (-w 1280) plutôt qu'une option isolée
             if (!raw.StartsWith('-'))
             {
-                list.Add(new LaunchToken(raw, "Valeur de l'option précédente", true));
+                list.Add(new LaunchToken(raw, "Value of the preceding option", true));
                 continue;
             }
 
-            list.Add(new LaunchToken(raw, "Option inconnue d'Aeropeek : son effet n'est pas vérifié", true));
+            list.Add(new LaunchToken(raw, "Option unknown to Aeropeek: its effect is unverified", true));
         }
 
         return list;
@@ -345,13 +345,13 @@ public static class Cs2
     {
         if (SteamRunning)
             throw new InvalidOperationException(
-                "Steam doit être fermé : il réécrit ce fichier en se fermant et effacerait la modification.");
+                "Steam must be closed: it rewrites this file on exit and would wipe the change.");
 
         var path = LocalConfigPath()
             ?? throw new InvalidOperationException("Fichier de configuration Steam introuvable.");
 
         if (value.Contains('"'))
-            throw new InvalidOperationException("Les guillemets ne sont pas acceptés dans les options de lancement.");
+            throw new InvalidOperationException("Quotation marks are not accepted in launch options.");
 
         var text = File.ReadAllText(path);
         var m = Regex.Match(text, "\"LaunchOptions\"\\s+\"([^\"]*)\"");
@@ -371,7 +371,7 @@ public static class Cs2
             previous = "";
             var block = Regex.Match(text, "\"" + AppId + "\"\\s*\\r?\\n\\s*\\{");
             if (!block.Success)
-                throw new InvalidOperationException("Bloc CS2 introuvable dans la configuration Steam.");
+                throw new InvalidOperationException("CS2 block not found in the Steam configuration.");
 
             int at = block.Index + block.Length;
             updated = text.Insert(at, $"\r\n\t\t\t\t\t\t\"LaunchOptions\"\t\t\"{value}\"");
@@ -476,7 +476,7 @@ public static class Cs2
     {
         if (rec.Kind != "cs2-launch") return;
         if (SteamRunning)
-            throw new InvalidOperationException("Steam doit être fermé pour annuler cette modification.");
+            throw new InvalidOperationException("Steam must be closed to undo this change.");
 
         var path = LocalConfigPath();
         if (path == null) return;

@@ -1,4 +1,4 @@
-namespace Aeropeek.Core;
+﻿namespace Aeropeek.Core;
 
 public enum CompareVerdict
 {
@@ -53,28 +53,28 @@ public static class BenchCompare
         // La chronologie ne couvre pas cette période : on ne peut rien conclure.
         if (changes == null)
             return new(CompareVerdict.Unknown,
-                $"Écart avec « {prev.Label} » : {amount} sur les 1% lows {figures}. "
-                + "Aeropeek ne sait pas ce qui a changé entre ces deux mesures — elles sont "
-                + "antérieures à la tenue de sa chronologie. L'écart n'est attribuable à rien.");
+                $"Difference from “{prev.Label}”: {amount} on the 1% lows {figures}. "
+                + "Aeropeek does not know what changed between these two runs — they predate "
+                + "the timeline it keeps. The difference cannot be attributed to anything.");
 
         if (changes.Count == 0)
             return new(CompareVerdict.Noise,
-                $"Rien n'a été modifié entre « {prev.Label} » et cette mesure. L'écart de "
+                $"Nothing was changed between “{prev.Label}” and this run. The difference of "
                 + $"{amount} {figures} est la variation naturelle de ta machine, pas un effet.");
 
-        string what = changes.Count == 1 ? $"« {changes[0].Label} »" : $"{changes.Count} réglages";
-        string verb = changes.Count == 1 ? "a changé" : "ont changé";
+        string what = changes.Count == 1 ? $"« {changes[0].Label} »" : $"{changes.Count} tweaks";
+        string verb = changes.Count == 1 ? "changed" : "changed";
 
         if (gap > SameSession)
             return new(CompareVerdict.NotComparable,
-                $"{what} {verb} entre les deux mesures, mais {Gap(gap)} les séparent : l'écart "
-                + $"de {amount} {figures} n'est pas attribuable. La carte, le serveur et l'état "
-                + "de la machine ont changé aussi. Refais les deux captures à la suite pour trancher.");
+                $"{what} {verb} between the two runs, but {Gap(gap)} separates them: the difference "
+                + $"of {amount} {figures} cannot be attributed. The map, the server and the state "
+                + "of the machine changed too. Take both captures back to back to settle it.");
 
         if (Math.Abs(pct) < noisePct)
             return new(CompareVerdict.Noise,
-                $"{what} {verb} : {amount} {figures}, sous le bruit mesuré sur ta machine "
-                + $"(±{noisePct:0.0} %). Rien de significatif.");
+                $"{what} {verb}: {amount} {figures}, below the noise measured on your machine "
+                + $"(±{noisePct:0.0}%). Nothing significant.");
 
         return new(pct > 0 ? CompareVerdict.Gain : CompareVerdict.Loss,
             $"{what} {verb} : {amount} sur les 1% lows {figures}.");
@@ -108,7 +108,7 @@ public static class BenchCompare
 
     static string Gap(TimeSpan g) =>
         g.TotalDays >= 2 ? $"{g.TotalDays:0} jours"
-        : g.TotalHours >= 24 ? "plus d'une journée"
+        : g.TotalHours >= 24 ? "more than a day"
         : g.TotalHours >= 2 ? $"{g.TotalHours:0} heures"
         : $"{g.TotalMinutes:0} minutes";
 }
