@@ -194,7 +194,7 @@ public static class Nvidia
         // 1 et 2 sont celles de la documentation ; 0 signifie « laissé au pilote ».
         (0x20C1221E, v => (v switch
         {
-            0 => "Automatique",
+            0 => "Automatic",
             1 => "On",
             2 => "Off",
             _ => $"valeur {v}"
@@ -250,7 +250,7 @@ public static class Nvidia
             try
             {
                 if (load(session) != 0 || basep(session, out IntPtr profile) != 0 || profile == IntPtr.Zero)
-                    throw new InvalidOperationException("Profil global du pilote illisible.");
+                    throw new InvalidOperationException("The driver's global profile is unreadable.");
 
                 uint version = (uint)(Marshal.SizeOf<NVDRS_SETTING>() | (1 << 16));
 
@@ -286,7 +286,7 @@ public static class Nvidia
                 {
                     Kind = "nvidia-setting",
                     TweakId = "nvidia-alimentation",
-                    Description = "Gestion de l'alimentation NVIDIA",
+                    Description = "NVIDIA power management",
                     ValueName = PowerModeId.ToString(),
                     PreviousValue = previous.ToString(),
                     NewValue = value.ToString(),

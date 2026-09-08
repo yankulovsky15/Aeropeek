@@ -124,7 +124,7 @@ public sealed class Catalogue
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine("Catalogue illisible : " + ex.Message);
+            System.Diagnostics.Debug.WriteLine("Catalogue unreadable: " + ex.Message);
         }
         return new Catalogue();
     }

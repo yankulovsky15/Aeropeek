@@ -153,14 +153,14 @@ public static class Cs2
         int borderless = Int(v, "setting.nowindowborder");
 
         if (full == 1 && borderless == 0)
-            list.Add(new Cs2Finding("mode", "Mode d'affichage", "Exclusive fullscreen", Cs2Verdict.Bon,
+            list.Add(new Cs2Finding("mode", "Display mode", "Exclusive fullscreen", Cs2Verdict.Bon,
                 "The game owns the display: the shortest path between a rendered frame and a shown frame."));
         else if (full == 1 && borderless == 1)
-            list.Add(new Cs2Finding("mode", "Mode d'affichage", "Borderless fullscreen", Cs2Verdict.AAmeliorer,
+            list.Add(new Cs2Finding("mode", "Display mode", "Borderless fullscreen", Cs2Verdict.AAmeliorer,
                 "Your frames pass through the Windows compositor before reaching the screen. That typically adds one frame of latency.",
                 "Settings → Video → Display Mode → Fullscreen. You lose instant alt-tab; that is the trade."));
         else if (full == 0)
-            list.Add(new Cs2Finding("mode", "Mode d'affichage", "Windowed", Cs2Verdict.AAmeliorer,
+            list.Add(new Cs2Finding("mode", "Display mode", "Windowed", Cs2Verdict.AAmeliorer,
                 "Windowed mode adds compositor latency and does not reserve the display for the game.",
                 "Settings → Video → Display Mode → Fullscreen."));
 
@@ -260,8 +260,8 @@ public static class Cs2
         ["-high"]                       = ("Starts the game at high priority", true),
         ["-fullscreen"]                 = ("Forces fullscreen", true),
         ["-windowed"]                   = ("Forces windowed mode", true),
-        ["-w"]                          = ("Force la largeur de l'image", true),
-        ["-h"]                          = ("Force la hauteur de l'image", true),
+        ["-w"]                          = ("Forces the frame width", true),
+        ["-h"]                          = ("Forces the frame height", true),
         ["-language"]                   = ("Forces the game language", true),
         ["-allow_third_party_software"] = ("Allows external overlays to hook into the game", true),
         ["-insecure"]                   = ("Disables VAC — no official server reachable", true),
@@ -348,7 +348,7 @@ public static class Cs2
                 "Steam must be closed: it rewrites this file on exit and would wipe the change.");
 
         var path = LocalConfigPath()
-            ?? throw new InvalidOperationException("Fichier de configuration Steam introuvable.");
+            ?? throw new InvalidOperationException("Steam configuration file not found.");
 
         if (value.Contains('"'))
             throw new InvalidOperationException("Quotation marks are not accepted in launch options.");
@@ -384,7 +384,7 @@ public static class Cs2
         {
             Kind = "cs2-launch",
             TweakId = "cs2-launch",
-            Description = "Options de lancement CS2",
+            Description = "CS2 launch options",
             BackupPath = backup,
             PreviousValue = previous,
             NewValue = value,
@@ -426,7 +426,7 @@ public static class Cs2
     public static OpRecord WriteManagedBlock(string body)
     {
         var path = AutoexecPath()
-            ?? throw new InvalidOperationException("Dossier cfg de CS2 introuvable.");
+            ?? throw new InvalidOperationException("CS2 cfg folder not found.");
 
         Directory.CreateDirectory(Path.GetDirectoryName(path)!);
 
@@ -453,7 +453,7 @@ public static class Cs2
         {
             Kind = "cs2-file",
             TweakId = "cs2-autoexec",
-            Description = "autoexec.cfg de CS2",
+            Description = "CS2 autoexec.cfg",
             BackupPath = backup,
             SubKey = path,
             Existed = existed

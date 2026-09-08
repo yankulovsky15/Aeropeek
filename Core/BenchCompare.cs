@@ -62,7 +62,7 @@ public static class BenchCompare
                 $"Nothing was changed between “{prev.Label}” and this run. The difference of "
                 + $"{amount} {figures} est la variation naturelle de ta machine, pas un effet.");
 
-        string what = changes.Count == 1 ? $"« {changes[0].Label} »" : $"{changes.Count} tweaks";
+        string what = changes.Count == 1 ? $"“{changes[0].Label}”" : $"{changes.Count} tweaks";
         string verb = changes.Count == 1 ? "changed" : "changed";
 
         if (gap > SameSession)

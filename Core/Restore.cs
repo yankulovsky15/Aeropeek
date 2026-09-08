@@ -10,10 +10,10 @@ public sealed record RestorePoint(uint Sequence, string Description, DateTime Cr
     /// <summary>Constantes de SRSetRestorePoint. Un type inconnu est affiché tel quel.</summary>
     public string TypeLabel => Type switch
     {
-        0 => "Installation d'application",
+        0 => "Application install",
         1 => "Application uninstall",
         7 => "Checkpoint",
-        10 => "Installation de pilote",
+        10 => "Driver install",
         12 => "Settings change",
         13 => "Operation undone",
         _ => $"Type {Type}"

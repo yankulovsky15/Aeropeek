@@ -52,7 +52,7 @@
 
         <DockPanel Grid.Row="0" Margin="0,0,0,14">
           <Button x:Name="BtnBurger" DockPanel.Dock="Left" Style="{StaticResource WinBtn}"
-                  Width="42" Height="42" Click="Burger_Click" ToolTip="Réduire le menu">
+                  Width="42" Height="42" Click="Burger_Click" ToolTip="Collapse the menu">
             <Path Data="M 0,0 H 15 M 0,5.5 H 15 M 0,11 H 15" StrokeThickness="1.5"
                   Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
           </Button>

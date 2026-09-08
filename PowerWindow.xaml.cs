@@ -87,7 +87,7 @@ public partial class PowerWindow : Window
             }).ToList();
 
             PowerSummary.Text = active != null
-                ? $"Actif : {active.Name} · {_plans.Count} plans disponibles"
+                ? $"Active: {active.Name} · {_plans.Count} plans available"
                 : $"{_plans.Count} plans disponibles";
 
             var dupes = lu.Dupes;
@@ -95,7 +95,7 @@ public partial class PowerWindow : Window
             CardDupes.Visibility = extra > 0 ? Visibility.Visible : Visibility.Collapsed;
             if (extra > 0)
                 DupesDetail.Text = $"{extra} copie(s) inutile(s) : "
-                    + string.Join(", ", dupes.Select(g => $"« {g.Nom} » ×{g.Nombre}"))
+                    + string.Join(", ", dupes.Select(g => $"“{g.Nom}” ×{g.Nombre}"))
                     + ". The active plan and one copy of each name are kept; "
                     + "the others are exported before deletion.";
 
@@ -124,14 +124,14 @@ public partial class PowerWindow : Window
             PowerFacts.Text = string.Join("\n", new[]
             {
                 minState != null ? $"· Minimum processor state: {minState}%" : "· Minimum processor state: unreadable",
-                minCores != null ? $"· Cœurs actifs minimum : {minCores} %" : "· Core parking: setting hidden by Windows",
+                minCores != null ? $"· Minimum active cores: {minCores}%" : "· Core parking: setting hidden by Windows",
                 aspm != null ? $"· PCI Express power saving: {(aspm == 0 ? "désactivée" : "active")}" : "· PCI Express : non lisible",
                 usb != null ? $"· USB selective suspend: {(usb == 0 ? "désactivée" : "active")}" : "· USB : non lisible"
             });
         }
         catch (Exception ex)
         {
-            PowerSummary.Text = "Lecture impossible : " + ex.Message;
+            PowerSummary.Text = "Could not read: " + ex.Message;
         }
         finally { PowerVeil.Visibility = Visibility.Collapsed; }
     }
@@ -143,7 +143,7 @@ public partial class PowerWindow : Window
         if (sender is not Button { Tag: PlanVm vm } || vm.Active) return;
         try
         {
-            _journal.Record(PowerOps.SetActivePlan(vm.Model.Id, "Plan d'alimentation : " + vm.Name));
+            _journal.Record(PowerOps.SetActivePlan(vm.Model.Id, "Power plan: " + vm.Name));
             Changed = true;
             _ = Refresh();
         }
@@ -155,9 +155,9 @@ public partial class PowerWindow : Window
         if (sender is not Button { Tag: PlanVm vm }) return;
 
         var answer = MessageBox.Show(
-            $"Supprimer le plan « {vm.Name} » ?\n\n" +
+            $"Delete the plan “{vm.Name}”?\n\n" +
             "It is exported to disk before deletion: “Undo everything” will be able to import it back.",
-            "Supprimer un plan", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            "Delete a plan", MessageBoxButton.YesNo, MessageBoxImage.Question);
         if (answer != MessageBoxResult.Yes) return;
 
         try
@@ -180,9 +180,9 @@ public partial class PowerWindow : Window
         if (toDelete.Count == 0) return;
 
         var answer = MessageBox.Show(
-            $"Supprimer {toDelete.Count} plan(s) en double ?\n\n" +
+            $"Delete {toDelete.Count} duplicate plan(s)?\n\n" +
             "Each is exported before deletion: “Undo everything” will be able to import them back.",
-            "Nettoyer les doublons", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            "Clean up the duplicates", MessageBoxButton.YesNo, MessageBoxImage.Question);
         if (answer != MessageBoxResult.Yes) return;
 
         int done = 0;
@@ -216,7 +216,7 @@ public partial class PowerWindow : Window
         {
             int target = TglUsb.IsChecked == true ? 0 : 1;
             _journal.Record(PowerOps.SetSetting(PowerOps.SubUsb, PowerOps.UsbSuspend, target,
-                target == 0 ? "Alimentation permanente des ports USB" : "USB selective suspend restored"));
+                target == 0 ? "Keep USB ports powered" : "USB selective suspend restored"));
             Changed = true;
         }
         catch (Exception ex) { MessageBox.Show(ex.Message, "Aeropeek", MessageBoxButton.OK, MessageBoxImage.Warning); }

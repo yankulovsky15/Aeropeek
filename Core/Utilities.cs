@@ -46,26 +46,26 @@ public static class Utilities
 
     public static readonly Utility[] All =
     {
-        new("cleanmgr", "Nettoyage de disque Windows",
+        new("cleanmgr", "Windows Disk Cleanup",
             "Opens Microsoft's own tool. It offers locations Aeropeek does not touch, such as restore points.",
             "cleanmgr", "cleanmgr.exe", Array.Empty<string>(),
-            UtilityKind.Launch, "Ouvrir", IcoDisk),
+            UtilityKind.Launch, "Open", IcoDisk),
 
         new("msinfo32", "System information",
             "Windows' detailed report: hardware, drivers, components, software environment.",
             "msinfo32", "msinfo32.exe", Array.Empty<string>(),
-            UtilityKind.Launch, "Ouvrir", IcoScreen),
+            UtilityKind.Launch, "Open", IcoScreen),
 
         new("gpu-restart", "Restart the graphics driver",
             "Resets the driver without rebooting the PC. Useful when the display freezes or flickers.",
-            "Win + Ctrl + Maj + B", "", Array.Empty<string>(),
+            "Win + Ctrl + Shift + B", "", Array.Empty<string>(),
             UtilityKind.DriverRestart, "Restart", IcoGpu,
             "The screen goes black for a second. Close your games first: some do not survive the reset."),
 
-        new("flushdns", "Vider le cache DNS",
+        new("flushdns", "Flush the DNS cache",
             "Clears the remembered name-to-address mappings. Worth doing when a site stays unreachable while it works elsewhere.",
             "ipconfig /flushdns", "ipconfig.exe", new[] { "/flushdns" },
-            UtilityKind.Run, "Vider", IcoGlobe),
+            UtilityKind.Run, "Flush", IcoGlobe),
 
         new("sfc", "System File Checker",
             "Checks the integrity of Windows files and repairs damaged ones.",
@@ -83,7 +83,7 @@ public static class Utilities
         new("chkdsk", "Disk check",
             "Scans the file system for errors. Read-only: nothing is changed.",
             "chkdsk C:", "chkdsk.exe", new[] { @"C:" },
-            UtilityKind.Run, "Analyser", IcoSearch,
+            UtilityKind.Run, "Scan", IcoSearch,
             "Read-only. A real repair would require a restart, which Aeropeek does not trigger."),
 
         // --- outils tiers ---
@@ -94,17 +94,17 @@ public static class Utilities
             "The reference privacy tool for Windows: hundreds of telemetry settings, "
             + "far beyond the four Aeropeek handles. Portable, free, no installation.",
             "oo-software.com", "", Array.Empty<string>(),
-            UtilityKind.External, "Lancer", IcoEye,
+            UtilityKind.External, "Run", IcoEye,
             "About 76 MB on first run. Its changes will not appear in Aeropeek's journal "
             + "and cannot be undone from here: use its own restore function.",
             "https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe",
             "O&O Software"),
 
-        new("winutil", "Windows Utility de Chris Titus",
+        new("winutil", "Chris Titus Windows Utility",
             "The Windows swiss army knife: bulk software installation, system repairs, "
             + "update policy, and a long list of adjustments Aeropeek does not cover.",
             "christitus.com", "", Array.Empty<string>(),
-            UtilityKind.External, "Lancer", IcoBox,
+            UtilityKind.External, "Run", IcoBox,
             "Unsigned PowerShell script: Aeropeek verifies the download address, not the author. "
             + "Its changes escape the journal. Create a restore point first — it offers to.",
             "https://github.com/ChrisTitusTech/winutil/releases/latest/download/winutil.ps1")

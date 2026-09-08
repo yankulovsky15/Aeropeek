@@ -72,7 +72,7 @@ public static class External
 
             if (subject == null || subject.IndexOf(u.Signer, StringComparison.OrdinalIgnoreCase) < 0)
                 throw new InvalidOperationException(
-                    $"The file is signed by “{subject ?? "signataire inconnu"} », "
+                    $"The file is signed by “{subject ?? "unknown signer"} ”, "
                     + $"and not by “{u.Signer}” as expected. Nothing was run.");
 
             log.Report($"Signature verified: {subject}");
@@ -88,7 +88,7 @@ public static class External
         }
 
         log.Report("");
-        log.Report("Lancement de l'outil…");
+        log.Report("Starting the tool…");
 
         Start(path);
 

@@ -87,7 +87,7 @@ public partial class AttributionWindow : Window
             ? "The tweak is currently applied: it will first be removed to establish the baseline, "
               + "then put back. Stay in game from start to finish — about two and a half minutes."
             : "Stay in game from start to finish, on the same map and under similar conditions. "
-              + "Environ deux minutes trente au total.";
+              + "About two and a half minutes in total.";
         FootNote.Text = "Nothing is kept if you cancel.";
     }
 
@@ -210,7 +210,7 @@ public partial class AttributionWindow : Window
         {
             VerdictText.Text = $"Real gain: +{a.DeltaLow1Pct:0.0}% on the 1% lows.";
             VerdictText.Foreground = B("#4FBF8B");
-            VerdictNote.Text = $"FPS moyen : {a.BaselineAvg:0} → {a.TweakedAvg:0} ({a.DeltaAvgPct:+0.0;-0.0} %). "
+            VerdictNote.Text = $"Average FPS: {a.BaselineAvg:0} → {a.TweakedAvg:0} ({a.DeltaAvgPct:+0.0;-0.0}%). "
                              + "Measurement kept: the tweak's card will now show this figure instead of an estimate.";
         }
         else
@@ -228,7 +228,7 @@ public partial class AttributionWindow : Window
 
         _phase = 3;
         BtnPrimary.Content = "Keep the tweak";
-        BtnSecondary.Content = "Le retirer";
+        BtnSecondary.Content = "Remove it";
         BtnSecondary.Visibility = Visibility.Visible;
     }
 

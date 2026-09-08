@@ -20,10 +20,10 @@ public sealed record CleanScan(CleanTarget Target, long Bytes, int Files, bool A
 
     public static string Human(long b) => b switch
     {
-        >= 1073741824 => $"{b / 1073741824.0:0.0} Go",
-        >= 1048576 => $"{b / 1048576.0:0.0} Mo",
-        >= 1024 => $"{b / 1024.0:0} Ko",
-        _ => $"{b} o"
+        >= 1073741824 => $"{b / 1073741824.0:0.0} GB",
+        >= 1048576 => $"{b / 1048576.0:0.0} MB",
+        >= 1024 => $"{b / 1024.0:0} KB",
+        _ => $"{b} B"
     };
 }
 
@@ -52,23 +52,23 @@ public static class Cleanup
 
     public static readonly CleanTarget[] Targets =
     {
-        new("shaders-nvidia", "Game-related", "Cache de shaders NVIDIA",
+        new("shaders-nvidia", "Game-related", "NVIDIA shader cache",
             "Rebuilds itself. It is also the fix when stutter comes from a damaged cache.",
             CleanRisk.Safe, true,
             () => Existing(Env(@"%LOCALAPPDATA%\NVIDIA\DXCache"), Env(@"%LOCALAPPDATA%\NVIDIA\GLCache"),
                            Env(@"%LOCALAPPDATA%\NVIDIA Corporation\NV_Cache"))),
 
-        new("shaders-steam", "Game-related", "Cache de shaders Steam",
+        new("shaders-steam", "Game-related", "Steam shader cache",
             "Also holds shaders for uninstalled games. Re-downloaded when needed.",
             CleanRisk.Safe, true,
             () => Existing(SteamPath() is { } s ? Path.Combine(s, "steamapps", "shadercache") : null)),
 
-        new("temp", "System", "Fichiers temporaires",
+        new("temp", "System", "Temporary files",
             "Windows and per-session Temp folders. Files in use are skipped.",
             CleanRisk.Safe, true,
             () => Existing(Env(@"%TEMP%"), Env(@"%SystemRoot%\Temp"))),
 
-        new("thumbnails", "System", "Vignettes de l'Explorateur",
+        new("thumbnails", "System", "Explorer thumbnails",
             "Cached thumbnails. Rebuilt the next time they're shown, a little more slowly.",
             CleanRisk.Safe, false,
             () => Existing(Env(@"%LOCALAPPDATA%\Microsoft\Windows\Explorer"))),
@@ -80,7 +80,7 @@ public static class Cleanup
                            Env(@"%ProgramData%\Microsoft\Windows\WER\ReportQueue"),
                            Env(@"%ProgramData%\Microsoft\Windows\WER\ReportArchive"))),
 
-        new("windows-update", "System", "Cache de Windows Update",
+        new("windows-update", "System", "Windows Update cache",
             "Installers already applied. Windows re-downloads them if an update is pending.",
             CleanRisk.Check, false,
             () => Existing(Env(@"%SystemRoot%\SoftwareDistribution\Download"))),
@@ -90,7 +90,7 @@ public static class Cleanup
             CleanRisk.Safe, false,
             () => Existing(Env(@"%SystemRoot%\ServiceProfiles\NetworkService\AppData\Local\Microsoft\Windows\DeliveryOptimization\Cache"))),
 
-        new("windows-old", "System", "Ancienne version de Windows",
+        new("windows-old", "System", "Previous Windows version",
             "The Windows.old folder. Deleting it permanently prevents rolling back to the previous version.",
             CleanRisk.NoReturn, false,
             () => Existing(Env(@"%SystemDrive%\Windows.old")))
@@ -196,7 +196,7 @@ public static class Cleanup
     {
         Kind = "files-deleted",
         TweakId = "nettoyage",
-        Description = "Nettoyage : " + target.Title,
+        Description = "Cleanup: " + target.Title,
         SubKey = string.Join(" · ", target.Paths()),
         PreviousValue = CleanScan.Human(outcome.Freed),
         NewValue = $"{outcome.Deleted} file(s) deleted, {outcome.Skipped} skipped"

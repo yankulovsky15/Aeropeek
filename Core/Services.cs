@@ -62,7 +62,7 @@ public static class ServiceOps
         ("DoSvc",     "Windows update sharing",
                       "Your PC uploads updates to other PCs. It is the heaviest thing on your ping.",
                       ServiceImpact.Reel),
-        ("WSearch",   "Recherche Windows",
+        ("WSearch",   "Windows Search",
                       "Indexes your files in the background, in unpredictable bursts.",
                       ServiceImpact.Reel),
         ("wuauserv",  "Windows Update",
@@ -77,7 +77,7 @@ public static class ServiceOps
         ("DiagTrack", "Windows telemetry",
                       "Sends usage data to Microsoft.",
                       ServiceImpact.Reel),
-        ("InstallService", "Installation du Microsoft Store",
+        ("InstallService", "Microsoft Store install",
                       "Can download and install an app mid-match, without asking.",
                       ServiceImpact.Reel),
         ("ClickToRunSvc", "Office update",
@@ -89,7 +89,7 @@ public static class ServiceOps
         ("CDPSvc",    "Connected Devices Platform",
                       "Talks constantly to the other devices on your Microsoft account.",
                       ServiceImpact.Reel),
-        ("WpnService", "Notifications Windows",
+        ("WpnService", "Windows notifications",
                       "Holds a connection open for notifications. You will get none during the match.",
                       ServiceImpact.Reel),
         ("PcaSvc",    "Program Compatibility Assistant",
@@ -98,17 +98,17 @@ public static class ServiceOps
 
         // ---- au repos : listés pour être complet, sans rien promettre ----
 
-        ("WerSvc",    "Rapport d'erreurs Windows",
-                      "Collecte les plantages.",
+        ("WerSvc",    "Windows Error Reporting",
+                      "Collects crash reports.",
                       ServiceImpact.Nul),
-        ("Spooler",   "Spouleur d'impression",
+        ("Spooler",   "Print Spooler",
                       "Only needed if you print.",
                       ServiceImpact.Nul),
-        ("PrintNotify", "Notifications d'impression",
+        ("PrintNotify", "Printer notifications",
                       "Printer notifications. Depends on the spooler.",
                       ServiceImpact.Nul),
         ("MapsBroker", "Downloaded Maps",
-                      "Sert l'application Cartes de Windows.",
+                      "Serves the Windows Maps app.",
                       ServiceImpact.Nul),
         ("lfsvc",     "Geolocation service",
                       "Supplies your location to apps that ask for it.",
@@ -119,10 +119,10 @@ public static class ServiceOps
         ("DusmSvc",   "Data usage",
                       "Counts the bytes used per connection.",
                       ServiceImpact.Nul),
-        ("XblAuthManager", "Xbox Live — authentification",
+        ("XblAuthManager", "Xbox Live — authentication",
                       "Used by Xbox games. No effect on CS2.",
                       ServiceImpact.Nul),
-        ("XblGameSave", "Xbox Live — sauvegardes",
+        ("XblGameSave", "Xbox Live — saves",
                       "Syncs Xbox game saves.",
                       ServiceImpact.Nul),
         ("XboxNetApiSvc", "Xbox Live — networking",
@@ -327,7 +327,7 @@ public sealed class MatchMode
         // 2. applications
         foreach (var (proc, label) in plan.Apps)
         {
-            progress?.Report($"Fermeture de {label}…");
+            progress?.Report($"Closing {label}…");
             try
             {
                 var rec = AppOps.Close(proc, label);
@@ -345,8 +345,8 @@ public sealed class MatchMode
                     c => string.Equals(c.Name, name, StringComparison.OrdinalIgnoreCase));
                 string label = string.IsNullOrEmpty(meta.Label) ? name : meta.Label;
 
-                progress?.Report($"Suspension de {label}…");
-                var rec = ServiceOps.Stop(name, $"Service suspendu : {label}");
+                progress?.Report($"Suspending {label}…");
+                var rec = ServiceOps.Stop(name, $"Service suspended: {label}");
                 if (rec != null) { _journal.Record(rec); services++; }
             }
             catch { }
@@ -359,7 +359,7 @@ public sealed class MatchMode
     public int Stop(IProgress<string>? progress = null)
     {
         if (_session == null) return 0;
-        progress?.Report("Restauration…");
+        progress?.Report("Restoring…");
         int n = _journal.RevertSession(_session, progress);
         _journal.Close();
         _session = null;

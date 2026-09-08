@@ -124,7 +124,7 @@ public sealed class PlanVm
 public sealed class RestoreVm
 {
     public RestorePoint Model { get; init; } = null!;
-    public string Description => Model.Description.Length > 0 ? Model.Description : "(sans nom)";
+    public string Description => Model.Description.Length > 0 ? Model.Description : "(unnamed)";
     public string Type => Model.TypeLabel;
     public string When => Model.Created == DateTime.MinValue
         ? $"number {Model.Sequence}"
@@ -336,10 +336,10 @@ public partial class MainWindow : Window
     void ShowSystemSummary()
     {
         SysCpu.Text = Trim(_sys.CpuName, 38);
-        SysGpu.Text = _sys.GpuNames.Count > 0 ? Trim(_sys.GpuNames[0], 38) : "Carte graphique inconnue";
+        SysGpu.Text = _sys.GpuNames.Count > 0 ? Trim(_sys.GpuNames[0], 38) : "Unknown graphics card";
         SysOs.Text = $"{_sys.OsName} · {_sys.OsDisplayVersion} ({_sys.OsBuild})";
         SysAc.Text = _sys.AntiCheats.Count > 0
-            ? "Anticheat : " + string.Join(", ", _sys.AntiCheats)
+            ? "Anti-cheat: " + string.Join(", ", _sys.AntiCheats)
             : "No anti-cheat detected";
     }
 
@@ -459,7 +459,7 @@ public partial class MainWindow : Window
             case "chercher-pilote":
             {
                 BtnScan.IsEnabled = false;
-                DiagSummary.Text = "Interrogation de NVIDIA…";
+                DiagSummary.Text = "Querying NVIDIA…";
                 string gpu = _sys.GpuNames.FirstOrDefault(g =>
                     g.Contains("NVIDIA", StringComparison.OrdinalIgnoreCase)) ?? _sys.GpuNames.FirstOrDefault() ?? "";
                 await Drivers.CheckLatestAsync(gpu);
@@ -491,7 +491,7 @@ public partial class MainWindow : Window
                         "Power management switched to “Prefer maximum performance”." +
                         Environment.NewLine + Environment.NewLine +
                         "The previous value is in the journal. Run the scan again to see it applied.",
-                        "Pilote NVIDIA");
+                        "NVIDIA driver");
                 }
                 catch (Exception ex)
                 {
@@ -536,7 +536,7 @@ public partial class MainWindow : Window
             var (fg, bg, badge) = app.Verdict switch
             {
                 Verdict.DejaApplique => (AccFg, AccBg, "Applied"),
-                Verdict.NonPertinent => (MuteFg, MuteBg, "Sans objet"),
+                Verdict.NonPertinent => (MuteFg, MuteBg, "Not applicable"),
                 Verdict.Bloque => (BadFg, BadBg, "Blocked"),
                 _ => t.Category switch
                 {
@@ -547,7 +547,7 @@ public partial class MainWindow : Window
             };
 
             var note = new StringBuilder();
-            if (!string.IsNullOrWhiteSpace(t.Gain)) note.Append("Gain attendu : ").Append(t.Gain);
+            if (!string.IsNullOrWhiteSpace(t.Gain)) note.Append("Expected gain: ").Append(t.Gain);
             if (!string.IsNullOrWhiteSpace(t.Consequence))
             {
                 if (note.Length > 0) note.Append("  ·  ");
@@ -567,7 +567,7 @@ public partial class MainWindow : Window
             Brush mFg = MuteFg, mBg = MuteBg;
             if (measured != null)
             {
-                measuredText = measured.Verdict + $" · le {measured.When:dd/MM}";
+                measuredText = measured.Verdict + $" · on {measured.When:MM-dd}";
                 if (!measured.Significant) { mFg = MuteFg; mBg = MuteBg; }
                 else if (measured.DeltaLow1Pct > 0) { mFg = OkFg; mBg = OkBg; }
                 else { mFg = BadFg; mBg = BadBg; }
@@ -590,7 +590,7 @@ public partial class MainWindow : Window
                 StateLabel = app.Verdict switch
                 {
                     Verdict.DejaApplique => "Applied",
-                    Verdict.NonPertinent => "Sans objet",
+                    Verdict.NonPertinent => "Not applicable",
                     Verdict.Bloque => "Blocked",
                     _ => "Not applied"
                 },
@@ -760,7 +760,7 @@ public partial class MainWindow : Window
         AdaptersList.ItemsSource = _adapters.Select(a => new
         {
             a.Name,
-            Kind = a.Wireless ? "Sans fil" : "Filaire",
+            Kind = a.Wireless ? "Wireless" : "Filaire",
             Icon = Geometry.Parse(a.Wireless ? IconWifi : IconEthernet),
             Servers = a.DnsText,
             Source = a.FromDhcp ? "handed out by the router" : "set manually"
@@ -769,7 +769,7 @@ public partial class MainWindow : Window
         DnsSummary.Text = _adapters.Count switch
         {
             0 => "No active network connection.",
-            1 => $"Connexion « {_adapters[0].Name} » · serveurs actuels : {_adapters[0].DnsText}",
+            1 => $"Connection “{_adapters[0].Name}” · current servers: {_adapters[0].DnsText}",
             _ => $"{_adapters.Count} active connections · changes apply to “{_adapters[0].Name}”"
         };
 
@@ -997,7 +997,7 @@ public partial class MainWindow : Window
             {
                 var (fg, bg, label) = s.Target.Risk switch
                 {
-                    CleanRisk.NoReturn => (BadFg, BadBg, "Sans retour"),
+                    CleanRisk.NoReturn => (BadFg, BadBg, "No way back"),
                     CleanRisk.Check => (WarnFg, WarnBg, "Worth checking"),
                     _ => (MuteFg, MuteBg, "")
                 };
@@ -1072,16 +1072,16 @@ public partial class MainWindow : Window
             $"Delete {CleanScan.Human(total)} spread over {chosen.Count} location(s)?\n\n"
             + (risky ? "Your selection contains items marked “Worth checking” or “No way back”.\n\n" : "")
             + "This deletion is permanent: it cannot be undone.",
-            "Confirmer le nettoyage", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            "Confirm the cleanup", MessageBoxButton.YesNo, MessageBoxImage.Warning);
         if (answer != MessageBoxResult.Yes) return;
 
         BtnCleanRun.IsEnabled = false;
         BtnCleanScan.IsEnabled = false;
-        CleanSummary.Text = "Suppression en cours…";
+        CleanSummary.Text = "Deleting…";
 
         // Supprimer plusieurs gigaoctets prend du temps : le même voile que
         // l'analyse, avec l'emplacement en cours de traitement.
-        CleanScanVeil.Content = "Suppression en cours…";
+        CleanScanVeil.Content = "Deleting…";
         Veil(CleanScanVeil, true);
 
         int deleted = 0, skipped = 0; long freed = 0;
@@ -1151,7 +1151,7 @@ public partial class MainWindow : Window
                 ? $"Using processor time right now. {a.Instances} processes."
                 : $"{a.Instances} processes, idle. Closing it frees memory, not processor time.",
             Memory = a.MemoryText,
-            Cpu = a.Active ? $"{a.CpuPercent:0.0} % processeur" : "au repos",
+            Cpu = a.Active ? $"{a.CpuPercent:0.0} % processeur" : "idle",
             ActivityFg = a.Active ? WarnFg : MuteFg,
             Selected = _selectedApps.Contains(a.Process)
         }).ToList();
@@ -1216,7 +1216,7 @@ public partial class MainWindow : Window
                     : $"{s.CpuPercent:0.0} % processeur";
                 fg = WarnFg;
             }
-            else { activity = "au repos"; fg = MuteFg; }
+            else { activity = "idle"; fg = MuteFg; }
 
             bool reel = s.Impact == ServiceImpact.Reel;
 
@@ -1230,7 +1230,7 @@ public partial class MainWindow : Window
                 Model = s, Name = s.Name, Label = s.Label,
                 Note = note,
                 Activity = activity, ActivityFg = fg,
-                Impact = reel ? "Can interfere" : "Aucun gain",
+                Impact = reel ? "Can interfere" : "No gain",
                 ImpactFg = reel ? WarnFg : MuteFg,
                 // Un avertissement se voit, un « rien à gagner » ne doit pas
                 // attirer l'oeil plus qu'un « Correct » juste au-dessus.
@@ -1242,7 +1242,7 @@ public partial class MainWindow : Window
         // Seuls les services en cours d'exécution peuvent être suspendus.
         var suspendables = _services.Where(s => s.Running).ToList();
         bool allOn = suspendables.Count > 0 && suspendables.All(s => _selectedServices.Contains(s.Name));
-        BtnSelectAll.Content = allOn ? "Untick all" : "Tout cocher";
+        BtnSelectAll.Content = allOn ? "Untick all" : "Tick all";
         BtnSelectAll.IsEnabled = suspendables.Count > 0;
 
         ServicesHeader.Text = suspendables.Count == 0
@@ -1281,7 +1281,7 @@ public partial class MainWindow : Window
     void RefreshAppsHeader()
     {
         bool allOn = _apps.Count > 0 && _apps.All(a => _selectedApps.Contains(a.Process));
-        BtnSelectApps.Content = allOn ? "Untick all" : "Tout cocher";
+        BtnSelectApps.Content = allOn ? "Untick all" : "Tick all";
         BtnSelectApps.IsEnabled = _apps.Count > 0;
 
         AppsHeader.Text = _apps.Count == 0
@@ -1331,7 +1331,7 @@ public partial class MainWindow : Window
         }
         else
         {
-            MatchState.Text = "En veille";
+            MatchState.Text = "Idle";
 
             var todo = new List<string>();
             if (apps > 0) todo.Add($"{apps} application(s) closed");
@@ -1362,7 +1362,7 @@ public partial class MainWindow : Window
         // met à jour le libellé du bouton « Tout sélectionner » sans reconstruire la liste
         var suspendables = _services.Where(s => s.Running).ToList();
         bool allOn = suspendables.Count > 0 && suspendables.All(s => _selectedServices.Contains(s.Name));
-        BtnSelectAll.Content = allOn ? "Untick all" : "Tout cocher";
+        BtnSelectAll.Content = allOn ? "Untick all" : "Tick all";
         ServicesHeader.Text = suspendables.Count == 0
             ? "SERVICES WINDOWS"
             : $"WINDOWS SERVICES — {_selectedServices.Count} OF {suspendables.Count} TICKED";
@@ -1386,7 +1386,7 @@ public partial class MainWindow : Window
         _matchBusy = true;
 
         bool stopping = _match.Active;
-        MatchVeil.Content = stopping ? "Restauration en cours…" : "Application en cours…";
+        MatchVeil.Content = stopping ? "Restoring…" : "Applying…";
         Veil(MatchVeil, true);
         SwMatch.IsEnabled = false;
 
@@ -1615,7 +1615,7 @@ public partial class MainWindow : Window
         Plot(newest, "#0EA595", 2);
 
         ChartFootnote.Text = older == null
-            ? $"{newest.Series.Count} points sur {newest.DurationS:0} s. Chaque point retient l'image la plus lente de son intervalle."
+            ? $"{newest.Series.Count} points over {newest.DurationS:0} s. Each point keeps the slowest frame of its interval."
             : $"Two runs overlaid. Each point keeps the slowest frame of its interval, "
               + "so that spikes stay visible despite the resampling.";
     }
@@ -1743,7 +1743,7 @@ public partial class MainWindow : Window
         if ((sender as Button)?.Tag is not JournalVm vm) return;
 
         var answer = MessageBox.Show(
-            $"Annuler « {vm.Title} » ?" + Environment.NewLine + Environment.NewLine
+            $"Undo “{vm.Title}”?" + Environment.NewLine + Environment.NewLine
             + "The exact state that came before will be restored"
             + (vm.Ids.Count > 1 ? $", for all {vm.Ids.Count} writes of this tweak." : ".")
             + " Nothing else is touched.",
@@ -1788,34 +1788,34 @@ public partial class MainWindow : Window
         try
         {
             var sb = new StringBuilder();
-            sb.AppendLine("=== Aeropeek — export de diagnostic ===");
-            sb.AppendLine($"Date : {DateTimeOffset.Now:yyyy-MM-dd HH:mm}");
+            sb.AppendLine("=== Aeropeek — diagnostics export ===");
+            sb.AppendLine($"Date: {DateTimeOffset.Now:yyyy-MM-dd HH:mm}");
             sb.AppendLine();
             sb.AppendLine("--- Machine ---");
             sb.AppendLine($"OS       : {_sys.OsName} {_sys.OsEdition} {_sys.OsDisplayVersion} (build {_sys.OsBuild})");
-            sb.AppendLine($"Châssis  : {(_sys.IsLaptop ? "portable" : "poste fixe")}");
+            sb.AppendLine($"Chassis : {(_sys.IsLaptop ? "portable" : "poste fixe")}");
             sb.AppendLine($"CPU      : {_sys.CpuName}");
-            sb.AppendLine($"Cœurs    : {_sys.Cpu.PhysicalCores} physiques / {_sys.Cpu.LogicalCores} logiques" +
+            sb.AppendLine($"Cores   : {_sys.Cpu.PhysicalCores} physical / {_sys.Cpu.LogicalCores} logical" +
                           (_sys.Cpu.IsHybrid ? $" ({_sys.Cpu.PerformanceCores} P + {_sys.Cpu.EfficiencyCores} E)" : ""));
             foreach (var g in _sys.GpuNames) sb.AppendLine($"GPU      : {g}");
             foreach (var m in _sys.Memory)
                 sb.AppendLine($"Memory  : {m.Kind} {m.CapacityBytes / 1024 / 1024 / 1024} GB — configured {m.ConfiguredMhz} MT/s, rated {m.RatedMhz} MT/s");
             foreach (var d in _sys.Displays)
                 sb.AppendLine($"Display : {d.MonitorName} {d.Width}x{d.Height} @ {d.RefreshHz} Hz via {d.AdapterName}");
-            sb.AppendLine($"Anticheat: {(_sys.AntiCheats.Count > 0 ? string.Join(", ", _sys.AntiCheats) : "aucun")}");
+            sb.AppendLine($"Anticheat: {(_sys.AntiCheats.Count > 0 ? string.Join(", ", _sys.AntiCheats) : "none")}");
             sb.AppendLine();
 
             sb.AppendLine("--- Diagnostic ---");
             foreach (var c in _lastChecks)
             {
-                sb.AppendLine($"[{c.Severity}] {c.Title} : {c.Value}");
+                sb.AppendLine($"[{c.Severity}] {c.Title}: {c.Value}");
                 sb.AppendLine($"    {c.Detail}");
                 if (!string.IsNullOrWhiteSpace(c.Advice)) sb.AppendLine($"    → {c.Advice}");
             }
             sb.AppendLine();
 
             sb.AppendLine("--- Changes applied ---");
-            if (_journal.TotalRecords == 0) sb.AppendLine("(aucune)");
+            if (_journal.TotalRecords == 0) sb.AppendLine("(none)");
             foreach (var s in _journal.Sessions)
                 foreach (var r in s.Records)
                     sb.AppendLine($"{r.When:yyyy-MM-dd HH:mm}  {r.Description}  |  {r.Hive}\\{r.SubKey}\\{r.ValueName}  |  " +
@@ -1830,7 +1830,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show("Export impossible : " + ex.Message, "Aeropeek",
+            MessageBox.Show("Export failed: " + ex.Message, "Aeropeek",
                 MessageBoxButton.OK, MessageBoxImage.Warning);
         }
     }
@@ -1901,7 +1901,7 @@ public partial class MainWindow : Window
 
         RestoreState.Text = !state.Available ? "Indisponible"
                           : !state.Enabled ? "Protection disabled"
-                          : _points.Count == 0 ? "Protection active, aucun point"
+                          : _points.Count == 0 ? "Protection on, no points"
                           : _points.Count == 1 ? "Protection active, 1 point"
                           : $"Protection active, {_points.Count} points";
 
@@ -1918,15 +1918,15 @@ public partial class MainWindow : Window
             RestoreFix.Visibility = Visibility.Visible;
             RestoreFixText.Text = "System protection is switched off: no point can be created "
                                 + "or restored while it stays that way.";
-            BtnRestoreFix.Content = "Activer la protection";
+            BtnRestoreFix.Content = "Enable protection";
             BtnRestoreFix.Tag = "activer";
         }
         else if (state.Enabled && state.FrequencyMin > 0)
         {
             RestoreFix.Visibility = Visibility.Visible;
-            RestoreFixText.Text = $"Windows refuse un second point avant {state.FrequencyMin / 60} heures. "
+            RestoreFixText.Text = $"Windows refuses a second point within {state.FrequencyMin / 60} hours. "
                                 + "Creating a point just before a tweak will fail silently.";
-            BtnRestoreFix.Content = "Lever la limite";
+            BtnRestoreFix.Content = "Lift the limit";
             BtnRestoreFix.Tag = "frequence";
         }
         else RestoreFix.Visibility = Visibility.Collapsed;
@@ -1997,7 +1997,7 @@ public partial class MainWindow : Window
         var answer = MessageBox.Show(
             $"Delete the point “{vm.Description}” from {vm.When}?" + Environment.NewLine + Environment.NewLine
             + "This deletion is permanent: you will not be able to return to that state.",
-            "Supprimer un point", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            "Delete a point", MessageBoxButton.YesNo, MessageBoxImage.Warning);
         if (answer != MessageBoxResult.Yes) return;
 
         if (!Restore.Delete(vm.Model.Sequence))
@@ -2015,7 +2015,7 @@ public partial class MainWindow : Window
             $"Delete all {_points.Count} restore points?" + Environment.NewLine + Environment.NewLine
             + "The machine will have no way back at all, including the points Windows created "
             + "before updates. This is permanent.",
-            "Tout supprimer", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            "Delete all", MessageBoxButton.YesNo, MessageBoxImage.Warning);
         if (answer != MessageBoxResult.Yes) return;
 
         Veil(RestoreVeil, true);

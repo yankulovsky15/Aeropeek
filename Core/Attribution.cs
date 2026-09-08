@@ -33,7 +33,7 @@ public sealed class Attribution
     public bool Significant => Math.Abs(DeltaLow1Pct) >= 2.0;
 
     public string Verdict => !Significant
-        ? "sans effet mesurable ici"
+        ? "no measurable effect here"
         : DeltaLow1Pct > 0
             ? $"measured here: +{DeltaLow1Pct:0.0}% on the 1% lows"
             : $"measured here: {DeltaLow1Pct:0.0}% on the 1% lows";

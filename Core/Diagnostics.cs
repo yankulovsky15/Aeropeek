@@ -176,12 +176,12 @@ public static class Diagnostics
         }
         catch
         {
-            return new CheckResult("vbs", "Hyperviseur (VBS)", Severity.Inconnu,
+            return new CheckResult("vbs", "Hypervisor (VBS)", Severity.Inconnu,
                 "Undetermined", "The state of virtualization-based security could not be read.");
         }
 
         if (status != 2)
-            return new CheckResult("vbs", "Hyperviseur (VBS)", Severity.Ok,
+            return new CheckResult("vbs", "Hypervisor (VBS)", Severity.Ok,
                 "Inactif", "Windows is not running under a hypervisor: no virtualization overhead.");
 
         // Le tableau contient 0 quand aucun service n'est actif : ce n'est pas un identifiant.
@@ -208,22 +208,22 @@ public static class Diagnostics
 
         // Cas coûteux : des services de sécurité tournent réellement sous hyperviseur.
         if (running.Length > 0)
-            return new CheckResult("vbs", "Hyperviseur (VBS)", Severity.Warn,
-                "Actif avec services",
+            return new CheckResult("vbs", "Hypervisor (VBS)", Severity.Warn,
+                "Active with services",
                 "Security services are running under the hypervisor" +
                 (users.Count > 0 ? " : " + string.Join(", ", users) + "." : "."),
                 "This is where the real cost sits. See the “Memory integrity” card, which is its main source.");
 
         // Cas résiduel : l'hyperviseur est chargé mais aucun service de sécurité ne tourne dedans.
         if (users.Count > 0)
-            return new CheckResult("vbs", "Hyperviseur (VBS)", Severity.Info,
+            return new CheckResult("vbs", "Hypervisor (VBS)", Severity.Info,
                 "Loaded, no active service",
                 "No security service is running under the hypervisor — most of the cost is already gone. " +
                 "It stays loaded because something requires it: " + string.Join(", ", users) + ".",
                 "The residual cost is small, a few percent at most. Removing it would mean giving up those features: " +
                 "rarely a good trade, particularly for Windows Hello.");
 
-        return new CheckResult("vbs", "Hyperviseur (VBS)", Severity.Warn,
+        return new CheckResult("vbs", "Hypervisor (VBS)", Severity.Warn,
             "Loaded with no identified user",
             "The hypervisor is loaded although no security service runs inside it and no known feature requires it.",
             "Tweaks tab → “Virtualization-based security”. Modest gain. Put it back before installing WSL, Docker or Windows Sandbox.");
@@ -421,7 +421,7 @@ public static class Diagnostics
     {
         var d = Drivers.Display();
         if (d == null || d.Date == null)
-            return new CheckResult("gpu-driver", "Pilote graphique", Severity.Inconnu,
+            return new CheckResult("gpu-driver", "Graphics driver", Severity.Inconnu,
                 "Undetermined", "The driver date could not be read.");
 
         int months = d.AgeMonths ?? 0;
@@ -436,15 +436,15 @@ public static class Diagnostics
             int cmp = Drivers.Compare(version, latest.Version);
 
             if (cmp < 0)
-                return new CheckResult("gpu-driver", "Pilote graphique", Severity.Probleme,
+                return new CheckResult("gpu-driver", "Graphics driver", Severity.Probleme,
                     $"{version} → {latest.Version}",
                     $"{installed} NVIDIA publie la {latest.Version}"
-                    + (latest.Date.Length > 0 ? $", parue le {latest.Date}." : "."),
+                    + (latest.Date.Length > 0 ? $", released {latest.Date}." : "."),
                     "An out-of-date driver sometimes costs more than every tweak on this list put together, "
                     + "especially after a game's major update.",
                     "telecharger-pilote", "Download the update");
 
-            return new CheckResult("gpu-driver", "Pilote graphique", Severity.Ok, value,
+            return new CheckResult("gpu-driver", "Graphics driver", Severity.Ok, value,
                 $"{installed} This is the latest version NVIDIA has published.",
                 "", "chercher-pilote", "Check again");
         }
@@ -457,13 +457,13 @@ public static class Diagnostics
         if (!nvidia)
         {
             detail = installed + " Automatic lookup is only available for NVIDIA cards.";
-            return new CheckResult("gpu-driver", "Pilote graphique", severity, value, detail);
+            return new CheckResult("gpu-driver", "Graphics driver", severity, value, detail);
         }
 
         if (Drivers.LastLookupError is { } err)
             detail = installed + " " + err;
 
-        return new CheckResult("gpu-driver", "Pilote graphique", severity, value, detail,
+        return new CheckResult("gpu-driver", "Graphics driver", severity, value, detail,
             "", "chercher-pilote", "Check for an update");
     }
 
@@ -473,7 +473,7 @@ public static class Diagnostics
     {
         var path = Storage.GamePath();
         if (path == null)
-            return new CheckResult("game-drive", "Disque du jeu", Severity.Inconnu,
+            return new CheckResult("game-drive", "Game disk", Severity.Inconnu,
                 "CS2 introuvable", "The installation could not be located through Steam.");
 
         char letter = char.ToUpperInvariant(path[0]);
@@ -481,14 +481,14 @@ public static class Diagnostics
         var all = Storage.Disks();
 
         if (disk == null)
-            return new CheckResult("game-drive", "Disque du jeu", Severity.Inconnu,
+            return new CheckResult("game-drive", "Game disk", Severity.Inconnu,
                 $"Lecteur {letter}:", $"Installed in {path}, but the physical disk could not be identified.");
 
         string value = $"{letter}: · {disk.Label}";
         var fastest = all.OrderByDescending(d => d.Rank).FirstOrDefault();
 
         if (!disk.IsSsd)
-            return new CheckResult("game-drive", "Disque du jeu", Severity.Probleme, value,
+            return new CheckResult("game-drive", "Game disk", Severity.Probleme, value,
                 $"CS2 is installed on a {disk.MediaType} ({disk.Name}). Load times and shader "
                 + "compilation suffer for it, and stutters can appear the first time you cross an area.",
                 fastest is { IsSsd: true }
@@ -497,11 +497,11 @@ public static class Diagnostics
                     : "An SSD is the only real remedy here.");
 
         if (fastest != null && fastest.Rank > disk.Rank)
-            return new CheckResult("game-drive", "Disque du jeu", Severity.Warn, value,
+            return new CheckResult("game-drive", "Game disk", Severity.Warn, value,
                 $"CS2 sits on a {disk.Label} while this machine has a {fastest.Label} ({fastest.Name}).",
                 "The difference shows up mostly in load times, little in game. Worth moving if you have the room.");
 
-        return new CheckResult("game-drive", "Disque du jeu", Severity.Ok, value,
+        return new CheckResult("game-drive", "Game disk", Severity.Ok, value,
             $"CS2 is installed on the fastest disk in the machine ({disk.Name}).");
     }
 
@@ -512,14 +512,14 @@ public static class Diagnostics
         bool nvidia = sys.GpuNames.Any(g => g.Contains("NVIDIA", StringComparison.OrdinalIgnoreCase));
         if (!nvidia)
             return new CheckResult("nvidia", "Graphics driver settings", Severity.Info,
-                "Sans objet", "This check only concerns NVIDIA cards.");
+                "Not applicable", "This check only concerns NVIDIA cards.");
 
         var settings = Nvidia.ReadSettings();
         if (settings.Count == 0)
             return new CheckResult("nvidia", "Graphics driver settings", Severity.Inconnu,
                 "Illisibles", "The driver's global profile could not be read.");
 
-        var lines = settings.Select(s => $"· {s.Name} : {s.Reading}");
+        var lines = settings.Select(s => $"· {s.Name}: {s.Reading}");
         var power = settings.FirstOrDefault(s => s.Id == Nvidia.PowerModeId);
 
         string detail = string.Join(Environment.NewLine, lines);
@@ -537,7 +537,7 @@ public static class Diagnostics
 
         return new CheckResult("nvidia", "Graphics driver settings", Severity.Ok,
             $"{settings.Count} settings read", detail, advice,
-            "ouvrir-nvidia", "Ouvrir le panneau NVIDIA");
+            "ouvrir-nvidia", "Open the NVIDIA panel");
     }
 
     // ---------- 5. Topologie processeur ----------
@@ -546,11 +546,11 @@ public static class Diagnostics
     {
         var t = sys.Cpu;
         if (t.PhysicalCores == 0)
-            return new CheckResult("cpu", "Cœurs du processeur", Severity.Inconnu, "Undetermined", "Topologie illisible.");
+            return new CheckResult("cpu", "Processor cores", Severity.Inconnu, "Undetermined", "Topologie illisible.");
 
         if (!t.IsHybrid)
-            return new CheckResult("cpu", "Cœurs du processeur", Severity.Ok,
-                $"{t.PhysicalCores} cœurs / {t.LogicalCores} threads",
+            return new CheckResult("cpu", "Processor cores", Severity.Ok,
+                $"{t.PhysicalCores} cores / {t.LogicalCores} threads",
                 "Uniform architecture: no affinity tweak is needed.");
 
         string range = MaskToRange(t.PerformanceMask);
@@ -558,19 +558,19 @@ public static class Diagnostics
 
         // CS2 n'est pas lancé : c'est un fait sur ta machine, pas un défaut à corriger.
         if (live == null)
-            return new CheckResult("cpu", "Cœurs du processeur", Severity.Info,
+            return new CheckResult("cpu", "Processor cores", Severity.Info,
                 $"{t.PerformanceCores} P-cores + {t.EfficiencyCores} E-cores",
                 $"Hybrid processor. When CS2 threads land on the efficiency cores, the 1% lows drop.",
                 $"Start CS2 then run the scan again: Aeropeek will be able to pin the game to processors {range} in one click.");
 
         if (live == t.PerformanceMask)
-            return new CheckResult("cpu", "Cœurs du processeur", Severity.Ok,
+            return new CheckResult("cpu", "Processor cores", Severity.Ok,
                 "Pinned to the P-cores",
                 $"CS2 runs on processors {range} only: no thread lands on the efficiency cores.",
                 "Affinity is lost when the game closes — you will have to apply it again next session.",
                 "affinite-tous", "Give back every core");
 
-        return new CheckResult("cpu", "Cœurs du processeur", Severity.Info,
+        return new CheckResult("cpu", "Processor cores", Severity.Info,
             $"{t.PerformanceCores} P-cores + {t.EfficiencyCores} E-cores",
             "CS2 runs on every core, efficiency ones included. That is the normal behaviour: Windows spreads the threads itself.",
             $"Pinning to processors {range} helps on some configurations and changes nothing on many others — "
@@ -583,7 +583,7 @@ public static class Diagnostics
     {
         var bits = new List<int>();
         for (int i = 0; i < 64; i++) if ((mask & (1UL << i)) != 0) bits.Add(i);
-        if (bits.Count == 0) return "de performance";
+        if (bits.Count == 0) return "performance";
         return bits.Count == bits[^1] - bits[0] + 1 ? $"{bits[0]} to {bits[^1]}" : string.Join(", ", bits);
     }
 
@@ -668,32 +668,32 @@ public static class Diagnostics
         int? usbSuspend = PowerSetting(SUB_USB, USB_SUSPEND);
 
         if (minState == null && minCores == null && usbSuspend == null)
-            return new CheckResult("power", "Plan d'alimentation", Severity.Inconnu, name,
+            return new CheckResult("power", "Power plan", Severity.Inconnu, name,
                 "The plan's settings could not be read.");
 
         var facts = new List<string>();
         if (minState != null) facts.Add($"minimum processor state {minState}%");
-        if (minCores != null) facts.Add($"cœurs actifs minimum {minCores} %");
+        if (minCores != null) facts.Add($"minimum active cores {minCores}%");
         if (usbSuspend != null) facts.Add("suspension USB " + (usbSuspend == 1 ? "enabled" : "disabled"));
-        string detail = "Sur secteur : " + string.Join(", ", facts) + ".";
+        string detail = "On mains power: " + string.Join(", ", facts) + ".";
 
         var issues = new List<string>();
         if (minCores is > 0 and < 100) issues.Add("core parking is active");
         if (usbSuspend == 1) issues.Add("USB selective suspend is enabled");
 
         if (issues.Count == 0)
-            return new CheckResult("power", "Plan d'alimentation", Severity.Ok, name,
+            return new CheckResult("power", "Power plan", Severity.Ok, name,
                 detail + " No core is parked and the USB ports stay powered.",
                 "", "power-panel", "Manage plans");
 
         if (sys.IsLaptop)
-            return new CheckResult("power", "Plan d'alimentation", Severity.Info, name,
+            return new CheckResult("power", "Power plan", Severity.Info, name,
                 detail + " On a laptop, those savings prevent overheating and throttling.",
                 "Only change it while on mains power, and watch the temperatures.",
                 "power-panel", "Manage plans");
 
-        return new CheckResult("power", "Plan d'alimentation", Severity.Warn, name,
-            detail + " On a desktop, " + string.Join(" et ", issues) + " with no real benefit.",
+        return new CheckResult("power", "Power plan", Severity.Warn, name,
+            detail + " On a desktop, " + string.Join(" and ", issues) + " with no real benefit.",
             "Modest effect — a few frames on short transitions, and some mouse latency if USB suspend "
             + "affects your receiver.",
             "power-panel", "Manage plans");
@@ -791,12 +791,12 @@ public static class Diagnostics
 
         string why = access == SystemProfile.ModuleAccess.Denied
             ? "Cannot verify which ones are actually hooked into CS2: reading its modules is blocked by "
-              + (sys.AntiCheats.Count > 0 ? string.Join(" et ", sys.AntiCheats) : "ton anticheat")
+              + (sys.AntiCheats.Count > 0 ? string.Join(" and ", sys.AntiCheats) : "your anti-cheat")
             : "With CS2 not running, there is no way to tell which ones will hook into it";
 
         return new CheckResult("overlays", "Surcouches", apps.Count >= 3 ? Severity.Warn : Severity.Info,
             string.Join(", ", apps),
-            $"{apps.Count} application(s) capables de s'accrocher au jeu tournent en ce moment. {why}.",
+            $"{apps.Count} application(s) able to hook into the game are running right now. {why}.",
             "Each costs frames while its overlay is active. Switch off the ones you don't need in game: "
             + "Discord → Settings → Game Overlay.");
     }

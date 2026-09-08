@@ -100,7 +100,7 @@ public static class RegistryOps
     }
 
     static RegistryKey Root(string hive) =>
-        Hives.TryGetValue(hive, out var k) ? k : throw new InvalidOperationException($"Ruche inconnue : {hive}");
+        Hives.TryGetValue(hive, out var k) ? k : throw new InvalidOperationException($"Unknown hive: {hive}");
 
     public static object? ReadValue(string hive, string subKey, string valueName)
     {

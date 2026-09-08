@@ -72,7 +72,7 @@ public partial class ConsoleWindow : Window
     {
         _running = true;
         Spin(true);
-        StatusText.Text = "En cours…";
+        StatusText.Text = "Running…";
         BtnClose.Content = "Interrompre";
 
         if (!string.IsNullOrEmpty(_utility.Caution)) Append("· " + _utility.Caution + Environment.NewLine);
