@@ -1,4 +1,4 @@
-# Aeropeek
+﻿# Aeropeek
 
 A Windows tuning tool for CS2 that **measures instead of promising**.
 
@@ -78,32 +78,30 @@ needed to add one:
 ```json
 {
   "id": "my-tweak",
-  "nom": "Title shown in the UI",
-  "explication": "What it does, in one sentence.",
+  "name": "Title shown in the UI",
+  "explanation": "What it does, in one sentence.",
   "consequence": "What the user gives up in exchange.",
   "gain": "up to +8% on 1% lows",
-  "categorie": "performance",
-  "redemarrage": false,
-  "applicable": { "buildMin": 19041, "gpu": "nvidia", "portable": "non" },
+  "category": "performance",
+  "needsRestart": false,
+  "appliesWhen": { "buildMin": 19041, "gpu": "nvidia", "laptop": "no" },
   "operations": [
     {
       "hive": "HKCU",
-      "cle": "Software\\Example",
-      "valeur": "ValueName",
+      "key": "Software\\Example",
+      "valueName": "ValueName",
       "type": "dword",
-      "vers": 0
+      "to": 0
     }
   ]
 }
 ```
 
-> The JSON field names are French for now — the codebase is being translated to
-> English, and renaming them would break every existing catalogue in the wild.
-> They will be migrated with a compatibility shim in a later version.
+`category` is one of `performance`, `network` or `privacy`.
 
-`applicable` is optional. Each of its fields hides the tweak — showing the reason
+`appliesWhen` is optional. Each of its fields hides the tweak — showing the reason
 why — on machines it does not concern: `buildMin` and `buildMax` for the Windows
-version, `gpu` for the graphics card vendor, `portable: "non"` to exclude
+version, `gpu` for the graphics card vendor, `laptop: "no"` to exclude
 laptops.
 
 Some registry paths are refused no matter what the catalogue says: Windows
