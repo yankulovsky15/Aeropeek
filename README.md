@@ -1,93 +1,95 @@
 # Aeropeek
 
-Un outil de réglage pour Windows, orienté CS2, qui **mesure au lieu de promettre**.
+A Windows tuning tool for CS2 that **measures instead of promising**.
 
-La plupart des « optimisations » qui circulent ne sont jamais vérifiées. Aeropeek
-part du principe inverse : il te dit quand un réglage ne sert à rien, il note
-tout ce qu'il modifie avec l'état exact d'avant, et il sait tout remettre en
-place.
+Most "optimization guides" are never verified. Aeropeek starts from the opposite
+premise: it tells you when a tweak does nothing, it records everything it
+changes along with the exact prior state, and it can put all of it back.
 
-## Ce qu'il fait
+## What it does
 
-- **Diagnostic** — une douzaine de vérifications sur la machine : plan
-  d'alimentation, sortie vidéo, âge du pilote graphique, topologie du
-  processeur, surcouches, hyperviseur. Il ne modifie rien.
-- **Réglages** — un catalogue de modifications du registre, chacune avec son
-  gain attendu, sa contrepartie, et son état réel sur cette machine.
-- **Mode Match** — suspend les services et ferme les applications qui peuvent
-  interrompre une partie, puis remet tout en état à la fin.
-- **Nettoyage** — caches de shaders, fichiers temporaires, rapports d'erreur.
-- **Benchmark** — capture les temps d'image via PresentMon et compare deux
-  mesures pour dire si un réglage a servi.
-- **DNS**, **Utilitaires**, **Restauration**.
+- **Diagnostics** — a dozen checks on your machine: power plan, video output,
+  graphics driver age, CPU topology, overlays, hypervisor. Changes nothing.
+- **Tweaks** — a catalogue of registry changes, each with its expected gain, what
+  it costs you, and whether it is already applied on this machine.
+- **Match Mode** — suspends the services and closes the applications that can
+  interrupt a game, then puts everything back when you're done.
+- **Cleanup** — shader caches, temporary files, crash reports.
+- **Benchmark** — captures frame times through PresentMon and compares two runs
+  to tell you whether a tweak actually did anything.
+- **DNS**, **Utilities**, **System Restore**.
 
-## Ce qu'il ne fait pas
+## What it will not do
 
-Ce sont des interdits inscrits dans le code, pas de simples recommandations :
+These are hard limits written into the code, not just guidelines:
 
-- il ne désactive pas l'antivirus ni les services de sécurité ;
-- il ne touche pas à Windows Update ;
-- il ne supprime aucun fichier système ;
-- il ne touche pas aux services d'anticheat (FACEIT, Vanguard, EAC, BattlEye) ;
-- il n'envoie rien sur Internet et ne collecte aucune donnée. Les seules
-  connexions sortantes sont facultatives : vérifier la dernière version du
-  pilote NVIDIA, et télécharger un utilitaire tiers si tu le demandes.
+- it does not disable your antivirus or any security service;
+- it does not touch Windows Update;
+- it deletes no system file;
+- it does not touch anti-cheat services (FACEIT, Vanguard, EAC, BattlEye);
+- it sends nothing over the internet and collects no data. The only outbound
+  connections are optional and on request: checking the latest NVIDIA driver
+  version, and downloading a third-party utility if you ask for one.
 
-Tout ce qu'il écrit reste dans `%LOCALAPPDATA%\Aeropeek`.
+Everything it writes stays in `%LOCALAPPDATA%\Aeropeek`.
 
-## Annuler
+## Undoing
 
-Chaque modification est journalisée **avant** d'être appliquée, avec la valeur
-précédente et le fait qu'elle existait ou non. L'onglet Restauration remet tout
-en état, réglage par réglage ou d'un bloc. Si l'application se ferme sans
-terminer proprement une session, elle le détecte au lancement suivant et propose
-d'annuler ce qui restait appliqué.
+Every change is journalled **before** it is applied, together with the previous
+value and whether that value existed at all. The Restore tab puts things back,
+one tweak at a time or all at once. If the app closes without finishing a
+session cleanly, it notices on the next launch and offers to roll back whatever
+was left applied.
 
-Une modification faite **avant** qu'Aeropeek ne la voie n'est pas annulable : le
-programme ne restaure que ce qu'il a lui-même écrit, et il le dit clairement
-plutôt que d'inventer une valeur par défaut.
+A setting changed **before** Aeropeek ever saw it cannot be undone: the program
+only restores what it wrote itself, and it says so plainly rather than inventing
+a default value.
 
-## Prérequis
+## Requirements
 
-- Windows 10 build 17763 ou plus récent — Windows 11 recommandé
-- [.NET 10 SDK](https://dotnet.microsoft.com/download) pour compiler
-- Droits administrateur à l'exécution : le programme lit et modifie des réglages
-  système, c'est inscrit dans son manifeste.
+- Windows 10 build 17763 or newer — Windows 11 recommended
+- [.NET 10 SDK](https://dotnet.microsoft.com/download) to build from source
+- Administrator rights at runtime: the program reads and writes system settings,
+  and its manifest requires elevation.
 
-## Compiler et lancer
+Prefer not to build it yourself? Grab the ready-to-run archive from
+[Releases](https://github.com/yankulovsky15/Aeropeek/releases) — the .NET runtime
+is bundled, so there is nothing to install.
+
+## Building and running
 
 ```
-git clone <url-du-depot>
+git clone https://github.com/yankulovsky15/Aeropeek.git
 cd Aeropeek
 dotnet run -c Release
 ```
 
-Pour produire une version distribuable :
+To produce a distributable, self-contained build:
 
 ```
-dotnet publish -c Release -o dist
+dotnet publish -c Release -r win-x64 --self-contained true -o dist
 ```
 
-## Ajouter un réglage
+## Adding a tweak
 
-Le catalogue est un simple fichier JSON, [`catalogue.json`](catalogue.json) — pas
-besoin de recompiler pour en ajouter un :
+The catalogue is plain JSON, [`catalogue.json`](catalogue.json) — no rebuild
+needed to add one:
 
 ```json
 {
-  "id": "mon-reglage",
-  "nom": "Titre affiché",
-  "explication": "Ce que ça fait, en une phrase.",
-  "consequence": "Ce que l'utilisateur perd en échange.",
-  "gain": "jusqu'à +8 % sur les 1% lows",
+  "id": "my-tweak",
+  "nom": "Title shown in the UI",
+  "explication": "What it does, in one sentence.",
+  "consequence": "What the user gives up in exchange.",
+  "gain": "up to +8% on 1% lows",
   "categorie": "performance",
   "redemarrage": false,
   "applicable": { "buildMin": 19041, "gpu": "nvidia", "portable": "non" },
   "operations": [
     {
       "hive": "HKCU",
-      "cle": "Software\\Exemple",
-      "valeur": "NomDeLaValeur",
+      "cle": "Software\\Example",
+      "valeur": "ValueName",
       "type": "dword",
       "vers": 0
     }
@@ -95,26 +97,29 @@ besoin de recompiler pour en ajouter un :
 }
 ```
 
-`applicable` est facultatif. Chacun de ses champs masque le réglage — avec sa
-raison affichée — sur les machines qui ne sont pas concernées : `buildMin` et
-`buildMax` pour la version de Windows, `gpu` pour le fabricant de la carte
-graphique, `portable: "non"` pour l'exclure des ordinateurs portables.
+> The JSON field names are French for now — the codebase is being translated to
+> English, and renaming them would break every existing catalogue in the wild.
+> They will be migrated with a compatibility shim in a later version.
 
-Certains chemins du registre sont refusés quelle que soit la provenance du
-catalogue : Windows Defender, les services de sécurité, `SAM`, `SECURITY` et
-`Control\Lsa`. Un réglage qui les viserait s'afficherait « Bloqué ».
+`applicable` is optional. Each of its fields hides the tweak — showing the reason
+why — on machines it does not concern: `buildMin` and `buildMax` for the Windows
+version, `gpu` for the graphics card vendor, `portable: "non"` to exclude
+laptops.
 
-## Avertissement
+Some registry paths are refused no matter what the catalogue says: Windows
+Defender, the security services, `SAM`, `SECURITY` and `Control\Lsa`. A tweak
+targeting them shows up as "Blocked".
 
-Ce programme modifie des réglages système. Il journalise tout et sait revenir en
-arrière, mais aucun outil ne remplace une sauvegarde. Crée un point de
-restauration avant une première utilisation — l'onglet Restauration le fait pour
-toi.
+## A word of warning
 
-## Licence
+This program changes system settings. It journals everything and knows how to
+walk it back, but no tool replaces a backup. Create a restore point before your
+first run — the Restore tab will do it for you.
 
-[Apache-2.0](LICENSE). Voir [NOTICE](NOTICE) et
-[THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt) pour les composants tiers.
+## License
 
-Aeropeek redistribue [Intel PresentMon](https://github.com/GameTechDev/PresentMon)
-(licence MIT) pour la capture des temps d'image.
+[Apache-2.0](LICENSE). See [NOTICE](NOTICE) and
+[THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt) for third-party components.
+
+Aeropeek redistributes [Intel PresentMon](https://github.com/GameTechDev/PresentMon)
+(MIT licence) for frame-time capture.
