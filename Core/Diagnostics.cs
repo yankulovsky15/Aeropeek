@@ -68,7 +68,7 @@ public static class Diagnostics
             catch (Exception ex)
             {
                 results.Add(new CheckResult(c.Method.Name, c.Method.Name, Severity.Inconnu,
-                    "Non déterminé", "La vérification a échoué : " + ex.Message));
+                    "Undetermined", "The check failed: " + ex.Message));
             }
         }
         return results.OrderBy(r => r.Severity switch
@@ -105,35 +105,35 @@ public static class Diagnostics
         if (reg != null) configured ??= Convert.ToInt32(reg) == 1;
 
         if (running == null && configured == null)
-            return new CheckResult("hvci", "Intégrité de la mémoire", Severity.Inconnu,
-                "Non déterminé", "Impossible de lire l'état de la sécurité basée sur la virtualisation.");
+            return new CheckResult("hvci", "Memory integrity", Severity.Inconnu,
+                "Undetermined", "Could not read the state of virtualization-based security.");
 
         // Désactivée mais encore active jusqu'au redémarrage
         if (running == true && configured == false)
-            return new CheckResult("hvci", "Intégrité de la mémoire", Severity.Warn,
-                "Redémarrage requis",
-                "Tu l'as désactivée, mais HVCI continue de tourner : le noyau reste sous hyperviseur jusqu'au prochain démarrage de Windows.",
-                "Redémarre pour que le gain soit effectif, puis relance l'analyse.");
+            return new CheckResult("hvci", "Memory integrity", Severity.Warn,
+                "Restart required",
+                "You turned it off, but HVCI is still running: the kernel stays under the hypervisor until Windows next boots.",
+                "Restart for the gain to take effect, then run the scan again.");
 
         // Activée mais pas encore chargée
         if (running == false && configured == true)
-            return new CheckResult("hvci", "Intégrité de la mémoire", Severity.Warn,
-                "Activée au prochain démarrage",
-                "HVCI ne tourne pas actuellement, mais il est configuré pour démarrer au prochain redémarrage.",
-                "Si tu ne le veux pas, désactive-le maintenant : Sécurité Windows → Sécurité des appareils → Isolation du noyau.");
+            return new CheckResult("hvci", "Memory integrity", Severity.Warn,
+                "Enabled at next boot",
+                "HVCI is not running right now, but it is set to start at the next reboot.",
+                "If you don't want it, turn it off now: Windows Security → Device security → Core isolation.");
 
         if (running == true || (running == null && configured == true))
-            return new CheckResult("hvci", "Intégrité de la mémoire", Severity.Probleme,
-                "Activée",
-                "L'intégrité de la mémoire (HVCI) fait tourner le noyau sous hyperviseur. Le coût est permanent et se voit surtout sur les 1% lows.",
-                "C'est le plus gros gain logiciel disponible : 5 à 10 %. Sécurité Windows → Sécurité des appareils → Isolation du noyau. "
+            return new CheckResult("hvci", "Memory integrity", Severity.Probleme,
+                "Enabled",
+                "Memory integrity (HVCI) runs the kernel under a hypervisor. The cost is permanent and shows up mostly on the 1% lows.",
+                "This is the biggest software gain available: 5 to 10%. Windows Security → Device security → Core isolation. "
                 + (sys.AntiCheats.Contains("FACEIT Anti-Cheat")
-                    ? "FACEIT exige Secure Boot et TPM, pas HVCI : tu peux le désactiver sans casser l'anticheat."
-                    : "Vérifie que ton anticheat ne l'exige pas."),
-                "ouvrir-isolation", "Ouvrir le réglage");
+                    ? "FACEIT requires Secure Boot and TPM, not HVCI: you can turn it off without breaking the anti-cheat."
+                    : "Check that your anti-cheat does not require it."),
+                "ouvrir-isolation", "Open the setting");
 
-        return new CheckResult("hvci", "Intégrité de la mémoire", Severity.Ok,
-            "Désactivée", "Aucun surcoût d'hyperviseur sur l'exécution du noyau.");
+        return new CheckResult("hvci", "Memory integrity", Severity.Ok,
+            "Disabled", "No hypervisor overhead on kernel execution.");
     }
 
     // ---------- 1 bis. Hyperviseur chargé sans utilisateur ----------
@@ -144,9 +144,9 @@ public static class Diagnostics
     /// </summary>
     static readonly (string Scenario, string Label)[] VbsScenarios =
     {
-        ("HypervisorEnforcedCodeIntegrity", "intégrité de la mémoire"),
-        ("WindowsHello",                    "Windows Hello (connexion sécurisée renforcée)"),
-        ("KernelShadowStacks",              "protection de la pile noyau"),
+        ("HypervisorEnforcedCodeIntegrity", "memory integrity"),
+        ("WindowsHello",                    "Windows Hello (enhanced secure sign-in)"),
+        ("KernelShadowStacks",              "kernel stack protection"),
         ("KeyGuard",                        "KeyGuard"),
         ("CredentialGuard",                 "Credential Guard")
     };
@@ -176,13 +176,13 @@ public static class Diagnostics
         }
         catch
         {
-            return new CheckResult("vbs", "Hyperviseur (VBS)", Severity.Inconnu,
-                "Non déterminé", "L'état de la sécurité basée sur la virtualisation n'a pas pu être lu.");
+            return new CheckResult("vbs", "Hypervisor (VBS)", Severity.Inconnu,
+                "Undetermined", "The state of virtualization-based security could not be read.");
         }
 
         if (status != 2)
-            return new CheckResult("vbs", "Hyperviseur (VBS)", Severity.Ok,
-                "Inactif", "Windows ne s'exécute pas sous hyperviseur : aucun surcoût de virtualisation.");
+            return new CheckResult("vbs", "Hypervisor (VBS)", Severity.Ok,
+                "Inactif", "Windows is not running under a hypervisor: no virtualization overhead.");
 
         // Le tableau contient 0 quand aucun service n'est actif : ce n'est pas un identifiant.
         var running = configured.Where(v => v > 0).ToArray();
@@ -208,25 +208,25 @@ public static class Diagnostics
 
         // Cas coûteux : des services de sécurité tournent réellement sous hyperviseur.
         if (running.Length > 0)
-            return new CheckResult("vbs", "Hyperviseur (VBS)", Severity.Warn,
-                "Actif avec services",
-                "Des services de sécurité s'exécutent sous hyperviseur" +
+            return new CheckResult("vbs", "Hypervisor (VBS)", Severity.Warn,
+                "Active with services",
+                "Security services are running under the hypervisor" +
                 (users.Count > 0 ? " : " + string.Join(", ", users) + "." : "."),
-                "C'est là qu'est le coût réel. Voir la carte « Intégrité de la mémoire », qui en est la principale source.");
+                "This is where the real cost sits. See the “Memory integrity” card, which is its main source.");
 
         // Cas résiduel : l'hyperviseur est chargé mais aucun service de sécurité ne tourne dedans.
         if (users.Count > 0)
-            return new CheckResult("vbs", "Hyperviseur (VBS)", Severity.Info,
-                "Chargé, sans service actif",
-                "Aucun service de sécurité ne tourne sous hyperviseur — le gros du coût a déjà disparu. " +
-                "Il reste chargé parce que quelque chose l'exige : " + string.Join(", ", users) + ".",
-                "Le coût résiduel est faible, quelques pourcents au plus. Le supprimer demanderait de renoncer à ces fonctionnalités : " +
-                "rarement un bon échange, en particulier pour Windows Hello.");
+            return new CheckResult("vbs", "Hypervisor (VBS)", Severity.Info,
+                "Loaded, no active service",
+                "No security service is running under the hypervisor — most of the cost is already gone. " +
+                "It stays loaded because something requires it: " + string.Join(", ", users) + ".",
+                "The residual cost is small, a few percent at most. Removing it would mean giving up those features: " +
+                "rarely a good trade, particularly for Windows Hello.");
 
-        return new CheckResult("vbs", "Hyperviseur (VBS)", Severity.Warn,
-            "Chargé sans utilisateur identifié",
-            "L'hyperviseur est chargé alors qu'aucun service de sécurité ne tourne dedans et qu'aucune fonctionnalité connue ne l'exige.",
-            "Onglet Réglages → « Sécurité basée sur la virtualisation ». Gain modeste. À remettre avant d'installer WSL, Docker ou Windows Sandbox.");
+        return new CheckResult("vbs", "Hypervisor (VBS)", Severity.Warn,
+            "Loaded with no identified user",
+            "The hypervisor is loaded although no security service runs inside it and no known feature requires it.",
+            "Tweaks tab → “Virtualization-based security”. Modest gain. Put it back before installing WSL, Docker or Windows Sandbox.");
     }
 
     // ---------- 2. Vitesse mémoire (EXPO / XMP) ----------
@@ -269,23 +269,23 @@ public static class Diagnostics
     static CheckResult MemorySpeed(SystemProfile sys)
     {
         if (sys.Memory.Count == 0)
-            return new CheckResult("ram", "Profil mémoire (EXPO / XMP)", Severity.Inconnu,
-                "Non déterminé", "Les modules mémoire n'ont pas pu être lus.");
+            return new CheckResult("ram", "Memory profile (EXPO / XMP)", Severity.Inconnu,
+                "Undetermined", "The memory modules could not be read.");
 
         var m = sys.Memory[0];
         uint conf = m.ConfiguredMhz;
         string kind = string.IsNullOrEmpty(m.Kind) ? "" : m.Kind + " ";
-        string value = conf > 0 ? $"{kind}{conf} MT/s" : "Non déterminé";
+        string value = conf > 0 ? $"{kind}{conf} MT/s" : "Undetermined";
 
         if (conf == 0)
-            return new CheckResult("ram", "Profil mémoire (EXPO / XMP)", Severity.Inconnu,
-                value, "La fréquence configurée n'a pas pu être lue.");
+            return new CheckResult("ram", "Memory profile (EXPO / XMP)", Severity.Inconnu,
+                value, "The configured speed could not be read.");
 
         if (m.RatedMhz > 0 && conf < m.RatedMhz)
-            return new CheckResult("ram", "Profil mémoire (EXPO / XMP)", Severity.Probleme,
+            return new CheckResult("ram", "Memory profile (EXPO / XMP)", Severity.Probleme,
                 value,
-                $"Tes modules sont donnés pour {m.RatedMhz} MT/s et tournent à {conf} MT/s.",
-                "Active le profil EXPO (AMD) ou XMP (Intel) dans le BIOS. Sur CS2, très sensible à la latence mémoire, c'est 10 à 15 % sur les 1% lows.");
+                $"Your modules are rated for {m.RatedMhz} MT/s and are running at {conf} MT/s.",
+                "Enable the EXPO (AMD) or XMP (Intel) profile in the BIOS. On CS2, which is very sensitive to memory latency, that is 10 to 15% on the 1% lows.");
 
         // La référence du module donne la fréquence certifiée : c'est la réponse
         // fiable, sans avoir à interroger le SPD ni à demander à l'utilisateur.
@@ -294,35 +294,35 @@ public static class Diagnostics
         {
             string pn = string.IsNullOrWhiteSpace(m.PartNumber) ? "" : $" ({m.PartNumber})";
             if (conf < fromPart)
-                return new CheckResult("ram", "Profil mémoire (EXPO / XMP)", Severity.Probleme,
+                return new CheckResult("ram", "Memory profile (EXPO / XMP)", Severity.Probleme,
                     value,
-                    $"Tes barrettes{pn} sont certifiées pour {fromPart} MT/s et tournent à {conf} MT/s.",
-                    "Active EXPO (AMD) ou XMP (Intel) dans le BIOS. Sur CS2, très sensible à la latence mémoire, "
-                    + "c'est 10 à 15 % sur les 1% lows — davantage que tous les réglages logiciels réunis.");
+                    $"Your sticks{pn} are certified for {fromPart} MT/s and are running at {conf} MT/s.",
+                    "Enable EXPO (AMD) or XMP (Intel) in the BIOS. On CS2, which is very sensitive to memory latency, "
+                    + "that is 10 to 15% on the 1% lows — more than every software tweak put together.");
 
-            return new CheckResult("ram", "Profil mémoire (EXPO / XMP)", Severity.Ok,
+            return new CheckResult("ram", "Memory profile (EXPO / XMP)", Severity.Ok,
                 value,
-                $"Tes barrettes{pn} sont certifiées pour {fromPart} MT/s et tournent bien à cette fréquence. "
-                + $"{sys.Memory.Count} module(s) installé(s).");
+                $"Your sticks{pn} are certified for {fromPart} MT/s and are indeed running at that speed. "
+                + $"{sys.Memory.Count} module(s) installed.");
         }
 
         // Déjà confirmé par l'utilisateur : on ne le harcèle plus.
         if (Settings.Current.ConfirmedMemoryMhz == conf)
-            return new CheckResult("ram", "Profil mémoire (EXPO / XMP)", Severity.Ok,
-                value, $"Tu as confirmé que {conf} MT/s est bien la fréquence certifiée de tes barrettes.");
+            return new CheckResult("ram", "Memory profile (EXPO / XMP)", Severity.Ok,
+                value, $"You confirmed that {conf} MT/s is indeed the certified speed of your sticks.");
 
         if (JedecBase.TryGetValue(m.Kind, out var bases) && bases.Contains(conf))
-            return new CheckResult("ram", "Profil mémoire (EXPO / XMP)", Severity.Warn,
+            return new CheckResult("ram", "Memory profile (EXPO / XMP)", Severity.Warn,
                 value,
-                $"{conf} MT/s est aussi une fréquence JEDEC standard pour la {m.Kind}. Windows n'expose pas la fréquence "
-                + "certifiée de tes barrettes — elle est dans leur SPD, que seul un pilote noyau pourrait lire. "
-                + "Aeropeek ne peut donc pas distinguer un kit 5600 avec profil actif d'un kit plus rapide avec profil éteint.",
-                "Regarde dans le BIOS, ou sur l'étiquette des barrettes. Si la fréquence affichée ici correspond à celle "
-                + "pour laquelle tu les as achetées, confirme-le une fois : la vérification n'y reviendra plus.",
-                "confirmer-memoire", "C'est la bonne fréquence");
+                $"{conf} MT/s is also a standard JEDEC speed for {m.Kind}. Windows does not expose the certified "
+                + "speed of your sticks — it lives in their SPD, which only a kernel driver could read. "
+                + "So Aeropeek cannot tell a 5600 kit with its profile on from a faster kit with its profile off.",
+                "Look in the BIOS, or on the label of the sticks. If the speed shown here matches the one "
+                + "you bought them for, confirm it once and this check will stop asking.",
+                "confirmer-memoire", "That is the right speed");
 
-        return new CheckResult("ram", "Profil mémoire (EXPO / XMP)", Severity.Ok,
-            value, "La mémoire tourne au-dessus des fréquences JEDEC de base : un profil de performance est actif.");
+        return new CheckResult("ram", "Memory profile (EXPO / XMP)", Severity.Ok,
+            value, "Memory is running above the base JEDEC speeds: a performance profile is active.");
     }
 
     // ---------- 3. Fréquence de rafraîchissement ----------
@@ -331,19 +331,19 @@ public static class Diagnostics
     {
         var primary = sys.Displays.FirstOrDefault(d => d.IsPrimary) ?? sys.Displays.FirstOrDefault();
         if (primary == null)
-            return new CheckResult("hz", "Fréquence d'écran", Severity.Inconnu, "Non déterminé", "Aucun écran détecté.");
+            return new CheckResult("hz", "Refresh rate", Severity.Inconnu, "Undetermined", "No display detected.");
 
         int max = MaxRefreshFor(primary.DeviceName, primary.Width, primary.Height);
         string value = $"{primary.RefreshHz} Hz";
 
         if (max > 0 && primary.RefreshHz < max)
-            return new CheckResult("hz", "Fréquence d'écran", Severity.Probleme,
+            return new CheckResult("hz", "Refresh rate", Severity.Probleme,
                 value,
-                $"Ton écran accepte {max} Hz en {primary.Width}×{primary.Height} et Windows le fait tourner à {primary.RefreshHz} Hz.",
-                $"Paramètres → Système → Affichage → Paramètres avancés → Fréquence d'actualisation → {max} Hz. Windows retombe régulièrement à 60 Hz après une mise à jour de pilote.");
+                $"Your display accepts {max} Hz at {primary.Width}×{primary.Height} and Windows is running it at {primary.RefreshHz} Hz.",
+                $"Settings → System → Display → Advanced display → Refresh rate → {max} Hz. Windows regularly falls back to 60 Hz after a driver update.");
 
-        return new CheckResult("hz", "Fréquence d'écran", Severity.Ok,
-            value, $"L'écran tourne à sa fréquence maximale en {primary.Width}×{primary.Height}.");
+        return new CheckResult("hz", "Refresh rate", Severity.Ok,
+            value, $"The display is running at its maximum refresh rate at {primary.Width}×{primary.Height}.");
     }
 
     static int MaxRefreshFor(string deviceName, int w, int h)
@@ -378,7 +378,7 @@ public static class Diagnostics
     {
         var primary = sys.Displays.FirstOrDefault(d => d.IsPrimary) ?? sys.Displays.FirstOrDefault();
         if (primary == null)
-            return new CheckResult("gpu-sortie", "Sortie vidéo", Severity.Inconnu, "Non déterminé", "Aucun écran détecté.");
+            return new CheckResult("gpu-sortie", "Video output", Severity.Inconnu, "Undetermined", "No display detected.");
 
         // Une puce ne compte comme dediee que si son nom n'est PAS celui d'un
         // circuit integre. Sans cette exclusion, « AMD Radeon(TM) Graphics » —
@@ -394,25 +394,25 @@ public static class Diagnostics
         // fait. L'ancien code tombait ici dans la conclusion « pilote par la
         // carte graphique dediee », qui etait fausse.
         if (!hasDedicated)
-            return new CheckResult("gpu-sortie", "Sortie vidéo", Severity.Info,
+            return new CheckResult("gpu-sortie", "Video output", Severity.Info,
                 primary.AdapterName,
-                "Cette machine n'a pas de carte graphique dédiée : l'affichage est assuré par le circuit intégré au processeur.",
-                "Il n'y a rien à rebrancher. Sur CS2, c'est ce circuit qui limitera le nombre d'images avant tout le reste.");
+                "This machine has no dedicated graphics card: display is handled by the chip integrated into the processor.",
+                "There is nothing to replug. On CS2, that chip is what will cap your frame rate before anything else does.");
 
         if (hasDedicated && onIntegrated && !sys.IsLaptop)
-            return new CheckResult("gpu-sortie", "Sortie vidéo", Severity.Probleme,
+            return new CheckResult("gpu-sortie", "Video output", Severity.Probleme,
                 primary.AdapterName,
-                "Ton écran principal est piloté par le circuit graphique intégré alors qu'une carte dédiée est présente.",
-                "Rebranche le câble sur la carte graphique, pas sur la carte mère. C'est le plus gros gain possible sur cette liste.");
+                "Your main display is being driven by the integrated graphics while a dedicated card is present.",
+                "Move the cable to the graphics card, not the motherboard. It is the single biggest gain on this list.");
 
         if (sys.IsLaptop && onIntegrated)
-            return new CheckResult("gpu-sortie", "Sortie vidéo", Severity.Info,
+            return new CheckResult("gpu-sortie", "Video output", Severity.Info,
                 primary.AdapterName,
-                "Affichage hybride : l'écran passe par le circuit intégré, ce qui est normal sur un portable.",
-                "Si ton portable a un interrupteur MUX, le mode carte dédiée réduit la latence.");
+                "Hybrid display: the screen goes through the integrated chip, which is normal on a laptop.",
+                "If your laptop has a MUX switch, dedicated-card mode lowers latency.");
 
-        return new CheckResult("gpu-sortie", "Sortie vidéo", Severity.Ok,
-            primary.AdapterName, "L'écran principal est piloté par la carte graphique dédiée.");
+        return new CheckResult("gpu-sortie", "Video output", Severity.Ok,
+            primary.AdapterName, "The main display is driven by the dedicated graphics card.");
     }
 
     // ---------- 4 bis. Âge du pilote graphique ----------
@@ -421,14 +421,14 @@ public static class Diagnostics
     {
         var d = Drivers.Display();
         if (d == null || d.Date == null)
-            return new CheckResult("gpu-driver", "Pilote graphique", Severity.Inconnu,
-                "Non déterminé", "La date du pilote n'a pas pu être lue.");
+            return new CheckResult("gpu-driver", "Graphics driver", Severity.Inconnu,
+                "Undetermined", "The driver date could not be read.");
 
         int months = d.AgeMonths ?? 0;
         bool nvidia = d.Name.Contains("NVIDIA", StringComparison.OrdinalIgnoreCase);
         string version = nvidia ? Drivers.Pretty(d.Version) : d.Version;
         string value = $"{version} · {d.Date:MM/yyyy}";
-        string installed = $"Version installée : {version}, publiée en {d.Date:MM/yyyy} — il y a {months} mois.";
+        string installed = $"Installed version: {version}, released {d.Date:yyyy-MM} — {months} months ago.";
 
         // Une recherche a été faite : on compare des faits, pas des indices.
         if (Drivers.Latest is { } latest)
@@ -436,35 +436,35 @@ public static class Diagnostics
             int cmp = Drivers.Compare(version, latest.Version);
 
             if (cmp < 0)
-                return new CheckResult("gpu-driver", "Pilote graphique", Severity.Probleme,
+                return new CheckResult("gpu-driver", "Graphics driver", Severity.Probleme,
                     $"{version} → {latest.Version}",
                     $"{installed} NVIDIA publie la {latest.Version}"
-                    + (latest.Date.Length > 0 ? $", parue le {latest.Date}." : "."),
-                    "Un pilote en retard coûte parfois plus que tous les réglages de cette liste réunis, "
-                    + "surtout après une mise à jour majeure d'un jeu.",
-                    "telecharger-pilote", "Télécharger la mise à jour");
+                    + (latest.Date.Length > 0 ? $", released {latest.Date}." : "."),
+                    "An out-of-date driver sometimes costs more than every tweak on this list put together, "
+                    + "especially after a game's major update.",
+                    "telecharger-pilote", "Download the update");
 
-            return new CheckResult("gpu-driver", "Pilote graphique", Severity.Ok, value,
-                $"{installed} C'est la dernière version publiée par NVIDIA.",
-                "", "chercher-pilote", "Revérifier");
+            return new CheckResult("gpu-driver", "Graphics driver", Severity.Ok, value,
+                $"{installed} This is the latest version NVIDIA has published.",
+                "", "chercher-pilote", "Check again");
         }
 
         // Aucune recherche : on énonce ce qu'on sait, sans rien supposer.
         var severity = Severity.Info;
-        string detail = installed + " Aeropeek ne sait pas si une version plus récente existe : "
-                      + "il faut le lui demander, car cela suppose d'interroger NVIDIA.";
+        string detail = installed + " Aeropeek does not know whether a newer version exists: "
+                      + "you have to ask it to, because that means querying NVIDIA.";
 
         if (!nvidia)
         {
-            detail = installed + " La recherche automatique n'est disponible que pour les cartes NVIDIA.";
-            return new CheckResult("gpu-driver", "Pilote graphique", severity, value, detail);
+            detail = installed + " Automatic lookup is only available for NVIDIA cards.";
+            return new CheckResult("gpu-driver", "Graphics driver", severity, value, detail);
         }
 
         if (Drivers.LastLookupError is { } err)
             detail = installed + " " + err;
 
-        return new CheckResult("gpu-driver", "Pilote graphique", severity, value, detail,
-            "", "chercher-pilote", "Chercher une mise à jour");
+        return new CheckResult("gpu-driver", "Graphics driver", severity, value, detail,
+            "", "chercher-pilote", "Check for an update");
     }
 
     // ---------- 4 ter. Disque du jeu ----------
@@ -473,36 +473,36 @@ public static class Diagnostics
     {
         var path = Storage.GamePath();
         if (path == null)
-            return new CheckResult("game-drive", "Disque du jeu", Severity.Inconnu,
-                "CS2 introuvable", "L'installation n'a pas été localisée via Steam.");
+            return new CheckResult("game-drive", "Game disk", Severity.Inconnu,
+                "CS2 introuvable", "The installation could not be located through Steam.");
 
         char letter = char.ToUpperInvariant(path[0]);
         var disk = Storage.DiskFor(letter);
         var all = Storage.Disks();
 
         if (disk == null)
-            return new CheckResult("game-drive", "Disque du jeu", Severity.Inconnu,
-                $"Lecteur {letter}:", $"Installé dans {path}, mais le disque physique n'a pas pu être identifié.");
+            return new CheckResult("game-drive", "Game disk", Severity.Inconnu,
+                $"Lecteur {letter}:", $"Installed in {path}, but the physical disk could not be identified.");
 
         string value = $"{letter}: · {disk.Label}";
         var fastest = all.OrderByDescending(d => d.Rank).FirstOrDefault();
 
         if (!disk.IsSsd)
-            return new CheckResult("game-drive", "Disque du jeu", Severity.Probleme, value,
-                $"CS2 est installé sur un {disk.MediaType} ({disk.Name}). Les temps de chargement et la compilation "
-                + "des shaders en pâtissent, et des saccades peuvent apparaître au premier passage sur une zone.",
+            return new CheckResult("game-drive", "Game disk", Severity.Probleme, value,
+                $"CS2 is installed on a {disk.MediaType} ({disk.Name}). Load times and shader "
+                + "compilation suffer for it, and stutters can appear the first time you cross an area.",
                 fastest is { IsSsd: true }
-                    ? $"Tu as un {fastest.Label} dans cette machine ({fastest.Name}). Déplace le jeu dessus : "
-                      + "Steam → Propriétés → Fichiers installés → Déplacer le dossier d'installation."
-                    : "Un SSD est le seul vrai remède ici.");
+                    ? $"You have a {fastest.Label} in this machine ({fastest.Name}). Move the game onto it: "
+                      + "Steam → Properties → Installed Files → Move install folder."
+                    : "An SSD is the only real remedy here.");
 
         if (fastest != null && fastest.Rank > disk.Rank)
-            return new CheckResult("game-drive", "Disque du jeu", Severity.Warn, value,
-                $"CS2 est sur un {disk.Label} alors que cette machine dispose d'un {fastest.Label} ({fastest.Name}).",
-                "L'écart se voit surtout sur les temps de chargement, peu en jeu. À déplacer si la place le permet.");
+            return new CheckResult("game-drive", "Game disk", Severity.Warn, value,
+                $"CS2 sits on a {disk.Label} while this machine has a {fastest.Label} ({fastest.Name}).",
+                "The difference shows up mostly in load times, little in game. Worth moving if you have the room.");
 
-        return new CheckResult("game-drive", "Disque du jeu", Severity.Ok, value,
-            $"CS2 est installé sur le disque le plus rapide de la machine ({disk.Name}).");
+        return new CheckResult("game-drive", "Game disk", Severity.Ok, value,
+            $"CS2 is installed on the fastest disk in the machine ({disk.Name}).");
     }
 
     // ---------- 4 quater. Réglages du pilote NVIDIA ----------
@@ -511,33 +511,33 @@ public static class Diagnostics
     {
         bool nvidia = sys.GpuNames.Any(g => g.Contains("NVIDIA", StringComparison.OrdinalIgnoreCase));
         if (!nvidia)
-            return new CheckResult("nvidia", "Réglages du pilote graphique", Severity.Info,
-                "Sans objet", "Cette vérification ne concerne que les cartes NVIDIA.");
+            return new CheckResult("nvidia", "Graphics driver settings", Severity.Info,
+                "Not applicable", "This check only concerns NVIDIA cards.");
 
         var settings = Nvidia.ReadSettings();
         if (settings.Count == 0)
-            return new CheckResult("nvidia", "Réglages du pilote graphique", Severity.Inconnu,
-                "Illisibles", "Le profil global du pilote n'a pas pu être lu.");
+            return new CheckResult("nvidia", "Graphics driver settings", Severity.Inconnu,
+                "Illisibles", "The driver's global profile could not be read.");
 
-        var lines = settings.Select(s => $"· {s.Name} : {s.Reading}");
+        var lines = settings.Select(s => $"· {s.Name}: {s.Reading}");
         var power = settings.FirstOrDefault(s => s.Id == Nvidia.PowerModeId);
 
         string detail = string.Join(Environment.NewLine, lines);
-        string advice = "Des cinq réglages lus, Aeropeek n'en écrit qu'un : la gestion de l'alimentation, "
-                      + "dont la table de valeurs est documentée et l'effet mesurable. Pour les autres, le pilote "
-                      + "donne le nom de l'option mais pas le sens de ses valeurs — l'application ne devine pas, "
-                      + "et renvoie au panneau NVIDIA.";
+        string advice = "Of the five settings it reads, Aeropeek writes only one: power management, "
+                      + "whose value table is documented and whose effect is measurable. For the others, the driver "
+                      + "gives the option's name but not the meaning of its values — the application does not guess, "
+                      + "and points you to the NVIDIA panel.";
 
         if (power is { Optimal: false })
-            return new CheckResult("nvidia", "Réglages du pilote graphique", Severity.Warn,
+            return new CheckResult("nvidia", "Graphics driver settings", Severity.Warn,
                 power.Reading, detail,
-                "La gestion de l'alimentation en « Privilégier les performances maximales » évite que la carte "
-                + "redescende en fréquence entre deux images. " + advice,
-                "nvidia-performances", "Privilégier les performances");
+                "Power management set to “Prefer maximum performance” stops the card from "
+                + "dropping its clocks between two frames. " + advice,
+                "nvidia-performances", "Prefer performance");
 
-        return new CheckResult("nvidia", "Réglages du pilote graphique", Severity.Ok,
-            $"{settings.Count} réglages lus", detail, advice,
-            "ouvrir-nvidia", "Ouvrir le panneau NVIDIA");
+        return new CheckResult("nvidia", "Graphics driver settings", Severity.Ok,
+            $"{settings.Count} settings read", detail, advice,
+            "ouvrir-nvidia", "Open the NVIDIA panel");
     }
 
     // ---------- 5. Topologie processeur ----------
@@ -546,45 +546,45 @@ public static class Diagnostics
     {
         var t = sys.Cpu;
         if (t.PhysicalCores == 0)
-            return new CheckResult("cpu", "Cœurs du processeur", Severity.Inconnu, "Non déterminé", "Topologie illisible.");
+            return new CheckResult("cpu", "Processor cores", Severity.Inconnu, "Undetermined", "Topologie illisible.");
 
         if (!t.IsHybrid)
-            return new CheckResult("cpu", "Cœurs du processeur", Severity.Ok,
-                $"{t.PhysicalCores} cœurs / {t.LogicalCores} threads",
-                "Architecture homogène : aucun réglage d'affinité n'est nécessaire.");
+            return new CheckResult("cpu", "Processor cores", Severity.Ok,
+                $"{t.PhysicalCores} cores / {t.LogicalCores} threads",
+                "Uniform architecture: no affinity tweak is needed.");
 
         string range = MaskToRange(t.PerformanceMask);
         var live = GameAffinity.Current();
 
         // CS2 n'est pas lancé : c'est un fait sur ta machine, pas un défaut à corriger.
         if (live == null)
-            return new CheckResult("cpu", "Cœurs du processeur", Severity.Info,
+            return new CheckResult("cpu", "Processor cores", Severity.Info,
                 $"{t.PerformanceCores} P-cores + {t.EfficiencyCores} E-cores",
-                $"Processeur hybride. Quand des threads de CS2 sont placés sur les cœurs efficients, les 1% lows chutent.",
-                $"Lance CS2 puis relance l'analyse : Aeropeek pourra épingler le jeu sur les processeurs {range} d'un clic.");
+                $"Hybrid processor. When CS2 threads land on the efficiency cores, the 1% lows drop.",
+                $"Start CS2 then run the scan again: Aeropeek will be able to pin the game to processors {range} in one click.");
 
         if (live == t.PerformanceMask)
-            return new CheckResult("cpu", "Cœurs du processeur", Severity.Ok,
-                "Épinglé sur les P-cores",
-                $"CS2 tourne sur les processeurs {range} uniquement : aucun thread ne part sur les cœurs efficients.",
-                "L'affinité est perdue à la fermeture du jeu — il faudra la réappliquer à la prochaine session.",
-                "affinite-tous", "Rendre tous les cœurs");
+            return new CheckResult("cpu", "Processor cores", Severity.Ok,
+                "Pinned to the P-cores",
+                $"CS2 runs on processors {range} only: no thread lands on the efficiency cores.",
+                "Affinity is lost when the game closes — you will have to apply it again next session.",
+                "affinite-tous", "Give back every core");
 
-        return new CheckResult("cpu", "Cœurs du processeur", Severity.Info,
+        return new CheckResult("cpu", "Processor cores", Severity.Info,
             $"{t.PerformanceCores} P-cores + {t.EfficiencyCores} E-cores",
-            "CS2 tourne sur tous les cœurs, efficients compris. C'est le comportement normal : Windows répartit lui-même les threads.",
-            $"L'épinglage sur les processeurs {range} aide sur certaines configurations et ne change rien sur beaucoup d'autres — "
-            + "sur les machines récentes, l'ordonnanceur de Windows fait déjà le bon choix. "
-            + "À ne garder que si l'onglet Benchmark montre un écart réel : mesure sans, épingle, remesure.",
-            "affinite-pcores", "Épingler CS2");
+            "CS2 runs on every core, efficiency ones included. That is the normal behaviour: Windows spreads the threads itself.",
+            $"Pinning to processors {range} helps on some configurations and changes nothing on many others — "
+            + "on recent machines, the Windows scheduler already makes the right call. "
+            + "Only keep it if the Benchmark tab shows a real difference: measure without, pin, measure again.",
+            "affinite-pcores", "Pin CS2");
     }
 
     static string MaskToRange(ulong mask)
     {
         var bits = new List<int>();
         for (int i = 0; i < 64; i++) if ((mask & (1UL << i)) != 0) bits.Add(i);
-        if (bits.Count == 0) return "de performance";
-        return bits.Count == bits[^1] - bits[0] + 1 ? $"{bits[0]} à {bits[^1]}" : string.Join(", ", bits);
+        if (bits.Count == 0) return "performance";
+        return bits.Count == bits[^1] - bits[0] + 1 ? $"{bits[0]} to {bits[^1]}" : string.Join(", ", bits);
     }
 
     // ---------- 6. Plan d'alimentation ----------
@@ -592,8 +592,8 @@ public static class Diagnostics
     static readonly Dictionary<string, (string Name, Severity Sev)> Schemes = new(StringComparer.OrdinalIgnoreCase)
     {
         ["381b4222-f694-41f0-9685-ff5bb260df2e"] = ("Utilisation normale", Severity.Warn),
-        ["a1841308-3541-4fab-bc81-f71556f20b4a"] = ("Économie d'énergie", Severity.Probleme),
-        ["8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c"] = ("Performances élevées", Severity.Ok),
+        ["a1841308-3541-4fab-bc81-f71556f20b4a"] = ("Power saver", Severity.Probleme),
+        ["8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c"] = ("High performance", Severity.Ok),
         ["e9a42b02-d5df-448d-aa00-03f14749eb61"] = ("Performances maximales", Severity.Ok)
     };
 
@@ -660,7 +660,7 @@ public static class Diagnostics
         string guid = v?.ToString() ?? "";
         string name = ActivePlanName();
         if (string.IsNullOrEmpty(name))
-            name = Schemes.TryGetValue(guid, out var known) ? known.Name : "Plan personnalisé";
+            name = Schemes.TryGetValue(guid, out var known) ? known.Name : "Custom plan";
 
         // On juge ce que le plan FAIT, pas comment il s'appelle.
         int? minState = PowerSetting(SUB_PROCESSOR, PROCTHROTTLEMIN);
@@ -668,35 +668,35 @@ public static class Diagnostics
         int? usbSuspend = PowerSetting(SUB_USB, USB_SUSPEND);
 
         if (minState == null && minCores == null && usbSuspend == null)
-            return new CheckResult("power", "Plan d'alimentation", Severity.Inconnu, name,
-                "Les réglages du plan n'ont pas pu être lus.");
+            return new CheckResult("power", "Power plan", Severity.Inconnu, name,
+                "The plan's settings could not be read.");
 
         var facts = new List<string>();
-        if (minState != null) facts.Add($"état minimal du processeur {minState} %");
-        if (minCores != null) facts.Add($"cœurs actifs minimum {minCores} %");
-        if (usbSuspend != null) facts.Add("suspension USB " + (usbSuspend == 1 ? "activée" : "désactivée"));
-        string detail = "Sur secteur : " + string.Join(", ", facts) + ".";
+        if (minState != null) facts.Add($"minimum processor state {minState}%");
+        if (minCores != null) facts.Add($"minimum active cores {minCores}%");
+        if (usbSuspend != null) facts.Add("suspension USB " + (usbSuspend == 1 ? "enabled" : "disabled"));
+        string detail = "On mains power: " + string.Join(", ", facts) + ".";
 
         var issues = new List<string>();
-        if (minCores is > 0 and < 100) issues.Add("le parking de cœurs est actif");
-        if (usbSuspend == 1) issues.Add("la suspension sélective USB est activée");
+        if (minCores is > 0 and < 100) issues.Add("core parking is active");
+        if (usbSuspend == 1) issues.Add("USB selective suspend is enabled");
 
         if (issues.Count == 0)
-            return new CheckResult("power", "Plan d'alimentation", Severity.Ok, name,
-                detail + " Aucun cœur n'est mis en veille et les ports USB restent alimentés.",
-                "", "power-panel", "Gérer les plans");
+            return new CheckResult("power", "Power plan", Severity.Ok, name,
+                detail + " No core is parked and the USB ports stay powered.",
+                "", "power-panel", "Manage plans");
 
         if (sys.IsLaptop)
-            return new CheckResult("power", "Plan d'alimentation", Severity.Info, name,
-                detail + " Sur un portable, ces économies évitent la surchauffe et le throttling.",
-                "À ne modifier que branché sur secteur, en surveillant les températures.",
-                "power-panel", "Gérer les plans");
+            return new CheckResult("power", "Power plan", Severity.Info, name,
+                detail + " On a laptop, those savings prevent overheating and throttling.",
+                "Only change it while on mains power, and watch the temperatures.",
+                "power-panel", "Manage plans");
 
-        return new CheckResult("power", "Plan d'alimentation", Severity.Warn, name,
-            detail + " Sur un poste fixe, " + string.Join(" et ", issues) + " sans réel bénéfice.",
-            "Effet modeste — quelques images sur les transitions courtes, et un peu de latence souris si la suspension USB "
-            + "touche ton récepteur.",
-            "power-panel", "Gérer les plans");
+        return new CheckResult("power", "Power plan", Severity.Warn, name,
+            detail + " On a desktop, " + string.Join(" and ", issues) + " with no real benefit.",
+            "Modest effect — a few frames on short transitions, and some mouse latency if USB suspend "
+            + "affects your receiver.",
+            "power-panel", "Manage plans");
     }
 
     // ---------- 7. Surcouches accrochées au jeu ----------
@@ -773,31 +773,31 @@ public static class Diagnostics
 
             if (hooked.Count == 0)
                 return new CheckResult("overlays", "Surcouches", Severity.Ok,
-                    "Aucune accrochée au jeu",
-                    $"{modules.Count} modules chargés dans CS2, aucune surcouche connue parmi eux.");
+                    "None hooked into the game",
+                    $"{modules.Count} modules loaded into CS2, none of them a known overlay.");
 
             return new CheckResult("overlays", "Surcouches", hooked.Count >= 3 ? Severity.Probleme : Severity.Warn,
                 string.Join(", ", hooked),
-                $"{hooked.Count} surcouche(s) accrochée(s) au processus de CS2. Chacune coûte des images et peut provoquer des saccades.",
-                "Désactive les superpositions en jeu dans les applications concernées. Celle de Discord se coupe dans Paramètres → Superposition de jeu.");
+                $"{hooked.Count} overlay(s) hooked into the CS2 process. Each one costs frames and can cause stutter.",
+                "Turn off in-game overlays in the applications concerned. Discord's is switched off under Settings → Game Overlay.");
         }
 
         // Sinon on ne peut pas interroger le jeu : on regarde les surcouches elles-mêmes.
         if (apps.Count == 0)
             return new CheckResult("overlays", "Surcouches", Severity.Ok,
-                "Aucune en cours d'exécution",
-                "Aucune application connue pour s'accrocher aux jeux ne tourne : ni Discord, ni RivaTuner, "
+                "None running",
+                "None of the applications known to hook into games is running: no Discord, no RivaTuner, "
                 + "ni Overwolf, ni iCUE, ni Razer Synapse.");
 
         string why = access == SystemProfile.ModuleAccess.Denied
-            ? "Impossible de vérifier lesquelles sont réellement accrochées à CS2 : la lecture de ses modules est bloquée par "
-              + (sys.AntiCheats.Count > 0 ? string.Join(" et ", sys.AntiCheats) : "ton anticheat")
-            : "CS2 n'étant pas lancé, impossible de savoir lesquelles s'y accrocheront";
+            ? "Cannot verify which ones are actually hooked into CS2: reading its modules is blocked by "
+              + (sys.AntiCheats.Count > 0 ? string.Join(" and ", sys.AntiCheats) : "your anti-cheat")
+            : "With CS2 not running, there is no way to tell which ones will hook into it";
 
         return new CheckResult("overlays", "Surcouches", apps.Count >= 3 ? Severity.Warn : Severity.Info,
             string.Join(", ", apps),
-            $"{apps.Count} application(s) capables de s'accrocher au jeu tournent en ce moment. {why}.",
-            "Chacune coûte des images quand sa superposition est active. Coupe celles dont tu n'as pas besoin en jeu : "
-            + "Discord → Paramètres → Superposition de jeu.");
+            $"{apps.Count} application(s) able to hook into the game are running right now. {why}.",
+            "Each costs frames while its overlay is active. Switch off the ones you don't need in game: "
+            + "Discord → Settings → Game Overlay.");
     }
 }

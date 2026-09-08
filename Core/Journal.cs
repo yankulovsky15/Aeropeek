@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -146,12 +146,12 @@ public sealed class Journal
         int done = 0;
         foreach (var rec in Enumerable.Reverse(session.Records.ToList()))
         {
-            progress?.Report(rec.Description.Length > 0 ? rec.Description + "…" : "Restauration…");
+            progress?.Report(rec.Description.Length > 0 ? rec.Description + "…" : "Restoring…");
             try { Ops.Revert(rec); done++; Mark(rec, reverted: true); } catch { }
         }
         session.Records.Clear();
         session.Closed ??= DateTimeOffset.Now;
-        session.Label = session.Label + " (annulée)";
+        session.Label = session.Label + " (undone)";
         Save();
         return done;
     }

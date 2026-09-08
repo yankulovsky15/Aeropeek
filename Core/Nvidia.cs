@@ -1,4 +1,4 @@
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 namespace Aeropeek.Core;
 
@@ -168,49 +168,49 @@ public static class Nvidia
         (PowerModeId, v => (v switch
         {
             0 => "Adaptatif",
-            1 => "Privilégier les performances maximales",
-            2 => "Contrôlé par le pilote",
+            1 => "Prefer maximum performance",
+            2 => "Driver controlled",
             3 => "Performances constantes",
             _ => $"valeur {v}"
         }, v == PowerModeMax,
-           "En adaptatif, la carte redescend en fréquence entre deux images et met un instant à remonter. "
-           + "C'est le seul réglage de cette liste dont l'effet se mesure sur les 1% lows.")),
+           "In adaptive mode the card drops its clocks between frames and takes a moment to climb back. "
+           + "It is the only setting on this list whose effect shows up on the 1% lows.")),
 
-        (0x007BA09E, v => (v == 0 ? "Laissé au jeu" : $"{v} image(s)", true,
-            "Réglage d'avant Reflex. Quand le jeu gère lui-même sa file d'attente — ce que fait CS2 avec Reflex — "
-            + "le forcer ici n'apporte rien.")),
+        (0x007BA09E, v => (v == 0 ? "Left to the game" : $"{v} image(s)", true,
+            "A pre-Reflex setting. When the game manages its own queue — which CS2 does with Reflex — "
+            + "forcing it here achieves nothing.")),
 
         (0x00CE2691, v => (v switch
         {
-            0x14 => "Haute qualité",
-            0x10 => "Qualité",
+            0x14 => "High quality",
+            0x10 => "Quality",
             0x0A => "Performance",
             0x00 => "Hautes performances",
             _ => $"valeur {v}"
         }, true,
-           "Écart invisible en jeu, et coût nul sur une carte récente.")),
+           "The difference is invisible in game, and free on a recent card.")),
 
         // Nom donné par le pilote : « Threaded optimization ». Les constantes
         // 1 et 2 sont celles de la documentation ; 0 signifie « laissé au pilote ».
         (0x20C1221E, v => (v switch
         {
-            0 => "Automatique",
-            1 => "Activée",
-            2 => "Désactivée",
+            0 => "Automatic",
+            1 => "On",
+            2 => "Off",
             _ => $"valeur {v}"
         }, true,
-           "Concerne le rendu OpenGL. CS2 utilise Direct3D : ce réglage ne le touche pas.")),
+           "Applies to OpenGL rendering. CS2 uses Direct3D: this setting does not affect it.")),
 
         // Nom donné par le pilote : « Vertical Sync ». Ces constantes sont des
         // valeurs magiques : on n'interprète que celles dont on est sûr, et on
         // affiche la valeur brute pour les autres plutôt que de deviner.
         (0x00A879CF, v => (v switch
         {
-            0x08416747 => "Forcée désactivée",
-            0x60925591 => "Laissée au jeu",
+            0x08416747 => "Forced off",
+            0x60925591 => "Left to the game",
             _ => $"valeur 0x{v:X8}"
         }, true,
-           "Le jeu décide déjà dans ses propres options. Le pilote ne sert ici qu'à passer outre."))
+           "The game already decides in its own options. The driver only serves to override it."))
     };
 
     /// <summary>
@@ -225,11 +225,11 @@ public static class Nvidia
     public static OpRecord SetPowerMode(uint value)
     {
         if (value > 3)
-            throw new InvalidOperationException($"Valeur hors table pour la gestion de l'alimentation : {value}");
+            throw new InvalidOperationException($"Value outside the power-management table: {value}");
 
         var init = Fn<D_Init>(0x0150E828);
         if (init == null || init() != 0)
-            throw new InvalidOperationException("Le pilote NVIDIA n'a pas répondu.");
+            throw new InvalidOperationException("The NVIDIA driver did not respond.");
 
         try
         {
@@ -242,15 +242,15 @@ public static class Nvidia
             var destroy = Fn<D_DrsDestroy>(0xDAD9CFF8);
 
             if (create == null || load == null || basep == null || get == null || set == null || save == null)
-                throw new InvalidOperationException("Cette version du pilote NVIDIA n'expose pas l'écriture des profils.");
+                throw new InvalidOperationException("This NVIDIA driver version does not expose profile writing.");
 
             if (create(out IntPtr session) != 0)
-                throw new InvalidOperationException("Session NvAPI impossible à ouvrir.");
+                throw new InvalidOperationException("Could not open an NvAPI session.");
 
             try
             {
                 if (load(session) != 0 || basep(session, out IntPtr profile) != 0 || profile == IntPtr.Zero)
-                    throw new InvalidOperationException("Profil global du pilote illisible.");
+                    throw new InvalidOperationException("The driver's global profile is unreadable.");
 
                 uint version = (uint)(Marshal.SizeOf<NVDRS_SETTING>() | (1 << 16));
 
@@ -258,11 +258,11 @@ public static class Nvidia
                 // et non une valeur « par défaut » supposée.
                 var before = new NVDRS_SETTING { version = version };
                 if (get(session, profile, PowerModeId, ref before) != 0)
-                    throw new InvalidOperationException("Réglage d'alimentation illisible.");
+                    throw new InvalidOperationException("Power setting unreadable.");
 
                 uint previous = before.u32CurrentValue;
                 if (previous == value)
-                    throw new InvalidOperationException("Ce réglage est déjà à cette valeur.");
+                    throw new InvalidOperationException("This setting is already at that value.");
 
                 var write = new NVDRS_SETTING
                 {
@@ -277,16 +277,16 @@ public static class Nvidia
                 };
 
                 int rc = set(session, profile, ref write);
-                if (rc != 0) throw new InvalidOperationException($"Le pilote a refusé l'écriture (code {rc}).");
+                if (rc != 0) throw new InvalidOperationException($"The driver refused the write (code {rc}).");
 
                 rc = save(session);
-                if (rc != 0) throw new InvalidOperationException($"Le pilote a refusé d'enregistrer (code {rc}).");
+                if (rc != 0) throw new InvalidOperationException($"The driver refused to save (code {rc}).");
 
                 return new OpRecord
                 {
                     Kind = "nvidia-setting",
                     TweakId = "nvidia-alimentation",
-                    Description = "Gestion de l'alimentation NVIDIA",
+                    Description = "NVIDIA power management",
                     ValueName = PowerModeId.ToString(),
                     PreviousValue = previous.ToString(),
                     NewValue = value.ToString(),

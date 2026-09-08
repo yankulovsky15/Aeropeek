@@ -76,18 +76,18 @@ public sealed class Tweak
         if (c != null)
         {
             if (c.BuildMin > 0 && sys.OsBuild < c.BuildMin)
-                return new Applicability(Verdict.NonPertinent, $"Nécessite Windows build {c.BuildMin} ou plus récent");
+                return new Applicability(Verdict.NonPertinent, $"Requires Windows build {c.BuildMin} or newer");
             if (c.BuildMax > 0 && sys.OsBuild > c.BuildMax)
-                return new Applicability(Verdict.NonPertinent, $"Sans objet à partir de la build {c.BuildMax}");
+                return new Applicability(Verdict.NonPertinent, $"Not applicable from build {c.BuildMax} onwards");
             if (string.Equals(c.Laptop, "no", StringComparison.OrdinalIgnoreCase) && sys.IsLaptop)
-                return new Applicability(Verdict.NonPertinent, "Déconseillé sur un ordinateur portable");
+                return new Applicability(Verdict.NonPertinent, "Not advised on a laptop");
             if (!string.IsNullOrEmpty(c.Gpu)
                 && !sys.GpuNames.Any(g => g.Contains(c.Gpu, StringComparison.OrdinalIgnoreCase)))
-                return new Applicability(Verdict.NonPertinent, $"Aucune carte graphique {c.Gpu} détectée");
+                return new Applicability(Verdict.NonPertinent, $"No {c.Gpu} graphics card detected");
         }
 
         return IsApplied()
-            ? new Applicability(Verdict.DejaApplique, "Déjà appliqué")
+            ? new Applicability(Verdict.DejaApplique, "Already applied")
             : new Applicability(Verdict.Applicable);
     }
 
@@ -124,7 +124,7 @@ public sealed class Catalogue
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine("Catalogue illisible : " + ex.Message);
+            System.Diagnostics.Debug.WriteLine("Catalogue unreadable: " + ex.Message);
         }
         return new Catalogue();
     }

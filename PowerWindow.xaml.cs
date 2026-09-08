@@ -1,4 +1,4 @@
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -87,7 +87,7 @@ public partial class PowerWindow : Window
             }).ToList();
 
             PowerSummary.Text = active != null
-                ? $"Actif : {active.Name} · {_plans.Count} plans disponibles"
+                ? $"Active: {active.Name} · {_plans.Count} plans available"
                 : $"{_plans.Count} plans disponibles";
 
             var dupes = lu.Dupes;
@@ -95,43 +95,43 @@ public partial class PowerWindow : Window
             CardDupes.Visibility = extra > 0 ? Visibility.Visible : Visibility.Collapsed;
             if (extra > 0)
                 DupesDetail.Text = $"{extra} copie(s) inutile(s) : "
-                    + string.Join(", ", dupes.Select(g => $"« {g.Nom} » ×{g.Nombre}"))
-                    + ". Le plan actif et un exemplaire de chaque nom sont conservés ; "
-                    + "les autres sont exportés avant suppression.";
+                    + string.Join(", ", dupes.Select(g => $"“{g.Nom}” ×{g.Nombre}"))
+                    + ". The active plan and one copy of each name are kept; "
+                    + "the others are exported before deletion.";
 
             var (ultimate, certain) = lu.Ultimate;
-            BtnUltimate.Content = ultimate != null ? "Déjà présent" : "Ajouter";
+            BtnUltimate.Content = ultimate != null ? "Already present" : "Ajouter";
             BtnUltimate.IsEnabled = ultimate == null;
             UltimateDetail.Text = ultimate == null
-                ? "Plan livré avec Windows mais masqué par défaut. Aucun ralentissement des cœurs en charge légère."
+                ? "A plan shipped with Windows but hidden by default. No core slowdown under light load."
                 : certain
-                    ? $"Déjà présent sous le nom « {ultimate.Name} »" + (ultimate.Active ? " — c'est ton plan actif." : ".")
-                    : $"Un plan nommé « {ultimate.Name} » est déjà présent"
-                      + (ultimate.Active ? " et c'est ton plan actif" : "")
-                      + ". Son nom indique qu'il dérive du modèle Performances ultimes, sans qu'Aeropeek puisse le certifier.";
+                    ? $"Already present under the name “{ultimate.Name}”" + (ultimate.Active ? " — it is your active plan." : ".")
+                    : $"A plan named “{ultimate.Name}” is already present"
+                      + (ultimate.Active ? " and it is your active plan" : "")
+                      + ". Its name suggests it derives from the Ultimate Performance template, though Aeropeek cannot certify that.";
 
             int? usb = lu.Usb;
             TglUsb.IsChecked = usb == 0;
             TglUsb.IsEnabled = usb != null;
-            UsbState.Text = usb == null ? "illisible" : (usb == 0 ? "Appliqué" : "Non appliqué");
+            UsbState.Text = usb == null ? "illisible" : (usb == 0 ? "Applied" : "Not applied");
             UsbDetail.Text = usb == 0
-                ? "La suspension sélective est désactivée : tes ports restent alimentés en permanence."
-                : "Windows peut mettre tes ports USB en veille. Sur une souris ou un casque sans fil, "
-                  + "ça ajoute une latence au réveil. Contrepartie : quelques watts de plus au repos.";
+                ? "Selective suspend is disabled: your ports stay powered at all times."
+                : "Windows can put your USB ports to sleep. On a wireless mouse or headset, "
+                  + "it adds wake-up latency. The trade-off: a few more watts at idle.";
 
             int? minState = lu.MinState, minCores = lu.MinCores, aspm = lu.Aspm;
 
             PowerFacts.Text = string.Join("\n", new[]
             {
-                minState != null ? $"· État minimal du processeur : {minState} %" : "· État minimal du processeur : non lisible",
-                minCores != null ? $"· Cœurs actifs minimum : {minCores} %" : "· Parking de cœurs : réglage masqué par Windows",
-                aspm != null ? $"· Économie d'énergie PCI Express : {(aspm == 0 ? "désactivée" : "active")}" : "· PCI Express : non lisible",
-                usb != null ? $"· Suspension sélective USB : {(usb == 0 ? "désactivée" : "active")}" : "· USB : non lisible"
+                minState != null ? $"· Minimum processor state: {minState}%" : "· Minimum processor state: unreadable",
+                minCores != null ? $"· Minimum active cores: {minCores}%" : "· Core parking: setting hidden by Windows",
+                aspm != null ? $"· PCI Express power saving: {(aspm == 0 ? "désactivée" : "active")}" : "· PCI Express : non lisible",
+                usb != null ? $"· USB selective suspend: {(usb == 0 ? "désactivée" : "active")}" : "· USB : non lisible"
             });
         }
         catch (Exception ex)
         {
-            PowerSummary.Text = "Lecture impossible : " + ex.Message;
+            PowerSummary.Text = "Could not read: " + ex.Message;
         }
         finally { PowerVeil.Visibility = Visibility.Collapsed; }
     }
@@ -143,7 +143,7 @@ public partial class PowerWindow : Window
         if (sender is not Button { Tag: PlanVm vm } || vm.Active) return;
         try
         {
-            _journal.Record(PowerOps.SetActivePlan(vm.Model.Id, "Plan d'alimentation : " + vm.Name));
+            _journal.Record(PowerOps.SetActivePlan(vm.Model.Id, "Power plan: " + vm.Name));
             Changed = true;
             _ = Refresh();
         }
@@ -155,9 +155,9 @@ public partial class PowerWindow : Window
         if (sender is not Button { Tag: PlanVm vm }) return;
 
         var answer = MessageBox.Show(
-            $"Supprimer le plan « {vm.Name} » ?\n\n" +
-            "Il est exporté sur disque avant suppression : « Tout annuler » saura le réimporter.",
-            "Supprimer un plan", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            $"Delete the plan “{vm.Name}”?\n\n" +
+            "It is exported to disk before deletion: “Undo everything” will be able to import it back.",
+            "Delete a plan", MessageBoxButton.YesNo, MessageBoxImage.Question);
         if (answer != MessageBoxResult.Yes) return;
 
         try
@@ -180,9 +180,9 @@ public partial class PowerWindow : Window
         if (toDelete.Count == 0) return;
 
         var answer = MessageBox.Show(
-            $"Supprimer {toDelete.Count} plan(s) en double ?\n\n" +
-            "Chacun est exporté avant suppression : « Tout annuler » saura les réimporter.",
-            "Nettoyer les doublons", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            $"Delete {toDelete.Count} duplicate plan(s)?\n\n" +
+            "Each is exported before deletion: “Undo everything” will be able to import them back.",
+            "Clean up the duplicates", MessageBoxButton.YesNo, MessageBoxImage.Question);
         if (answer != MessageBoxResult.Yes) return;
 
         int done = 0;
@@ -193,7 +193,7 @@ public partial class PowerWindow : Window
 
         Changed = true;
         _ = Refresh();
-        MessageBox.Show($"{done} plan(s) supprimé(s).", "Aeropeek");
+        MessageBox.Show($"{done} plan(s) deleted.", "Aeropeek");
     }
 
     void Ultimate_Click(object sender, RoutedEventArgs e)
@@ -204,8 +204,8 @@ public partial class PowerWindow : Window
             Changed = true;
             _ = Refresh();
             MessageBox.Show(created
-                ? "Le plan Performances ultimes est maintenant disponible dans la liste."
-                : "Ce plan existait déjà : rien n'a été créé.", "Aeropeek");
+                ? "The Ultimate Performance plan is now available in the list."
+                : "This plan already existed: nothing was created.", "Aeropeek");
         }
         catch (Exception ex) { MessageBox.Show(ex.Message, "Aeropeek", MessageBoxButton.OK, MessageBoxImage.Warning); }
     }
@@ -216,7 +216,7 @@ public partial class PowerWindow : Window
         {
             int target = TglUsb.IsChecked == true ? 0 : 1;
             _journal.Record(PowerOps.SetSetting(PowerOps.SubUsb, PowerOps.UsbSuspend, target,
-                target == 0 ? "Alimentation permanente des ports USB" : "Suspension sélective USB rétablie"));
+                target == 0 ? "Keep USB ports powered" : "USB selective suspend restored"));
             Changed = true;
         }
         catch (Exception ex) { MessageBox.Show(ex.Message, "Aeropeek", MessageBoxButton.OK, MessageBoxImage.Warning); }

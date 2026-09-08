@@ -1,4 +1,4 @@
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 
 namespace Aeropeek.Core;
 
@@ -92,15 +92,15 @@ public static class RegistryOps
     public static bool IsAllowed(string hive, string subKey, out string reason)
     {
         reason = "";
-        if (!Hives.ContainsKey(hive)) { reason = $"Ruche non autorisée : {hive}"; return false; }
+        if (!Hives.ContainsKey(hive)) { reason = $"Hive not allowed: {hive}"; return false; }
         foreach (var f in Forbidden)
             if (subKey.StartsWith(f, StringComparison.OrdinalIgnoreCase))
-            { reason = $"Chemin protégé : {subKey}"; return false; }
+            { reason = $"Protected path: {subKey}"; return false; }
         return true;
     }
 
     static RegistryKey Root(string hive) =>
-        Hives.TryGetValue(hive, out var k) ? k : throw new InvalidOperationException($"Ruche inconnue : {hive}");
+        Hives.TryGetValue(hive, out var k) ? k : throw new InvalidOperationException($"Unknown hive: {hive}");
 
     public static object? ReadValue(string hive, string subKey, string valueName)
     {

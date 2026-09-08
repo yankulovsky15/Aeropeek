@@ -59,74 +59,74 @@ public static class ServiceOps
     {
         // ---- peuvent réellement interrompre une partie ----
 
-        ("DoSvc",     "Partage des mises à jour Windows",
-                      "Ton PC envoie des mises à jour à d'autres PC. C'est ce qui pèse le plus sur ton ping.",
+        ("DoSvc",     "Windows update sharing",
+                      "Your PC uploads updates to other PCs. It is the heaviest thing on your ping.",
                       ServiceImpact.Reel),
-        ("WSearch",   "Recherche Windows",
-                      "Indexe tes fichiers en arrière-plan, par à-coups imprévisibles.",
+        ("WSearch",   "Windows Search",
+                      "Indexes your files in the background, in unpredictable bursts.",
                       ServiceImpact.Reel),
         ("wuauserv",  "Windows Update",
-                      "Recherche et télécharge les mises à jour. Redémarre seul : suspension temporaire uniquement.",
+                      "Finds and downloads updates. Restarts itself: temporary suspension only.",
                       ServiceImpact.Reel),
-        ("BITS",      "Transfert en arrière-plan",
-                      "Télécharge les mises à jour. Dépendance de Windows Update.",
+        ("BITS",      "Background transfer",
+                      "Downloads updates. A dependency of Windows Update.",
                       ServiceImpact.Reel),
         ("SysMain",   "SuperFetch",
-                      "Précharge tes applications. Peu utile avec un SSD rapide et beaucoup de mémoire.",
+                      "Preloads your applications. Of little use with a fast SSD and plenty of memory.",
                       ServiceImpact.Reel),
-        ("DiagTrack", "Télémétrie Windows",
-                      "Envoie des données d'usage à Microsoft.",
+        ("DiagTrack", "Windows telemetry",
+                      "Sends usage data to Microsoft.",
                       ServiceImpact.Reel),
-        ("InstallService", "Installation du Microsoft Store",
-                      "Peut télécharger et installer une application en pleine partie, sans rien demander.",
+        ("InstallService", "Microsoft Store install",
+                      "Can download and install an app mid-match, without asking.",
                       ServiceImpact.Reel),
-        ("ClickToRunSvc", "Mise à jour d'Office",
-                      "Télécharge des paquets de plusieurs centaines de mégaoctets sans prévenir.",
+        ("ClickToRunSvc", "Office update",
+                      "Downloads packages of several hundred megabytes without warning.",
                       ServiceImpact.Reel),
-        ("edgeupdate", "Mise à jour d'Edge",
-                      "Se réveille pour vérifier et télécharger une nouvelle version du navigateur.",
+        ("edgeupdate", "Edge update",
+                      "Wakes up to check for and download a new browser version.",
                       ServiceImpact.Reel),
-        ("CDPSvc",    "Plateforme des appareils connectés",
-                      "Dialogue en permanence avec les autres appareils de ton compte Microsoft.",
+        ("CDPSvc",    "Connected Devices Platform",
+                      "Talks constantly to the other devices on your Microsoft account.",
                       ServiceImpact.Reel),
-        ("WpnService", "Notifications Windows",
-                      "Maintient une connexion ouverte pour les notifications. Tu n'en recevras plus pendant la partie.",
+        ("WpnService", "Windows notifications",
+                      "Holds a connection open for notifications. You will get none during the match.",
                       ServiceImpact.Reel),
-        ("PcaSvc",    "Assistant Compatibilité des programmes",
-                      "Écrit dans une base de données à chaque lancement de programme.",
+        ("PcaSvc",    "Program Compatibility Assistant",
+                      "Writes to a database every time a program starts.",
                       ServiceImpact.Reel),
 
         // ---- au repos : listés pour être complet, sans rien promettre ----
 
-        ("WerSvc",    "Rapport d'erreurs Windows",
-                      "Collecte les plantages.",
+        ("WerSvc",    "Windows Error Reporting",
+                      "Collects crash reports.",
                       ServiceImpact.Nul),
-        ("Spooler",   "Spouleur d'impression",
-                      "Nécessaire uniquement si tu imprimes.",
+        ("Spooler",   "Print Spooler",
+                      "Only needed if you print.",
                       ServiceImpact.Nul),
-        ("PrintNotify", "Notifications d'impression",
-                      "Messages de l'imprimante. Dépend du spouleur.",
+        ("PrintNotify", "Printer notifications",
+                      "Printer notifications. Depends on the spooler.",
                       ServiceImpact.Nul),
-        ("MapsBroker", "Cartes téléchargées",
-                      "Sert l'application Cartes de Windows.",
+        ("MapsBroker", "Downloaded Maps",
+                      "Serves the Windows Maps app.",
                       ServiceImpact.Nul),
-        ("lfsvc",     "Service de géolocalisation",
-                      "Fournit ta position aux applications qui la demandent.",
+        ("lfsvc",     "Geolocation service",
+                      "Supplies your location to apps that ask for it.",
                       ServiceImpact.Nul),
-        ("TrkWks",    "Suivi de liens distribués",
-                      "Répare les raccourcis vers des fichiers déplacés.",
+        ("TrkWks",    "Distributed Link Tracking",
+                      "Repairs shortcuts to files that moved.",
                       ServiceImpact.Nul),
-        ("DusmSvc",   "Utilisation des données",
-                      "Compte les octets consommés par connexion.",
+        ("DusmSvc",   "Data usage",
+                      "Counts the bytes used per connection.",
                       ServiceImpact.Nul),
-        ("XblAuthManager", "Xbox Live — authentification",
-                      "Sert aux jeux Xbox. Sans effet sur CS2.",
+        ("XblAuthManager", "Xbox Live — authentication",
+                      "Used by Xbox games. No effect on CS2.",
                       ServiceImpact.Nul),
-        ("XblGameSave", "Xbox Live — sauvegardes",
-                      "Synchronise les sauvegardes des jeux Xbox.",
+        ("XblGameSave", "Xbox Live — saves",
+                      "Syncs Xbox game saves.",
                       ServiceImpact.Nul),
-        ("XboxNetApiSvc", "Xbox Live — réseau",
-                      "Services réseau des jeux Xbox.",
+        ("XboxNetApiSvc", "Xbox Live — networking",
+                      "Networking services for Xbox games.",
                       ServiceImpact.Nul)
     };
 
@@ -237,7 +237,7 @@ public static class ServiceOps
     /// <summary>Arrête un service et renvoie de quoi le relancer à l'identique.</summary>
     public static OpRecord? Stop(string name, string description)
     {
-        if (!IsAllowed(name)) throw new InvalidOperationException($"Service protégé : {name}");
+        if (!IsAllowed(name)) throw new InvalidOperationException($"Protected service: {name}");
 
         using var sc = Find(name);
         if (sc == null || sc.Status != ServiceControllerStatus.Running) return null;
@@ -315,7 +315,7 @@ public sealed class MatchMode
         // 1. priorité : d'abord, elle profite au jeu pendant le reste des opérations
         if (plan.RaisePriority)
         {
-            progress?.Report("Priorité du jeu…");
+            progress?.Report("Game priority…");
             try
             {
                 var rec = AppOps.SetGamePriority(plan.GameProcess, System.Diagnostics.ProcessPriorityClass.High);
@@ -327,7 +327,7 @@ public sealed class MatchMode
         // 2. applications
         foreach (var (proc, label) in plan.Apps)
         {
-            progress?.Report($"Fermeture de {label}…");
+            progress?.Report($"Closing {label}…");
             try
             {
                 var rec = AppOps.Close(proc, label);
@@ -345,8 +345,8 @@ public sealed class MatchMode
                     c => string.Equals(c.Name, name, StringComparison.OrdinalIgnoreCase));
                 string label = string.IsNullOrEmpty(meta.Label) ? name : meta.Label;
 
-                progress?.Report($"Suspension de {label}…");
-                var rec = ServiceOps.Stop(name, $"Service suspendu : {label}");
+                progress?.Report($"Suspending {label}…");
+                var rec = ServiceOps.Stop(name, $"Service suspended: {label}");
                 if (rec != null) { _journal.Record(rec); services++; }
             }
             catch { }
@@ -359,7 +359,7 @@ public sealed class MatchMode
     public int Stop(IProgress<string>? progress = null)
     {
         if (_session == null) return 0;
-        progress?.Report("Restauration…");
+        progress?.Report("Restoring…");
         int n = _journal.RevertSession(_session, progress);
         _journal.Close();
         _session = null;

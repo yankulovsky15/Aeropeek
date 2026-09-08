@@ -21,13 +21,13 @@
     <Grid Grid.Row="0" Background="{StaticResource Bg}">
       <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
                   WindowChrome.IsHitTestVisibleInChrome="True">
-        <Button Style="{StaticResource WinBtn}" Click="Minimize_Click" ToolTip="Réduire">
+        <Button Style="{StaticResource WinBtn}" Click="Minimize_Click" ToolTip="Minimize">
           <Path Data="M 0,0 H 10" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" StrokeThickness="1.2"/>
         </Button>
-        <Button x:Name="BtnMax" Style="{StaticResource WinBtn}" Click="Maximize_Click" ToolTip="Agrandir">
+        <Button x:Name="BtnMax" Style="{StaticResource WinBtn}" Click="Maximize_Click" ToolTip="Maximize">
           <Path x:Name="MaxIcon" Data="M 0,0 H 10 V 10 H 0 Z" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" StrokeThickness="1.2" Fill="Transparent"/>
         </Button>
-        <Button Style="{StaticResource WinBtnClose}" Click="Close_Click" ToolTip="Fermer">
+        <Button Style="{StaticResource WinBtnClose}" Click="Close_Click" ToolTip="Close">
           <Path Data="M 0,0 L 10,10 M 10,0 L 0,10" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" StrokeThickness="1.2"/>
         </Button>
       </StackPanel>
@@ -52,12 +52,12 @@
 
         <DockPanel Grid.Row="0" Margin="0,0,0,14">
           <Button x:Name="BtnBurger" DockPanel.Dock="Left" Style="{StaticResource WinBtn}"
-                  Width="42" Height="42" Click="Burger_Click" ToolTip="Réduire le menu">
+                  Width="42" Height="42" Click="Burger_Click" ToolTip="Collapse the menu">
             <Path Data="M 0,0 H 15 M 0,5.5 H 15 M 0,11 H 15" StrokeThickness="1.5"
                   Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
           </Button>
           <StackPanel x:Name="BrandPanel" Orientation="Horizontal" VerticalAlignment="Center" Margin="4,0,0,0"
-                      Background="Transparent" Cursor="Hand" ToolTip="Revoir la présentation"
+                      Background="Transparent" Cursor="Hand" ToolTip="Show the introduction again"
                       MouseLeftButtonUp="Brand_Click">
             <!-- Même éclair que l'icône de l'application, en vectoriel : il reste
                  net à n'importe quelle échelle d'affichage. -->
@@ -69,26 +69,26 @@
             </Border>
             <TextBlock Text="Aeropeek" FontSize="15" FontWeight="SemiBold" Margin="9,0,0,0"
                        VerticalAlignment="Center"/>
-            <TextBlock Text="bêta" Foreground="{StaticResource Ink3}" FontSize="11" Margin="8,3,0,0"/>
+            <TextBlock Text="beta" Foreground="{StaticResource Ink3}" FontSize="11" Margin="8,3,0,0"/>
           </StackPanel>
         </DockPanel>
 
         <StackPanel Grid.Row="1">
-          <RadioButton x:Name="NavDiag" Style="{StaticResource Nav}" ToolTip="Diagnostic" local:NavIcon.Data="F1 M 3,12 A 9,9 0 1 1 21,12 A 9,9 0 1 1 3,12 Z M 12.9,12.9 L 17.3,6.7 L 11.1,11.1 Z" Content="Diagnostic"
+          <RadioButton x:Name="NavDiag" Style="{StaticResource Nav}" ToolTip="Diagnostics" local:NavIcon.Data="F1 M 3,12 A 9,9 0 1 1 21,12 A 9,9 0 1 1 3,12 Z M 12.9,12.9 L 17.3,6.7 L 11.1,11.1 Z" Content="Diagnostics"
                        IsChecked="True" Checked="Nav_Checked" Tag="0"/>
-          <RadioButton x:Name="NavMatch" Style="{StaticResource Nav}" ToolTip="Mode Match" local:NavIcon.Data="F1 M 4.4,12 A 7.6,7.6 0 1 1 19.6,12 A 7.6,7.6 0 1 1 4.4,12 Z M 6.9,12 A 5.1,5.1 0 1 0 17.1,12 A 5.1,5.1 0 1 0 6.9,12 Z M 9.7,12 A 2.3,2.3 0 1 1 14.3,12 A 2.3,2.3 0 1 1 9.7,12 Z M 11.9,3 L 12.1,3 A 0.9,0.9 0 0 1 13,3.9 L 13,5.7 A 0.9,0.9 0 0 1 12.1,6.6 L 11.9,6.6 A 0.9,0.9 0 0 1 11,5.7 L 11,3.9 A 0.9,0.9 0 0 1 11.9,3 Z M 11.9,17.4 L 12.1,17.4 A 0.9,0.9 0 0 1 13,18.3 L 13,20.1 A 0.9,0.9 0 0 1 12.1,21 L 11.9,21 A 0.9,0.9 0 0 1 11,20.1 L 11,18.3 A 0.9,0.9 0 0 1 11.9,17.4 Z M 3.9,11 L 5.7,11 A 0.9,0.9 0 0 1 6.6,11.9 L 6.6,12.1 A 0.9,0.9 0 0 1 5.7,13 L 3.9,13 A 0.9,0.9 0 0 1 3,12.1 L 3,11.9 A 0.9,0.9 0 0 1 3.9,11 Z M 18.3,11 L 20.1,11 A 0.9,0.9 0 0 1 21,11.9 L 21,12.1 A 0.9,0.9 0 0 1 20.1,13 L 18.3,13 A 0.9,0.9 0 0 1 17.4,12.1 L 17.4,11.9 A 0.9,0.9 0 0 1 18.3,11 Z" Content="Mode Match"
+          <RadioButton x:Name="NavMatch" Style="{StaticResource Nav}" ToolTip="Match Mode" local:NavIcon.Data="F1 M 4.4,12 A 7.6,7.6 0 1 1 19.6,12 A 7.6,7.6 0 1 1 4.4,12 Z M 6.9,12 A 5.1,5.1 0 1 0 17.1,12 A 5.1,5.1 0 1 0 6.9,12 Z M 9.7,12 A 2.3,2.3 0 1 1 14.3,12 A 2.3,2.3 0 1 1 9.7,12 Z M 11.9,3 L 12.1,3 A 0.9,0.9 0 0 1 13,3.9 L 13,5.7 A 0.9,0.9 0 0 1 12.1,6.6 L 11.9,6.6 A 0.9,0.9 0 0 1 11,5.7 L 11,3.9 A 0.9,0.9 0 0 1 11.9,3 Z M 11.9,17.4 L 12.1,17.4 A 0.9,0.9 0 0 1 13,18.3 L 13,20.1 A 0.9,0.9 0 0 1 12.1,21 L 11.9,21 A 0.9,0.9 0 0 1 11,20.1 L 11,18.3 A 0.9,0.9 0 0 1 11.9,17.4 Z M 3.9,11 L 5.7,11 A 0.9,0.9 0 0 1 6.6,11.9 L 6.6,12.1 A 0.9,0.9 0 0 1 5.7,13 L 3.9,13 A 0.9,0.9 0 0 1 3,12.1 L 3,11.9 A 0.9,0.9 0 0 1 3.9,11 Z M 18.3,11 L 20.1,11 A 0.9,0.9 0 0 1 21,11.9 L 21,12.1 A 0.9,0.9 0 0 1 20.1,13 L 18.3,13 A 0.9,0.9 0 0 1 17.4,12.1 L 17.4,11.9 A 0.9,0.9 0 0 1 18.3,11 Z" Content="Match Mode"
                        Checked="Nav_Checked" Tag="4"/>
-          <RadioButton x:Name="NavTweaks" Style="{StaticResource Nav}" ToolTip="Réglages" local:NavIcon.Data="F1 M 5.5,3.5 L 5.5,3.5 A 1.3,1.3 0 0 1 6.8,4.8 L 6.8,19.2 A 1.3,1.3 0 0 1 5.5,20.5 L 5.5,20.5 A 1.3,1.3 0 0 1 4.2,19.2 L 4.2,4.8 A 1.3,1.3 0 0 1 5.5,3.5 Z M 2.4,8.5 A 3.1,3.1 0 1 1 8.6,8.5 A 3.1,3.1 0 1 1 2.4,8.5 Z M 4.25,8.5 A 1.25,1.25 0 1 0 6.75,8.5 A 1.25,1.25 0 1 0 4.25,8.5 Z M 12,3.5 L 12,3.5 A 1.3,1.3 0 0 1 13.3,4.8 L 13.3,19.2 A 1.3,1.3 0 0 1 12,20.5 L 12,20.5 A 1.3,1.3 0 0 1 10.7,19.2 L 10.7,4.8 A 1.3,1.3 0 0 1 12,3.5 Z M 8.9,15 A 3.1,3.1 0 1 1 15.1,15 A 3.1,3.1 0 1 1 8.9,15 Z M 10.75,15 A 1.25,1.25 0 1 0 13.25,15 A 1.25,1.25 0 1 0 10.75,15 Z M 18.5,3.5 L 18.5,3.5 A 1.3,1.3 0 0 1 19.8,4.8 L 19.8,19.2 A 1.3,1.3 0 0 1 18.5,20.5 L 18.5,20.5 A 1.3,1.3 0 0 1 17.2,19.2 L 17.2,4.8 A 1.3,1.3 0 0 1 18.5,3.5 Z M 15.4,7.5 A 3.1,3.1 0 1 1 21.6,7.5 A 3.1,3.1 0 1 1 15.4,7.5 Z M 17.25,7.5 A 1.25,1.25 0 1 0 19.75,7.5 A 1.25,1.25 0 1 0 17.25,7.5 Z" Content="Réglages"
+          <RadioButton x:Name="NavTweaks" Style="{StaticResource Nav}" ToolTip="Tweaks" local:NavIcon.Data="F1 M 5.5,3.5 L 5.5,3.5 A 1.3,1.3 0 0 1 6.8,4.8 L 6.8,19.2 A 1.3,1.3 0 0 1 5.5,20.5 L 5.5,20.5 A 1.3,1.3 0 0 1 4.2,19.2 L 4.2,4.8 A 1.3,1.3 0 0 1 5.5,3.5 Z M 2.4,8.5 A 3.1,3.1 0 1 1 8.6,8.5 A 3.1,3.1 0 1 1 2.4,8.5 Z M 4.25,8.5 A 1.25,1.25 0 1 0 6.75,8.5 A 1.25,1.25 0 1 0 4.25,8.5 Z M 12,3.5 L 12,3.5 A 1.3,1.3 0 0 1 13.3,4.8 L 13.3,19.2 A 1.3,1.3 0 0 1 12,20.5 L 12,20.5 A 1.3,1.3 0 0 1 10.7,19.2 L 10.7,4.8 A 1.3,1.3 0 0 1 12,3.5 Z M 8.9,15 A 3.1,3.1 0 1 1 15.1,15 A 3.1,3.1 0 1 1 8.9,15 Z M 10.75,15 A 1.25,1.25 0 1 0 13.25,15 A 1.25,1.25 0 1 0 10.75,15 Z M 18.5,3.5 L 18.5,3.5 A 1.3,1.3 0 0 1 19.8,4.8 L 19.8,19.2 A 1.3,1.3 0 0 1 18.5,20.5 L 18.5,20.5 A 1.3,1.3 0 0 1 17.2,19.2 L 17.2,4.8 A 1.3,1.3 0 0 1 18.5,3.5 Z M 15.4,7.5 A 3.1,3.1 0 1 1 21.6,7.5 A 3.1,3.1 0 1 1 15.4,7.5 Z M 17.25,7.5 A 1.25,1.25 0 1 0 19.75,7.5 A 1.25,1.25 0 1 0 17.25,7.5 Z" Content="Tweaks"
                        Checked="Nav_Checked" Tag="1"/>
-          <RadioButton x:Name="NavClean" Style="{StaticResource Nav}" ToolTip="Nettoyage" local:NavIcon.Data="F1 M 20.4132,4.51317 L 14.2132,10.7132 L 12.5868,9.08683 L 18.7868,2.88683 Z M 10.8,7.6 L 16.4,13.2 L 11.4,21 L 3,12.6 Z M 7.95,9.55 L 14.45,16.05 L 15.15,15.35 L 8.65,8.85 Z" Content="Nettoyage"
+          <RadioButton x:Name="NavClean" Style="{StaticResource Nav}" ToolTip="Cleanup" local:NavIcon.Data="F1 M 20.4132,4.51317 L 14.2132,10.7132 L 12.5868,9.08683 L 18.7868,2.88683 Z M 10.8,7.6 L 16.4,13.2 L 11.4,21 L 3,12.6 Z M 7.95,9.55 L 14.45,16.05 L 15.15,15.35 L 8.65,8.85 Z" Content="Cleanup"
                        Checked="Nav_Checked" Tag="7"/>
           <RadioButton x:Name="NavDns" Style="{StaticResource Nav}" ToolTip="DNS" local:NavIcon.Data="F1 M 3,12 A 9,9 0 1 1 21,12 A 9,9 0 1 1 3,12 Z M 4.8,8.25 A 0.6,0.6 0 0 0 4.2,8.85 L 4.2,8.85 A 0.6,0.6 0 0 0 4.8,9.45 L 19.2,9.45 A 0.6,0.6 0 0 0 19.8,8.85 L 19.8,8.85 A 0.6,0.6 0 0 0 19.2,8.25 Z M 4.8,14.55 A 0.6,0.6 0 0 0 4.2,15.15 L 4.2,15.15 A 0.6,0.6 0 0 0 4.8,15.75 L 19.2,15.75 A 0.6,0.6 0 0 0 19.8,15.15 L 19.8,15.15 A 0.6,0.6 0 0 0 19.2,14.55 Z M 12,3.6 A 0.65,0.65 0 0 0 11.35,4.25 L 11.35,19.75 A 0.65,0.65 0 0 0 12,20.4 L 12,20.4 A 0.65,0.65 0 0 0 12.65,19.75 L 12.65,4.25 A 0.65,0.65 0 0 0 12,3.6 Z" Content="DNS"
                        Checked="Nav_Checked" Tag="6"/>
           <RadioButton x:Name="NavBench" Style="{StaticResource Nav}" ToolTip="Benchmark" local:NavIcon.Data="F1 M 3.95,19.1 L 20.05,19.1 A 0.95,0.95 0 0 1 21,20.05 L 21,20.05 A 0.95,0.95 0 0 1 20.05,21 L 3.95,21 A 0.95,0.95 0 0 1 3,20.05 L 3,20.05 A 0.95,0.95 0 0 1 3.95,19.1 Z M 6.5,11.8 L 7.9,11.8 A 1.1,1.1 0 0 1 9,12.9 L 9,19.2 A 1.1,1.1 0 0 1 7.9,20.3 L 6.5,20.3 A 1.1,1.1 0 0 1 5.4,19.2 L 5.4,12.9 A 1.1,1.1 0 0 1 6.5,11.8 Z M 11.3,5.6 L 12.7,5.6 A 1.1,1.1 0 0 1 13.8,6.7 L 13.8,19.2 A 1.1,1.1 0 0 1 12.7,20.3 L 11.3,20.3 A 1.1,1.1 0 0 1 10.2,19.2 L 10.2,6.7 A 1.1,1.1 0 0 1 11.3,5.6 Z M 16.1,14.3 L 17.5,14.3 A 1.1,1.1 0 0 1 18.6,15.4 L 18.6,19.2 A 1.1,1.1 0 0 1 17.5,20.3 L 16.1,20.3 A 1.1,1.1 0 0 1 15,19.2 L 15,15.4 A 1.1,1.1 0 0 1 16.1,14.3 Z" Content="Benchmark"
                        Checked="Nav_Checked" Tag="3"/>
-          <RadioButton x:Name="NavUtils" Style="{StaticResource Nav}" ToolTip="Utilitaires" local:NavIcon.Data="F1 M 5.2,8.4 L 18.8,8.4 A 2.2,2.2 0 0 1 21,10.6 L 21,18.4 A 2.2,2.2 0 0 1 18.8,20.6 L 5.2,20.6 A 2.2,2.2 0 0 1 3,18.4 L 3,10.6 A 2.2,2.2 0 0 1 5.2,8.4 Z M 9.7,3.6 L 14.3,3.6 A 2.1,2.1 0 0 1 16.4,5.7 L 16.4,7.5 A 2.1,2.1 0 0 1 14.3,9.6 L 9.7,9.6 A 2.1,2.1 0 0 1 7.6,7.5 L 7.6,5.7 A 2.1,2.1 0 0 1 9.7,3.6 Z M 11,5.5 A 1.5,1.5 0 0 0 9.5,7 L 9.5,8.1 A 1.5,1.5 0 0 0 11,9.6 L 13,9.6 A 1.5,1.5 0 0 0 14.5,8.1 L 14.5,7 A 1.5,1.5 0 0 0 13,5.5 Z M 5.85,12.6 A 0.85,0.85 0 0 0 5,13.45 L 5,13.45 A 0.85,0.85 0 0 0 5.85,14.3 L 18.15,14.3 A 0.85,0.85 0 0 0 19,13.45 L 19,13.45 A 0.85,0.85 0 0 0 18.15,12.6 Z" Content="Utilitaires"
+          <RadioButton x:Name="NavUtils" Style="{StaticResource Nav}" ToolTip="Utilities" local:NavIcon.Data="F1 M 5.2,8.4 L 18.8,8.4 A 2.2,2.2 0 0 1 21,10.6 L 21,18.4 A 2.2,2.2 0 0 1 18.8,20.6 L 5.2,20.6 A 2.2,2.2 0 0 1 3,18.4 L 3,10.6 A 2.2,2.2 0 0 1 5.2,8.4 Z M 9.7,3.6 L 14.3,3.6 A 2.1,2.1 0 0 1 16.4,5.7 L 16.4,7.5 A 2.1,2.1 0 0 1 14.3,9.6 L 9.7,9.6 A 2.1,2.1 0 0 1 7.6,7.5 L 7.6,5.7 A 2.1,2.1 0 0 1 9.7,3.6 Z M 11,5.5 A 1.5,1.5 0 0 0 9.5,7 L 9.5,8.1 A 1.5,1.5 0 0 0 11,9.6 L 13,9.6 A 1.5,1.5 0 0 0 14.5,8.1 L 14.5,7 A 1.5,1.5 0 0 0 13,5.5 Z M 5.85,12.6 A 0.85,0.85 0 0 0 5,13.45 L 5,13.45 A 0.85,0.85 0 0 0 5.85,14.3 L 18.15,14.3 A 0.85,0.85 0 0 0 19,13.45 L 19,13.45 A 0.85,0.85 0 0 0 18.15,12.6 Z" Content="Utilities"
                        Checked="Nav_Checked" Tag="8"/>
-          <RadioButton x:Name="NavRestore" Style="{StaticResource Nav}" ToolTip="Restauration" local:NavIcon.Data="F1 M 17.2947,5.22311 A 8.6,8.6 0 1 1 7.19094,4.87028 L 9.0922,7.689 A 5.2,5.2 0 1 0 15.2014,7.90234 Z M 18.7107,3.41068 L 11.8352,3.11502 L 13.7854,9.71477 Z" Content="Restauration"
+          <RadioButton x:Name="NavRestore" Style="{StaticResource Nav}" ToolTip="Restore" local:NavIcon.Data="F1 M 17.2947,5.22311 A 8.6,8.6 0 1 1 7.19094,4.87028 L 9.0922,7.689 A 5.2,5.2 0 1 0 15.2014,7.90234 Z M 18.7107,3.41068 L 11.8352,3.11502 L 13.7854,9.71477 Z" Content="Restore"
                        Checked="Nav_Checked" Tag="5"/>
         </StackPanel>
 
@@ -116,12 +116,12 @@
         </Grid.RowDefinitions>
 
         <DockPanel Grid.Row="0" Margin="0,0,0,18">
-          <Button DockPanel.Dock="Right" x:Name="BtnScan" Content="Analyser" Style="{StaticResource Primary}"
+          <Button DockPanel.Dock="Right" x:Name="BtnScan" Content="Scan" Style="{StaticResource Primary}"
                   Click="Scan_Click" VerticalAlignment="Bottom"/>
           <StackPanel>
-            <TextBlock Text="Diagnostic" Style="{StaticResource H1}"/>
+            <TextBlock Text="Diagnostics" Style="{StaticResource H1}"/>
             <TextBlock x:Name="DiagSummary" Style="{StaticResource Sub}" Margin="0,4,0,0"
-                       Text="Analyse de la configuration en cours…"/>
+                       Text="Reading your configuration…"/>
           </StackPanel>
         </DockPanel>
 
@@ -160,7 +160,7 @@
         </ScrollViewer>
 
         <ContentControl x:Name="DiagVeil" Grid.Row="1" Style="{StaticResource ScanVeil}"
-                        Content="Analyse du système…"/>
+                        Content="Scanning the system…"/>
       </Grid>
 
       <!-- Reglages -->
@@ -171,9 +171,9 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Margin="0,0,0,18">
-          <TextBlock Text="Réglages" Style="{StaticResource H1}"/>
+          <TextBlock Text="Tweaks" Style="{StaticResource H1}"/>
           <TextBlock Style="{StaticResource Sub}" Margin="0,4,0,0"
-                     Text="Chaque réglage enregistre l'état exact qui le précédait. Annuler restaure cet état, jamais une valeur par défaut supposée."/>
+                     Text="Every tweak records the exact state that came before it. Undoing restores that state — never a guessed default."/>
         </StackPanel>
 
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="0,0,10,0">
@@ -192,10 +192,10 @@
                                     Tag="{Binding}" Click="Tweak_Click" ToolTip="{Binding ActionLabel}"/>
                       <TextBlock Text="{Binding StateLabel}" Foreground="{Binding BadgeFg}" FontSize="11"
                                  HorizontalAlignment="Center" Margin="0,6,0,0" TextWrapping="NoWrap"/>
-                      <Button Content="Mesurer" Style="{StaticResource Ghost}" Height="28" Padding="12,0"
+                      <Button Content="Measure" Style="{StaticResource Ghost}" Height="28" Padding="12,0"
                               FontSize="12" Margin="0,10,0,0" HorizontalAlignment="Center"
                               Visibility="{Binding MeasureVisibility}" Tag="{Binding}" Click="Measure_Click"
-                              ToolTip="Mesurer l'effet réel de ce réglage sur ta machine"/>
+                              ToolTip="Measure what this tweak actually does on your machine"/>
                     </StackPanel>
                     <StackPanel>
                       <DockPanel>
@@ -231,7 +231,7 @@
         </Grid.RowDefinitions>
 
         <DockPanel Grid.Row="0" Margin="0,0,0,18">
-          <Button DockPanel.Dock="Right" x:Name="BtnDnsTest" Content="Tester les serveurs"
+          <Button DockPanel.Dock="Right" x:Name="BtnDnsTest" Content="Test the servers"
                   Style="{StaticResource Primary}" Click="DnsTest_Click" VerticalAlignment="Bottom"
                   Height="38" Padding="18,0" FontSize="13.5"/>
           <StackPanel>
@@ -245,7 +245,7 @@
 
             <Border Style="{StaticResource Card}">
               <StackPanel>
-                <TextBlock Text="CONFIGURATION ACTUELLE" Style="{StaticResource Kicker}"/>
+                <TextBlock Text="CURRENT SETUP" Style="{StaticResource Kicker}"/>
                 <ItemsControl x:Name="AdaptersList" Margin="0,10,0,0">
                   <ItemsControl.ItemTemplate>
                     <DataTemplate>
@@ -356,7 +356,7 @@
             <Border Style="{StaticResource Card}" Margin="0,0,12,12">
               <StackPanel>
                 <DockPanel>
-                  <Button DockPanel.Dock="Right" x:Name="BtnCustomDns" Content="Afficher"
+                  <Button DockPanel.Dock="Right" x:Name="BtnCustomDns" Content="Show"
                           Style="{StaticResource Ghost}" Height="30" MinWidth="92" Click="CustomDns_Toggle"/>
                   <Border Width="36" Height="36" CornerRadius="9" Background="#231C36"
                           Margin="0,0,12,0" VerticalAlignment="Center">
@@ -365,7 +365,7 @@
                           Stroke="#B98CF7" StrokeThickness="1.7"
                           StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round"/>
                   </Border>
-                  <TextBlock Text="Serveurs personnalisés" FontSize="15" FontWeight="SemiBold"
+                  <TextBlock Text="Custom servers" FontSize="15" FontWeight="SemiBold"
                              VerticalAlignment="Center"/>
                 </DockPanel>
 
@@ -378,20 +378,20 @@
                       <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
-                      <TextBlock Text="SERVEUR PRINCIPAL" Style="{StaticResource Kicker}" Margin="0,0,0,7"/>
+                      <TextBlock Text="PRIMARY SERVER" Style="{StaticResource Kicker}" Margin="0,0,0,7"/>
                       <TextBox x:Name="CustomPrimary" Tag="1.1.1.1"/>
                     </StackPanel>
                     <StackPanel Grid.Column="2">
-                      <TextBlock Text="SERVEUR SECONDAIRE (FACULTATIF)" Style="{StaticResource Kicker}" Margin="0,0,0,7"/>
+                      <TextBlock Text="SECONDARY SERVER (OPTIONAL)" Style="{StaticResource Kicker}" Margin="0,0,0,7"/>
                       <TextBox x:Name="CustomSecondary" Tag="1.0.0.1"/>
                     </StackPanel>
                   </Grid>
                   <DockPanel Margin="0,14,0,0">
-                    <Button DockPanel.Dock="Right" Content="Appliquer" Style="{StaticResource Primary}"
+                    <Button DockPanel.Dock="Right" Content="Apply" Style="{StaticResource Primary}"
                             Height="38" Padding="20,0" FontSize="13.5" Click="CustomDns_Apply" Margin="16,0,0,0"/>
                     <TextBlock x:Name="CustomDnsHint" Style="{StaticResource Sub}" FontSize="12.5"
                                VerticalAlignment="Center"
-                               Text="Adresses IPv4 uniquement. Le secondaire peut rester vide."/>
+                               Text="IPv4 addresses only. The secondary one may stay empty."/>
                   </DockPanel>
                 </StackPanel>
               </StackPanel>
@@ -401,7 +401,7 @@
         </ScrollViewer>
 
         <ContentControl x:Name="DnsVeil" Grid.Row="1" Style="{StaticResource ScanVeil}"
-                        Content="Test des serveurs…"/>
+                        Content="Testing the servers…"/>
       </Grid>
 
       <!-- Nettoyage -->
@@ -413,16 +413,16 @@
         </Grid.RowDefinitions>
 
         <DockPanel Grid.Row="0" Margin="0,0,0,16">
-          <Button DockPanel.Dock="Right" x:Name="BtnCleanRun" Content="Nettoyer la sélection"
+          <Button DockPanel.Dock="Right" x:Name="BtnCleanRun" Content="Clean selected"
                   Style="{StaticResource Primary}" Click="CleanRun_Click" VerticalAlignment="Bottom" Margin="10,0,0,0"/>
-          <Button DockPanel.Dock="Right" x:Name="BtnCleanScan" Content="Analyser"
+          <Button DockPanel.Dock="Right" x:Name="BtnCleanScan" Content="Scan"
                   Style="{StaticResource Ghost}" Height="40" Click="CleanScan_Click" VerticalAlignment="Bottom"
                   Margin="10,0,0,0"/>
-          <Button DockPanel.Dock="Right" x:Name="BtnCleanAll" Content="Tout sélectionner"
+          <Button DockPanel.Dock="Right" x:Name="BtnCleanAll" Content="Select all"
                   Style="{StaticResource Ghost}" Height="40" Click="CleanAll_Click" VerticalAlignment="Bottom"
                   MinWidth="150"/>
           <StackPanel>
-            <TextBlock Text="Nettoyage" Style="{StaticResource H1}"/>
+            <TextBlock Text="Cleanup" Style="{StaticResource H1}"/>
             <TextBlock x:Name="CleanSummary" Style="{StaticResource Sub}" Margin="0,4,0,0"/>
           </StackPanel>
         </DockPanel>
@@ -433,7 +433,7 @@
                        FontFamily="Cascadia Mono, Consolas" FontSize="18" FontWeight="SemiBold"
                        VerticalAlignment="Center" TextWrapping="NoWrap" Margin="16,0,0,0"/>
             <TextBlock Style="{StaticResource Sub}" FontSize="12.5" VerticalAlignment="Center"
-                       Text="Une suppression de fichiers ne peut pas être annulée : déplacer des dizaines de Go en quarantaine n'aurait pas de sens. Le journal en garde la trace, mais « Tout annuler » ne les restaurera pas."/>
+                       Text="Deleting files cannot be undone: moving tens of gigabytes into quarantine would make no sense. The journal keeps a record of it, but “Undo everything” will not bring them back."/>
           </DockPanel>
         </Border>
 
@@ -468,7 +468,7 @@
         </ScrollViewer>
 
         <ContentControl x:Name="CleanScanVeil" Style="{StaticResource ScanVeil}"
-                        Content="Analyse des dossiers…"/>
+                        Content="Scanning folders…"/>
         </Grid>
       </Grid>
 
@@ -482,9 +482,9 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Margin="0,0,0,16">
-          <TextBlock Text="Mode Match" Style="{StaticResource H1}"/>
+          <TextBlock Text="Match Mode" Style="{StaticResource H1}"/>
           <TextBlock Style="{StaticResource Sub}" Margin="0,4,0,0"
-                     Text="Met en pause ce qui tourne en arrière-plan le temps d'une partie, puis remet tout comme avant. Aucun type de démarrage n'est modifié."/>
+                     Text="Pauses what runs in the background for the length of a match, then puts everything back. No startup type is changed."/>
         </StackPanel>
 
         <!-- Bandeau compact. Les descriptions des deux options sont passées en
@@ -494,12 +494,12 @@
             <DockPanel>
               <StackPanel DockPanel.Dock="Right" Width="84" VerticalAlignment="Center" Margin="18,0,0,0">
                 <ToggleButton x:Name="SwMatch" Style="{StaticResource Switch}" HorizontalAlignment="Center"
-                              Click="Match_Click" ToolTip="Activer ou désactiver maintenant"/>
-                <TextBlock x:Name="MatchState" Text="En veille" Foreground="{StaticResource Ink3}"
+                              Click="Match_Click" ToolTip="Turn on or off now"/>
+                <TextBlock x:Name="MatchState" Text="Idle" Foreground="{StaticResource Ink3}"
                            FontSize="11" HorizontalAlignment="Center" Margin="0,5,0,0" TextWrapping="NoWrap"/>
               </StackPanel>
               <StackPanel VerticalAlignment="Center">
-                <TextBlock x:Name="MatchTitle" Text="Mode Match en veille" FontSize="15" FontWeight="SemiBold"/>
+                <TextBlock x:Name="MatchTitle" Text="Match Mode idle" FontSize="15" FontWeight="SemiBold"/>
                 <TextBlock x:Name="MatchDetail" Style="{StaticResource Sub}" FontSize="12.5"
                            Margin="0,4,0,0" TextWrapping="Wrap"/>
               </StackPanel>
@@ -508,20 +508,20 @@
             <Border Height="1" Background="#1C2836" Margin="0,13,0,11"/>
 
             <DockPanel>
-              <TextBlock DockPanel.Dock="Right" x:Name="HowLink" Text="Comment ça marche ?"
+              <TextBlock DockPanel.Dock="Right" x:Name="HowLink" Text="How does it work?"
                          Foreground="{StaticResource Accent}" FontSize="12" Cursor="Hand"
                          Background="Transparent" Padding="4,2"
                          VerticalAlignment="Center" Margin="12,0,0,0" MouseLeftButtonUp="How_Click"/>
               <StackPanel Orientation="Horizontal">
                 <ToggleButton x:Name="ChkAuto" Style="{StaticResource SwitchSm}" Click="Option_Toggle"
                               VerticalAlignment="Center"
-                              ToolTip="S'active seul au lancement de CS2, se désactive à sa fermeture."/>
-                <TextBlock Text="Automatique au lancement de CS2" FontSize="12.5" Margin="9,0,24,0"
+                              ToolTip="Turns itself on when CS2 starts, and off when it closes."/>
+                <TextBlock Text="Automatic when CS2 starts" FontSize="12.5" Margin="9,0,24,0"
                            Foreground="{StaticResource Ink2}" VerticalAlignment="Center"/>
                 <ToggleButton x:Name="ChkPriority" Style="{StaticResource SwitchSm}" IsChecked="True"
                               Click="Option_Toggle" VerticalAlignment="Center"
-                              ToolTip="Windows sert cs2.exe avant le reste. Sans effet si le jeu n'est pas lancé."/>
-                <TextBlock Text="Priorité haute pour CS2" FontSize="12.5" Margin="9,0,0,0"
+                              ToolTip="Windows serves cs2.exe before anything else. No effect while the game isn't running."/>
+                <TextBlock Text="High priority for CS2" FontSize="12.5" Margin="9,0,0,0"
                            Foreground="{StaticResource Ink2}" VerticalAlignment="Center"/>
               </StackPanel>
             </DockPanel>
@@ -539,9 +539,9 @@
                              FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </Border>
                 <StackPanel Margin="8,0,0,0">
-                  <TextBlock Text="Priorité" FontSize="12.5" FontWeight="SemiBold"/>
+                  <TextBlock Text="Priority" FontSize="12.5" FontWeight="SemiBold"/>
                   <TextBlock Style="{StaticResource Sub}" FontSize="11.5" Margin="0,2,0,0"
-                             TextWrapping="Wrap" Text="cs2.exe passe devant."/>
+                             TextWrapping="Wrap" Text="cs2.exe goes first."/>
                 </StackPanel>
               </StackPanel>
               <StackPanel Orientation="Horizontal" Margin="0,0,16,0">
@@ -552,7 +552,7 @@
                 <StackPanel Margin="8,0,0,0">
                   <TextBlock Text="Applications" FontSize="12.5" FontWeight="SemiBold"/>
                   <TextBlock Style="{StaticResource Sub}" FontSize="11.5" Margin="0,2,0,0"
-                             TextWrapping="Wrap" Text="Les cochées sont fermées."/>
+                             TextWrapping="Wrap" Text="Ticked ones get closed."/>
                 </StackPanel>
               </StackPanel>
               <StackPanel Orientation="Horizontal" Margin="0,0,16,0">
@@ -563,12 +563,12 @@
                 <StackPanel Margin="8,0,0,0">
                   <TextBlock Text="Services" FontSize="12.5" FontWeight="SemiBold"/>
                   <TextBlock Style="{StaticResource Sub}" FontSize="11.5" Margin="0,2,0,0"
-                             TextWrapping="Wrap" Text="Les cochés sont suspendus."/>
+                             TextWrapping="Wrap" Text="Ticked ones get suspended."/>
                 </StackPanel>
               </StackPanel>
             </UniformGrid>
             <TextBlock Style="{StaticResource Sub}" FontSize="12" Margin="0,12,0,0" TextWrapping="Wrap"
-                       Text="À la désactivation tout revient : services relancés, applications rouvertes, priorité rendue. Aucun type de démarrage n'est modifié — et si Aeropeek se ferme brutalement, la restauration a lieu au prochain lancement."/>
+                       Text="Turning it off puts everything back: services restarted, applications reopened, priority handed back. No startup type is changed — and if Aeropeek closes abruptly, the rollback happens on the next launch."/>
           </StackPanel>
         </Border>
 
@@ -576,10 +576,10 @@
          <StackPanel>
 
           <DockPanel Margin="2,2,0,10">
-            <Button DockPanel.Dock="Right" x:Name="BtnSelectApps" Content="Tout cocher"
+            <Button DockPanel.Dock="Right" x:Name="BtnSelectApps" Content="Tick all"
                     Style="{StaticResource Ghost}" Height="26" Padding="12,0" FontSize="11.5"
                     Click="SelectAllApps_Click" VerticalAlignment="Center"/>
-            <TextBlock x:Name="AppsHeader" Text="APPLICATIONS EN ARRIÈRE-PLAN"
+            <TextBlock x:Name="AppsHeader" Text="BACKGROUND APPLICATIONS"
                        Style="{StaticResource Kicker}" VerticalAlignment="Center"/>
           </DockPanel>
           <ItemsControl x:Name="AppsList">
@@ -617,17 +617,17 @@
 
           <TextBlock x:Name="NoAppsText" Style="{StaticResource Sub}" Margin="2,0,0,12"
                      Visibility="Collapsed"
-                     Text="Aucune des applications connues ne tourne actuellement."/>
+                     Text="None of the applications it knows about are running right now."/>
 
           <DockPanel Margin="2,10,0,10">
-            <Button DockPanel.Dock="Right" x:Name="BtnResample" Content="Actualiser"
+            <Button DockPanel.Dock="Right" x:Name="BtnResample" Content="Refresh"
                     Style="{StaticResource Ghost}" Height="26" Padding="12,0" FontSize="11.5"
                     Click="Resample_Click" Margin="10,0,0,0" VerticalAlignment="Center"
-                    ToolTip="Remesurer pendant 5 secondes ce que consomme chaque service"/>
-            <Button DockPanel.Dock="Right" x:Name="BtnSelectAll" Content="Tout cocher"
+                    ToolTip="Re-measure for 5 seconds what each service consumes"/>
+            <Button DockPanel.Dock="Right" x:Name="BtnSelectAll" Content="Tick all"
                     Style="{StaticResource Ghost}" Height="26" Padding="12,0" FontSize="11.5"
                     Click="SelectAll_Click" VerticalAlignment="Center"/>
-            <TextBlock x:Name="ServicesHeader" Text="SERVICES WINDOWS"
+            <TextBlock x:Name="ServicesHeader" Text="WINDOWS SERVICES"
                        Style="{StaticResource Kicker}" VerticalAlignment="Center"/>
           </DockPanel>
           <ItemsControl x:Name="ServicesList">
@@ -671,7 +671,7 @@
         </ScrollViewer>
 
         <ContentControl x:Name="MatchVeil" Grid.Row="3" Style="{StaticResource ScanVeil}"
-                        Content="Application en cours…"/>
+                        Content="Applying…"/>
       </Grid>
 
       <!-- Benchmark -->
@@ -683,22 +683,22 @@
         </Grid.RowDefinitions>
 
         <DockPanel Grid.Row="0" Margin="0,0,0,16">
-          <Button DockPanel.Dock="Right" x:Name="BtnCapture" Content="Capturer 60 s"
+          <Button DockPanel.Dock="Right" x:Name="BtnCapture" Content="Capture 60 s"
                   Style="{StaticResource Primary}" Click="Capture_Click" VerticalAlignment="Bottom"/>
           <StackPanel>
             <TextBlock Text="Benchmark" Style="{StaticResource H1}"/>
             <TextBlock Style="{StaticResource Sub}" Margin="0,4,0,0"
-                       Text="Mesure les temps d'image pendant que tu joues, pour comparer avant et après un réglage."/>
+                       Text="Measures frame times while you play, so you can compare before and after a tweak."/>
           </StackPanel>
         </DockPanel>
 
         <Border Grid.Row="1" Style="{StaticResource Card}">
           <DockPanel>
-            <TextBlock DockPanel.Dock="Left" Text="Nom de la mesure" Style="{StaticResource Sub}"
+            <TextBlock DockPanel.Dock="Left" Text="Name for this run" Style="{StaticResource Sub}"
                        VerticalAlignment="Center" Margin="0,0,14,0"/>
             <TextBlock x:Name="BenchStatus" DockPanel.Dock="Right" Style="{StaticResource Sub}"
                        VerticalAlignment="Center" Margin="16,0,0,0" TextWrapping="NoWrap"/>
-            <TextBox x:Name="BenchLabel" Text="avant réglage" Height="34" VerticalContentAlignment="Center"
+            <TextBox x:Name="BenchLabel" Text="before tweak" Height="34" VerticalContentAlignment="Center"
                      Background="#0D1620" Foreground="{StaticResource Ink}" BorderBrush="#2A3849"
                      BorderThickness="1" Padding="10,0" CaretBrush="{StaticResource Accent}"/>
           </DockPanel>
@@ -719,8 +719,8 @@
                              Margin="8,0,0,0" TextWrapping="NoWrap"/>
                 </StackPanel>
                 <StackPanel>
-                  <TextBlock Text="Temps par image" FontSize="15" FontWeight="SemiBold"/>
-                  <TextBlock Text="plus bas et plus plat, meilleur c'est" Style="{StaticResource Sub}"
+                  <TextBlock Text="Frame time" FontSize="15" FontWeight="SemiBold"/>
+                  <TextBlock Text="lower and flatter is better" Style="{StaticResource Sub}"
                              FontSize="12.5" Margin="0,3,0,0"/>
                 </StackPanel>
               </DockPanel>
@@ -752,7 +752,7 @@
                     </DockPanel>
                     <UniformGrid Columns="5">
                       <StackPanel>
-                        <TextBlock Text="FPS moyen" Style="{StaticResource Kicker}"/>
+                        <TextBlock Text="Average FPS" Style="{StaticResource Kicker}"/>
                         <TextBlock Text="{Binding Fps}" FontSize="22" FontWeight="SemiBold"
                                    FontFamily="Cascadia Mono, Consolas" Margin="0,4,0,0"/>
                       </StackPanel>
@@ -763,17 +763,17 @@
                                    FontFamily="Cascadia Mono, Consolas" Margin="0,4,0,0"/>
                       </StackPanel>
                       <StackPanel>
-                        <TextBlock Text="0,1% low" Style="{StaticResource Kicker}"/>
+                        <TextBlock Text="0.1% low" Style="{StaticResource Kicker}"/>
                         <TextBlock Text="{Binding Low01}" FontSize="22" FontWeight="SemiBold"
                                    FontFamily="Cascadia Mono, Consolas" Margin="0,4,0,0"/>
                       </StackPanel>
                       <StackPanel>
-                        <TextBlock Text="Image la plus lente" Style="{StaticResource Kicker}"/>
+                        <TextBlock Text="Slowest frame" Style="{StaticResource Kicker}"/>
                         <TextBlock Text="{Binding MaxMs}" FontSize="22" FontWeight="SemiBold"
                                    FontFamily="Cascadia Mono, Consolas" Margin="0,4,0,0"/>
                       </StackPanel>
                       <StackPanel>
-                        <TextBlock Text="Saccades" Style="{StaticResource Kicker}"/>
+                        <TextBlock Text="Stutters" Style="{StaticResource Kicker}"/>
                         <TextBlock Text="{Binding Stutters}" FontSize="22" FontWeight="SemiBold"
                                    FontFamily="Cascadia Mono, Consolas" Margin="0,4,0,0"/>
                       </StackPanel>
@@ -802,9 +802,9 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Margin="0,0,0,18">
-          <TextBlock Text="Utilitaires" Style="{StaticResource H1}"/>
+          <TextBlock Text="Utilities" Style="{StaticResource H1}"/>
           <TextBlock Style="{StaticResource Sub}" Margin="0,4,0,0"
-                     Text="Les outils de Windows, rassemblés ici. Ils agissent seuls : Aeropeek les lance et affiche leur sortie, sans les journaliser ni prétendre pouvoir les annuler."/>
+                     Text="Windows' own tools, gathered in one place. They act on their own: Aeropeek launches them and shows their output, without journalling them or pretending it can undo them."/>
         </StackPanel>
 
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="0,0,10,0">
@@ -860,13 +860,13 @@
                   VerticalAlignment="Bottom" BorderBrush="#1C2836" BorderThickness="1">
             <StackPanel Orientation="Horizontal">
               <RadioButton x:Name="TabPoints" Style="{StaticResource Pill}" GroupName="Restore"
-                           Content="Points système" IsChecked="True" Checked="RestoreTab_Checked" Tag="points"/>
+                           Content="System points" IsChecked="True" Checked="RestoreTab_Checked" Tag="points"/>
               <RadioButton x:Name="TabJournal" Style="{StaticResource Pill}" GroupName="Restore"
-                           Content="Journal des modifications" Checked="RestoreTab_Checked" Tag="journal"/>
+                           Content="Change journal" Checked="RestoreTab_Checked" Tag="journal"/>
             </StackPanel>
           </Border>
           <StackPanel>
-            <TextBlock Text="Restauration" Style="{StaticResource H1}"/>
+            <TextBlock Text="Restore" Style="{StaticResource H1}"/>
             <TextBlock x:Name="RestoreSub" Style="{StaticResource Sub}" Margin="0,4,0,0" TextWrapping="Wrap"/>
           </StackPanel>
         </DockPanel>
@@ -881,10 +881,10 @@
             </Grid.RowDefinitions>
         <Border Grid.Row="0" Style="{StaticResource Card}">
           <DockPanel>
-            <Button DockPanel.Dock="Right" x:Name="BtnRestoreCreate" Content="Créer un point"
+            <Button DockPanel.Dock="Right" x:Name="BtnRestoreCreate" Content="Create a point"
                     Style="{StaticResource Primary}" Click="RestoreCreate_Click"
                     VerticalAlignment="Center" Margin="12,0,0,0"/>
-            <Button DockPanel.Dock="Right" x:Name="BtnRestoreReload" Content="Actualiser"
+            <Button DockPanel.Dock="Right" x:Name="BtnRestoreReload" Content="Refresh"
                     Style="{StaticResource Ghost}" Height="40" Click="RestoreReload_Click"
                     VerticalAlignment="Center"/>
             <StackPanel VerticalAlignment="Center">
@@ -908,10 +908,10 @@
         <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" Padding="0,0,10,0">
          <StackPanel>
           <DockPanel Margin="2,0,0,10">
-            <TextBlock DockPanel.Dock="Right" x:Name="DeleteAllLink" Text="Tout supprimer"
+            <TextBlock DockPanel.Dock="Right" x:Name="DeleteAllLink" Text="Delete all"
                        Foreground="#F2726A" FontSize="12.5" Cursor="Hand" Background="Transparent"
                        Padding="4,3" VerticalAlignment="Center" MouseLeftButtonUp="RestoreDeleteAll_Click"/>
-            <TextBlock x:Name="RestoreHeader" Text="POINTS DISPONIBLES"
+            <TextBlock x:Name="RestoreHeader" Text="AVAILABLE POINTS"
                        Style="{StaticResource Kicker}" VerticalAlignment="Center"/>
           </DockPanel>
 
@@ -920,10 +920,10 @@
               <DataTemplate>
                 <Border Style="{StaticResource CardAction}">
                   <DockPanel>
-                    <Button DockPanel.Dock="Right" Content="Supprimer" Style="{StaticResource Ghost}"
+                    <Button DockPanel.Dock="Right" Content="Delete" Style="{StaticResource Ghost}"
                             Height="30" Padding="12,0" FontSize="12" Tag="{Binding}"
                             Click="RestoreDelete_Click" VerticalAlignment="Center" Margin="8,0,0,0"/>
-                    <Button DockPanel.Dock="Right" Content="Restaurer" Style="{StaticResource TintBtn}"
+                    <Button DockPanel.Dock="Right" Content="Restore" Style="{StaticResource TintBtn}"
                             Background="#16212E" BorderBrush="{StaticResource Accent}"
                             Foreground="{StaticResource Accent}" Height="30" Padding="14,0" FontSize="12"
                             Tag="{Binding}" Click="RestoreApply_Click" VerticalAlignment="Center"
@@ -951,7 +951,7 @@
         </ScrollViewer>
 
             <ContentControl x:Name="RestoreVeil" Grid.Row="2" Style="{StaticResource ScanVeil}"
-                            Content="Lecture des points de restauration…"/>
+                            Content="Reading restore points…"/>
           </Grid>
 
           <Grid x:Name="PaneJournal" Visibility="Collapsed">
@@ -961,10 +961,10 @@
             </Grid.RowDefinitions>
 
             <DockPanel Grid.Row="0" Margin="0,0,0,14">
-              <Button DockPanel.Dock="Right" Content="Tout annuler" Style="{StaticResource Ghost}"
+              <Button DockPanel.Dock="Right" Content="Undo everything" Style="{StaticResource Ghost}"
                       Height="32" Padding="14,0" FontSize="12.5" Click="RevertAll_Click"
                       VerticalAlignment="Center" Margin="10,0,0,0"/>
-              <Button DockPanel.Dock="Right" Content="Exporter le diagnostic" Style="{StaticResource Ghost}"
+              <Button DockPanel.Dock="Right" Content="Export the diagnostics" Style="{StaticResource Ghost}"
                       Height="32" Padding="14,0" FontSize="12.5" Click="Export_Click"
                       VerticalAlignment="Center"/>
               <TextBlock x:Name="JournalSummary" Style="{StaticResource Sub}" FontSize="12.5"
@@ -977,15 +977,15 @@
               <DataTemplate>
                 <Border Style="{StaticResource CardAction}">
                   <DockPanel>
-                    <Button DockPanel.Dock="Right" Content="Annuler" Style="{StaticResource Ghost}"
+                    <Button DockPanel.Dock="Right" Content="Undo" Style="{StaticResource Ghost}"
                             Height="30" Padding="14,0" FontSize="12" Tag="{Binding}"
                             Click="JournalUndo_Click" VerticalAlignment="Center" Margin="14,0,0,0"
                             Visibility="{Binding UndoVisibility}"
-                            ToolTip="Remettre l'état exact qui précédait"/>
-                    <TextBlock DockPanel.Dock="Right" Text="Définitif" Foreground="{StaticResource Ink3}"
+                            ToolTip="Put back the exact state that came before"/>
+                    <TextBlock DockPanel.Dock="Right" Text="Permanent" Foreground="{StaticResource Ink3}"
                                FontSize="12" VerticalAlignment="Center" Margin="14,0,0,0"
                                TextWrapping="NoWrap" Visibility="{Binding NoUndoVisibility}"
-                               ToolTip="Cette opération ne peut pas être annulée"/>
+                               ToolTip="This operation cannot be undone"/>
                   <StackPanel>
                     <DockPanel>
                       <TextBlock DockPanel.Dock="Right" Text="{Binding When}" Style="{StaticResource Sub}"
@@ -1020,33 +1020,33 @@
 
         <TextBlock Text="Aeropeek" FontSize="34" FontWeight="Bold" Foreground="{StaticResource Ink}"/>
         <TextBlock Style="{StaticResource Sub}" Margin="0,10,0,0" FontSize="15" TextWrapping="Wrap"
-                   Text="Un outil de réglage pour CS2 qui mesure au lieu de promettre."/>
+                   Text="A tuning tool for CS2 that measures instead of promising."/>
 
         <Border Style="{StaticResource Card}" Padding="24,22" Margin="0,30,0,0">
           <StackPanel>
-            <TextBlock Text="CE QU'IL FAIT AUTREMENT" Style="{StaticResource Kicker}"/>
+            <TextBlock Text="WHAT IT DOES DIFFERENTLY" Style="{StaticResource Kicker}"/>
 
             <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
               <TextBlock Text="—" Foreground="{StaticResource Accent}" FontWeight="Bold" Margin="0,0,12,0"/>
               <TextBlock Style="{StaticResource Sub}" TextWrapping="Wrap" FontSize="14"
-                         Text="Il te dit quand un réglage ne sert à rien. La plupart des « optimisations » qui circulent ne changent rien de mesurable, et Aeropeek le dit au lieu de les vendre."/>
+                         Text="It tells you when a tweak does nothing. Most “optimizations” going around change nothing measurable, and Aeropeek says so instead of selling them to you."/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="0,14,0,0">
               <TextBlock Text="—" Foreground="{StaticResource Accent}" FontWeight="Bold" Margin="0,0,12,0"/>
               <TextBlock Style="{StaticResource Sub}" TextWrapping="Wrap" FontSize="14"
-                         Text="Tout ce qu'il modifie est noté, avec l'état exact d'avant. L'onglet Restauration remet tout comme c'était, y compris des semaines plus tard."/>
+                         Text="Everything it changes is recorded, along with the exact prior state. The Restore tab puts it all back the way it was, even weeks later."/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="0,14,0,0">
               <TextBlock Text="—" Foreground="{StaticResource Accent}" FontWeight="Bold" Margin="0,0,12,0"/>
               <TextBlock Style="{StaticResource Sub}" TextWrapping="Wrap" FontSize="14"
-                         Text="Il ne désactive pas ton antivirus, ne touche pas à Windows Update et ne supprime aucun fichier système. Ces chemins sont interdits dans le code, pas seulement déconseillés."/>
+                         Text="It does not disable your antivirus, does not touch Windows Update and deletes no system file. Those paths are forbidden in the code, not merely discouraged."/>
             </StackPanel>
           </StackPanel>
         </Border>
 
-        <TextBlock Text="PAR OÙ COMMENCER" Style="{StaticResource Kicker}" Margin="2,30,0,12"/>
+        <TextBlock Text="WHERE TO START" Style="{StaticResource Kicker}" Margin="2,30,0,12"/>
 
         <Border Style="{StaticResource Card}" Padding="22,18">
           <DockPanel>
@@ -1054,9 +1054,9 @@
                        FontSize="26" FontWeight="Bold" FontFamily="Cascadia Mono, Consolas"
                        Margin="0,0,20,0" VerticalAlignment="Center"/>
             <StackPanel VerticalAlignment="Center">
-              <TextBlock Text="Diagnostic" FontSize="16" FontWeight="SemiBold"/>
+              <TextBlock Text="Diagnostics" FontSize="16" FontWeight="SemiBold"/>
               <TextBlock Style="{StaticResource Sub}" Margin="0,5,0,0" TextWrapping="Wrap"
-                         Text="Lance l'analyse. Elle ne modifie rien et te dit ce qui cloche vraiment sur cette machine."/>
+                         Text="Run the scan. It changes nothing, and tells you what is actually wrong with this machine."/>
             </StackPanel>
           </DockPanel>
         </Border>
@@ -1069,7 +1069,7 @@
             <StackPanel VerticalAlignment="Center">
               <TextBlock Text="Benchmark" FontSize="16" FontWeight="SemiBold"/>
               <TextBlock Style="{StaticResource Sub}" Margin="0,5,0,0" TextWrapping="Wrap"
-                         Text="Mesure une partie avant de toucher à quoi que ce soit. Sans ce point de départ, aucun réglage ne pourra être jugé."/>
+                         Text="Measure a match before touching anything at all. Without that starting point, no tweak can be judged."/>
             </StackPanel>
           </DockPanel>
         </Border>
@@ -1080,19 +1080,19 @@
                        FontSize="26" FontWeight="Bold" FontFamily="Cascadia Mono, Consolas"
                        Margin="0,0,20,0" VerticalAlignment="Center"/>
             <StackPanel VerticalAlignment="Center">
-              <TextBlock Text="Un seul changement à la fois" FontSize="16" FontWeight="SemiBold"/>
+              <TextBlock Text="One change at a time" FontSize="16" FontWeight="SemiBold"/>
               <TextBlock Style="{StaticResource Sub}" Margin="0,5,0,0" TextWrapping="Wrap"
-                         Text="Applique un réglage, rejoue, remesure. En appliquer dix d'un coup rend impossible de savoir lequel a servi — et c'est souvent aucun."/>
+                         Text="Apply one tweak, play again, measure again. Applying ten at once makes it impossible to know which one helped — and often none of them did."/>
             </StackPanel>
           </DockPanel>
         </Border>
 
         <Border Background="#0D1620" CornerRadius="6" Padding="16,14" Margin="0,22,0,0">
           <TextBlock Style="{StaticResource Sub}" TextWrapping="Wrap" FontSize="12.5" Foreground="#A9BCCF"
-                     Text="Aeropeek tourne en administrateur parce qu'il lit et modifie des réglages système. Il n'envoie rien sur Internet et ne récupère aucune donnée : tout ce qu'il écrit reste dans ton dossier utilisateur."/>
+                     Text="Aeropeek runs as administrator because it reads and writes system settings. It sends nothing over the internet and collects no data: everything it writes stays in your own user folder."/>
         </Border>
 
-        <Button x:Name="BtnWelcomeStart" Content="Lancer le diagnostic" Style="{StaticResource Primary}"
+        <Button x:Name="BtnWelcomeStart" Content="Run the diagnostics" Style="{StaticResource Primary}"
                 Click="WelcomeStart_Click" HorizontalAlignment="Left" Margin="0,26,0,0" MinWidth="210"/>
 
       </StackPanel>

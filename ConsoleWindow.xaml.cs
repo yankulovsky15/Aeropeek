@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -72,7 +72,7 @@ public partial class ConsoleWindow : Window
     {
         _running = true;
         Spin(true);
-        StatusText.Text = "En cours…";
+        StatusText.Text = "Running…";
         BtnClose.Content = "Interrompre";
 
         if (!string.IsNullOrEmpty(_utility.Caution)) Append("· " + _utility.Caution + Environment.NewLine);
@@ -85,8 +85,8 @@ public partial class ConsoleWindow : Window
                 : await Utilities.RunAsync(_utility, progress, _cts.Token);
 
             StatusText.Text = _utility.Kind == UtilityKind.External
-                ? "Outil lancé."
-                : code == 0 ? "Terminé sans erreur." : $"Terminé avec le code {code}.";
+                ? "Tool started."
+                : code == 0 ? "Finished with no error." : $"Finished with code {code}.";
             StatusText.Foreground = code == 0 ? B("#4FBF8B") : B("#E0A63C");
         }
         catch (OperationCanceledException)
@@ -97,7 +97,7 @@ public partial class ConsoleWindow : Window
         catch (Exception ex)
         {
             Append(ex.Message);
-            StatusText.Text = "Échec.";
+            StatusText.Text = "Failed.";
             StatusText.Foreground = B("#F2726A");
         }
         finally

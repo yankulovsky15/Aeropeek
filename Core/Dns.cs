@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Net.NetworkInformation;
 using Microsoft.Win32;
 
@@ -7,7 +7,7 @@ namespace Aeropeek.Core;
 public sealed record NetAdapter(string Name, string Description, string Guid, string[] Dns,
                                bool FromDhcp, bool Wireless)
 {
-    public string DnsText => Dns.Length == 0 ? "aucun" : string.Join(" / ", Dns);
+    public string DnsText => Dns.Length == 0 ? "none" : string.Join(" / ", Dns);
 }
 
 public sealed record DnsProvider(string Name, string Primary, string Secondary, string Note, string[] Tags,
@@ -26,23 +26,23 @@ public static class DnsOps
     public static readonly DnsProvider[] Providers =
     {
         new("Cloudflare", "1.1.1.1", "1.0.0.1",
-            "Rapide, sans journalisation des requêtes.",
-            new[] { "Rapide", "Confidentialité" }, "#F6821F", "M 7,18 H 17.3 A 3.6,3.6 0 0 0 17.3,10.8 A 5.6,5.6 0 0 0 6.8,9.9 A 4.1,4.1 0 0 0 7,18 Z"),
+            "Fast, with no query logging.",
+            new[] { "Fast", "Privacy" }, "#F6821F", "M 7,18 H 17.3 A 3.6,3.6 0 0 0 17.3,10.8 A 5.6,5.6 0 0 0 6.8,9.9 A 4.1,4.1 0 0 0 7,18 Z"),
         new("Google", "8.8.8.8", "8.8.4.4",
-            "Très répandu et fiable, mais Google conserve des données de requête.",
-            new[] { "Fiable", "Répandu" }, "#5B9BF8", "M 3,12 A 9,9 0 1 0 21,12 A 9,9 0 1 0 3,12 M 3,12 H 21 M 12,3 A 14,14 0 0 1 12,21 A 14,14 0 0 1 12,3"),
+            "Very widespread and reliable, but Google keeps query data.",
+            new[] { "Reliable", "Widespread" }, "#5B9BF8", "M 3,12 A 9,9 0 1 0 21,12 A 9,9 0 1 0 3,12 M 3,12 H 21 M 12,3 A 14,14 0 0 1 12,21 A 14,14 0 0 1 12,3"),
         new("Quad9", "9.9.9.9", "149.112.112.112",
-            "Bloque les domaines malveillants connus.",
-            new[] { "Sécurité", "Filtrage" }, "#B98CF7", "M 12,3 L 20,6 V 12 C 20,17 16.6,20.2 12,21 C 7.4,20.2 4,17 4,12 V 6 Z"),
+            "Blocks known malicious domains.",
+            new[] { "Security", "Filtering" }, "#B98CF7", "M 12,3 L 20,6 V 12 C 20,17 16.6,20.2 12,21 C 7.4,20.2 4,17 4,12 V 6 Z"),
         new("AdGuard", "94.140.14.14", "94.140.15.15",
-            "Bloque publicités et traqueurs au niveau du nom de domaine.",
-            new[] { "Sans publicité", "Filtrage" }, "#6BC97F", "M 7,18 H 17.3 A 3.6,3.6 0 0 0 17.3,10.8 A 5.6,5.6 0 0 0 6.8,9.9 A 4.1,4.1 0 0 0 7,18 Z"),
+            "Blocks ads and trackers at the domain-name level.",
+            new[] { "Ad-free", "Filtering" }, "#6BC97F", "M 7,18 H 17.3 A 3.6,3.6 0 0 0 17.3,10.8 A 5.6,5.6 0 0 0 6.8,9.9 A 4.1,4.1 0 0 0 7,18 Z"),
         new("OpenDNS", "208.67.222.222", "208.67.220.220",
-            "Filtrage de contenu paramétrable, propriété de Cisco.",
-            new[] { "Filtrage", "Sécurité" }, "#3BB6E8", "M 12,3 L 20,6 V 12 C 20,17 16.6,20.2 12,21 C 7.4,20.2 4,17 4,12 V 6 Z"),
-        new("Automatique", "", "",
-            "Ceux fournis par ta box ou ton fournisseur d'accès. Souvent les plus proches.",
-            new[] { "Par défaut", "DHCP" }, "#8497AC", "M 9,12 A 3,3 0 1 0 15,12 A 3,3 0 1 0 9,12 M 12,2 V 5 M 12,19 V 22 M 4.2,6.6 L 6.3,8.7 M 17.7,15.3 L 19.8,17.4 M 2,12 H 5 M 19,12 H 22 M 4.2,17.4 L 6.3,15.3 M 17.7,8.7 L 19.8,6.6")
+            "Configurable content filtering, owned by Cisco.",
+            new[] { "Filtering", "Security" }, "#3BB6E8", "M 12,3 L 20,6 V 12 C 20,17 16.6,20.2 12,21 C 7.4,20.2 4,17 4,12 V 6 Z"),
+        new("Automatic", "", "",
+            "The ones your router or provider hands out. Often the closest.",
+            new[] { "Default", "DHCP" }, "#8497AC", "M 9,12 A 3,3 0 1 0 15,12 A 3,3 0 1 0 9,12 M 12,2 V 5 M 12,19 V 22 M 4.2,6.6 L 6.3,8.7 M 17.7,15.3 L 19.8,17.4 M 2,12 H 5 M 19,12 H 22 M 4.2,17.4 L 6.3,15.3 M 17.7,8.7 L 19.8,6.6")
     };
 
     // ---------- lecture ----------
@@ -172,13 +172,13 @@ public static class DnsOps
         if (servers.Length == 0)
         {
             var (c, o) = Netsh("interface", "ipv4", "set", "dnsservers", "name=" + adapter, "source=dhcp");
-            if (c != 0) throw new InvalidOperationException("netsh a refusé. " + Shorten(o));
+            if (c != 0) throw new InvalidOperationException("netsh refused. " + Shorten(o));
             return;
         }
 
         var (code, output) = Netsh("interface", "ipv4", "set", "dnsservers",
             "name=" + adapter, "source=static", "address=" + servers[0], "register=primary", "validate=no");
-        if (code != 0) throw new InvalidOperationException("netsh a refusé. " + Shorten(output));
+        if (code != 0) throw new InvalidOperationException("netsh refused. " + Shorten(output));
 
         for (int i = 1; i < servers.Length; i++)
             Netsh("interface", "ipv4", "add", "dnsservers",
@@ -198,7 +198,7 @@ public static class DnsOps
         {
             Kind = "dns",
             TweakId = "dns",
-            Description = $"DNS de « {adapter.Name} » : {provider.Name}",
+            Description = $"DNS for “{adapter.Name}”: {provider.Name}",
             SubKey = adapter.Name,
             ValueName = adapter.Guid,
             Existed = previous.Length > 0,
