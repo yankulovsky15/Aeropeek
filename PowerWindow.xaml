@@ -24,7 +24,7 @@
       <Border Grid.Row="0" Background="Transparent" MouseLeftButtonDown="Header_Drag">
         <DockPanel Margin="24,20,16,16">
           <Button DockPanel.Dock="Right" Style="{StaticResource WinBtn}" Width="38" Height="38"
-                  Click="Close_Click" ToolTip="Fermer">
+                  Click="Close_Click" ToolTip="Close">
             <Path Data="M 0,0 L 11,11 M 11,0 L 0,11" StrokeThickness="1.4"
                   Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
           </Button>
@@ -47,13 +47,13 @@
 
           <Border Style="{StaticResource Card}" Padding="0">
             <StackPanel>
-              <TextBlock Text="PLANS DISPONIBLES" Style="{StaticResource Kicker}" Margin="20,16,20,2"/>
+              <TextBlock Text="AVAILABLE PLANS" Style="{StaticResource Kicker}" Margin="20,16,20,2"/>
               <ItemsControl x:Name="PlansList" Margin="0,8,0,6">
                 <ItemsControl.ItemTemplate>
                   <DataTemplate>
                     <Border Style="{StaticResource RowHover}" Padding="20,0" Height="52" CornerRadius="6">
                       <DockPanel>
-                        <Button DockPanel.Dock="Right" Content="Utiliser" Style="{StaticResource Ghost}"
+                        <Button DockPanel.Dock="Right" Content="Use" Style="{StaticResource Ghost}"
                                 Visibility="{Binding UseVisibility}" Tag="{Binding}" Click="ApplyPlan_Click"
                                 VerticalAlignment="Center" MinWidth="92" Margin="10,0,0,0"/>
                         <Button DockPanel.Dock="Right" Style="{StaticResource Ghost}" ToolTip="Delete this plan"
@@ -64,7 +64,7 @@
                                 Stroke="#B08088" StrokeThickness="1.6"
                                 StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round"/>
                         </Button>
-                        <TextBlock DockPanel.Dock="Right" Text="Actif" Visibility="{Binding ActiveVisibility}"
+                        <TextBlock DockPanel.Dock="Right" Text="Active" Visibility="{Binding ActiveVisibility}"
                                    Foreground="{StaticResource Accent}" FontSize="12.5" FontWeight="SemiBold"
                                    VerticalAlignment="Center" Margin="16,0,10,0"/>
                         <Border Width="8" Height="8" CornerRadius="4" Background="{Binding DotFill}"
@@ -81,7 +81,7 @@
 
           <Border x:Name="CardDupes" Style="{StaticResource CardAction}" Padding="20,18" Visibility="Collapsed">
             <DockPanel>
-              <Button DockPanel.Dock="Right" Content="Nettoyer" Style="{StaticResource Ghost}"
+              <Button DockPanel.Dock="Right" Content="Clean" Style="{StaticResource Ghost}"
                       Click="CleanDupes_Click" VerticalAlignment="Center" Margin="16,0,0,0" MinWidth="110"/>
               <StackPanel>
                 <TextBlock Text="Duplicate plans" FontSize="15" FontWeight="SemiBold"/>
@@ -92,7 +92,7 @@
 
           <Border Style="{StaticResource CardAction}" Padding="20,18">
             <DockPanel>
-              <Button DockPanel.Dock="Right" x:Name="BtnUltimate" Content="Ajouter"
+              <Button DockPanel.Dock="Right" x:Name="BtnUltimate" Content="Add"
                       Style="{StaticResource Ghost}" Click="Ultimate_Click"
                       VerticalAlignment="Center" Margin="16,0,0,0" MinWidth="110"/>
               <StackPanel>

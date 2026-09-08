@@ -40,32 +40,32 @@ public static class AppOps
     /// </summary>
     public static readonly (string Process, string Label, string Category)[] Candidates =
     {
-        ("chrome",              "Google Chrome",        "Navigateur"),
-        ("msedge",              "Microsoft Edge",       "Navigateur"),
-        ("firefox",             "Mozilla Firefox",      "Navigateur"),
-        ("opera",               "Opera",                "Navigateur"),
-        ("brave",               "Brave",                "Navigateur"),
-        ("vivaldi",             "Vivaldi",              "Navigateur"),
+        ("chrome",              "Google Chrome",        "Browser"),
+        ("msedge",              "Microsoft Edge",       "Browser"),
+        ("firefox",             "Mozilla Firefox",      "Browser"),
+        ("opera",               "Opera",                "Browser"),
+        ("brave",               "Brave",                "Browser"),
+        ("vivaldi",             "Vivaldi",              "Browser"),
 
-        ("EpicGamesLauncher",   "Epic Games",           "Lanceur"),
-        ("Battle.net",          "Battle.net",           "Lanceur"),
-        ("GalaxyClient",        "GOG Galaxy",           "Lanceur"),
-        ("EADesktop",           "EA App",               "Lanceur"),
-        ("UbisoftConnect",      "Ubisoft Connect",      "Lanceur"),
-        ("upc",                 "Ubisoft Connect",      "Lanceur"),
+        ("EpicGamesLauncher",   "Epic Games",           "Launcher"),
+        ("Battle.net",          "Battle.net",           "Launcher"),
+        ("GalaxyClient",        "GOG Galaxy",           "Launcher"),
+        ("EADesktop",           "EA App",               "Launcher"),
+        ("UbisoftConnect",      "Ubisoft Connect",      "Launcher"),
+        ("upc",                 "Ubisoft Connect",      "Launcher"),
 
-        ("Discord",             "Discord",              "Messagerie"),
-        ("Teams",               "Microsoft Teams",      "Messagerie"),
-        ("ms-teams",            "Microsoft Teams",      "Messagerie"),
-        ("Slack",               "Slack",                "Messagerie"),
-        ("WhatsApp",            "WhatsApp",             "Messagerie"),
-        ("Telegram",            "Telegram",             "Messagerie"),
+        ("Discord",             "Discord",              "Messaging"),
+        ("Teams",               "Microsoft Teams",      "Messaging"),
+        ("ms-teams",            "Microsoft Teams",      "Messaging"),
+        ("Slack",               "Slack",                "Messaging"),
+        ("WhatsApp",            "WhatsApp",             "Messaging"),
+        ("Telegram",            "Telegram",             "Messaging"),
 
-        ("Spotify",             "Spotify",              "Autre"),
-        ("OneDrive",            "OneDrive",             "Autre"),
-        ("Code",                "Visual Studio Code",   "Autre"),
-        ("obs64",               "OBS Studio",           "Autre"),
-        ("wallpaper64",         "Wallpaper Engine",     "Autre")
+        ("Spotify",             "Spotify",              "Other"),
+        ("OneDrive",            "OneDrive",             "Other"),
+        ("Code",                "Visual Studio Code",   "Other"),
+        ("obs64",               "OBS Studio",           "Other"),
+        ("wallpaper64",         "Wallpaper Engine",     "Other")
     };
 
     public static bool IsAllowed(string process) => !Protected.Contains(process);

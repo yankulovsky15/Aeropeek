@@ -66,7 +66,7 @@ public static class Storage
                 // MediaType : 3 = disque dur, 4 = SSD.  BusType : 17 = NVMe
                 bool nvme = bus == 17;
                 bool ssd = media == 4 || nvme;
-                string mediaText = media switch { 3 => "disque dur", 4 => "SSD", _ => "type inconnu" };
+                string mediaText = media switch { 3 => "hard drive", 4 => "SSD", _ => "type inconnu" };
 
                 list.Add(new DiskInfo(index, (mo["FriendlyName"] as string ?? "").Trim(),
                     mediaText, bus == 17 ? "NVMe" : bus == 11 ? "SATA" : "", nvme, ssd));

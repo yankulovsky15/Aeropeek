@@ -100,7 +100,7 @@ public partial class PowerWindow : Window
                     + "the others are exported before deletion.";
 
             var (ultimate, certain) = lu.Ultimate;
-            BtnUltimate.Content = ultimate != null ? "Already present" : "Ajouter";
+            BtnUltimate.Content = ultimate != null ? "Already present" : "Add";
             BtnUltimate.IsEnabled = ultimate == null;
             UltimateDetail.Text = ultimate == null
                 ? "A plan shipped with Windows but hidden by default. No core slowdown under light load."
@@ -125,8 +125,8 @@ public partial class PowerWindow : Window
             {
                 minState != null ? $"· Minimum processor state: {minState}%" : "· Minimum processor state: unreadable",
                 minCores != null ? $"· Minimum active cores: {minCores}%" : "· Core parking: setting hidden by Windows",
-                aspm != null ? $"· PCI Express power saving: {(aspm == 0 ? "désactivée" : "active")}" : "· PCI Express : non lisible",
-                usb != null ? $"· USB selective suspend: {(usb == 0 ? "désactivée" : "active")}" : "· USB : non lisible"
+                aspm != null ? $"· PCI Express power saving: {(aspm == 0 ? "disabled" : "active")}" : "· PCI Express : non lisible",
+                usb != null ? $"· USB selective suspend: {(usb == 0 ? "disabled" : "active")}" : "· USB : non lisible"
             });
         }
         catch (Exception ex)

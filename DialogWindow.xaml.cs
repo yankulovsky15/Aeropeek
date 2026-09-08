@@ -1,4 +1,4 @@
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -44,7 +44,7 @@ public partial class DialogWindow : Window
         if (buttons is MessageBoxButton.YesNo or MessageBoxButton.OKCancel)
         {
             w.BtnCancel.Visibility = Visibility.Visible;
-            w.BtnCancel.Content = buttons == MessageBoxButton.YesNo ? "Non" : "Annuler";
+            w.BtnCancel.Content = buttons == MessageBoxButton.YesNo ? "No" : "Cancel";
             w.BtnOk.Content = buttons == MessageBoxButton.YesNo ? "Oui" : "OK";
         }
 

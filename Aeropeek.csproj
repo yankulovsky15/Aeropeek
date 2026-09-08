@@ -12,7 +12,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AssemblyName>Aeropeek</AssemblyName>
     <RootNamespace>Aeropeek</RootNamespace>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <ApplicationIcon>aeropeek.ico</ApplicationIcon>
     <AssemblyTitle>Aeropeek</AssemblyTitle>
     <Product>Aeropeek</Product>

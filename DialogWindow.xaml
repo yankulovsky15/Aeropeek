@@ -1,4 +1,4 @@
-<Window x:Class="Aeropeek.DialogWindow"
+﻿<Window x:Class="Aeropeek.DialogWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Width="470" SizeToContent="Height" ResizeMode="NoResize" ShowInTaskbar="False"
@@ -33,7 +33,7 @@
                  Margin="52,14,0,0" LineHeight="21"/>
 
       <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,26,0,0">
-        <Button x:Name="BtnCancel" Content="Annuler" Style="{StaticResource Ghost}" Height="38"
+        <Button x:Name="BtnCancel" Content="Cancel" Style="{StaticResource Ghost}" Height="38"
                 MinWidth="104" Margin="0,0,10,0" Click="Cancel_Click" Visibility="Collapsed"/>
         <Button x:Name="BtnOk" Content="OK" Style="{StaticResource Primary}" Height="38"
                 MinWidth="104" Click="Ok_Click"/>

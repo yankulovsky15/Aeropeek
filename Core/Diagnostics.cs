@@ -182,7 +182,7 @@ public static class Diagnostics
 
         if (status != 2)
             return new CheckResult("vbs", "Hypervisor (VBS)", Severity.Ok,
-                "Inactif", "Windows is not running under a hypervisor: no virtualization overhead.");
+                "Inactive", "Windows is not running under a hypervisor: no virtualization overhead.");
 
         // Le tableau contient 0 quand aucun service n'est actif : ce n'est pas un identifiant.
         var running = configured.Where(v => v > 0).ToArray();
@@ -474,7 +474,7 @@ public static class Diagnostics
         var path = Storage.GamePath();
         if (path == null)
             return new CheckResult("game-drive", "Game disk", Severity.Inconnu,
-                "CS2 introuvable", "The installation could not be located through Steam.");
+                "CS2 not found", "The installation could not be located through Steam.");
 
         char letter = char.ToUpperInvariant(path[0]);
         var disk = Storage.DiskFor(letter);
@@ -517,7 +517,7 @@ public static class Diagnostics
         var settings = Nvidia.ReadSettings();
         if (settings.Count == 0)
             return new CheckResult("nvidia", "Graphics driver settings", Severity.Inconnu,
-                "Illisibles", "The driver's global profile could not be read.");
+                "Unreadable", "The driver's global profile could not be read.");
 
         var lines = settings.Select(s => $"· {s.Name}: {s.Reading}");
         var power = settings.FirstOrDefault(s => s.Id == Nvidia.PowerModeId);
@@ -546,7 +546,7 @@ public static class Diagnostics
     {
         var t = sys.Cpu;
         if (t.PhysicalCores == 0)
-            return new CheckResult("cpu", "Processor cores", Severity.Inconnu, "Undetermined", "Topologie illisible.");
+            return new CheckResult("cpu", "Processor cores", Severity.Inconnu, "Undetermined", "Topology unreadable.");
 
         if (!t.IsHybrid)
             return new CheckResult("cpu", "Processor cores", Severity.Ok,
@@ -591,10 +591,10 @@ public static class Diagnostics
 
     static readonly Dictionary<string, (string Name, Severity Sev)> Schemes = new(StringComparer.OrdinalIgnoreCase)
     {
-        ["381b4222-f694-41f0-9685-ff5bb260df2e"] = ("Utilisation normale", Severity.Warn),
+        ["381b4222-f694-41f0-9685-ff5bb260df2e"] = ("Normal use", Severity.Warn),
         ["a1841308-3541-4fab-bc81-f71556f20b4a"] = ("Power saver", Severity.Probleme),
         ["8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c"] = ("High performance", Severity.Ok),
-        ["e9a42b02-d5df-448d-aa00-03f14749eb61"] = ("Performances maximales", Severity.Ok)
+        ["e9a42b02-d5df-448d-aa00-03f14749eb61"] = ("Maximum performance", Severity.Ok)
     };
 
     // Sous-groupes et paramètres d'alimentation, identifiants stables de Windows.
@@ -674,7 +674,7 @@ public static class Diagnostics
         var facts = new List<string>();
         if (minState != null) facts.Add($"minimum processor state {minState}%");
         if (minCores != null) facts.Add($"minimum active cores {minCores}%");
-        if (usbSuspend != null) facts.Add("suspension USB " + (usbSuspend == 1 ? "enabled" : "disabled"));
+        if (usbSuspend != null) facts.Add("USB suspend " + (usbSuspend == 1 ? "enabled" : "disabled"));
         string detail = "On mains power: " + string.Join(", ", facts) + ".";
 
         var issues = new List<string>();
@@ -705,7 +705,7 @@ public static class Diagnostics
     {
         ("discordhook",           "Discord"),
         ("rtsshooks",             "RivaTuner / MSI Afterburner"),
-        ("gameoverlayrenderer",   "Superposition Steam"),
+        ("gameoverlayrenderer",   "Steam overlay"),
         ("nvspcap",               "NVIDIA / GeForce Experience"),
         ("nvcamera",              "NVIDIA ShadowPlay"),
         ("rzchromasdk",           "Razer Chroma"),
@@ -729,8 +729,8 @@ public static class Diagnostics
         ("DiscordPTB",      "Discord"),
         ("RTSS",            "RivaTuner Statistics Server"),
         ("MSIAfterburner",  "MSI Afterburner"),
-        ("NVIDIA Share",    "Superposition NVIDIA"),
-        ("NVIDIA Overlay",  "Superposition NVIDIA"),
+        ("NVIDIA Share",    "NVIDIA overlay"),
+        ("NVIDIA Overlay",  "NVIDIA overlay"),
         ("Overwolf",        "Overwolf"),
         ("Medal",           "Medal"),
         ("iCUE",            "Corsair iCUE"),
@@ -772,11 +772,11 @@ public static class Diagnostics
                     hooked.Add(label);
 
             if (hooked.Count == 0)
-                return new CheckResult("overlays", "Surcouches", Severity.Ok,
+                return new CheckResult("overlays", "Overlays", Severity.Ok,
                     "None hooked into the game",
                     $"{modules.Count} modules loaded into CS2, none of them a known overlay.");
 
-            return new CheckResult("overlays", "Surcouches", hooked.Count >= 3 ? Severity.Probleme : Severity.Warn,
+            return new CheckResult("overlays", "Overlays", hooked.Count >= 3 ? Severity.Probleme : Severity.Warn,
                 string.Join(", ", hooked),
                 $"{hooked.Count} overlay(s) hooked into the CS2 process. Each one costs frames and can cause stutter.",
                 "Turn off in-game overlays in the applications concerned. Discord's is switched off under Settings → Game Overlay.");
@@ -784,7 +784,7 @@ public static class Diagnostics
 
         // Sinon on ne peut pas interroger le jeu : on regarde les surcouches elles-mêmes.
         if (apps.Count == 0)
-            return new CheckResult("overlays", "Surcouches", Severity.Ok,
+            return new CheckResult("overlays", "Overlays", Severity.Ok,
                 "None running",
                 "None of the applications known to hook into games is running: no Discord, no RivaTuner, "
                 + "ni Overwolf, ni iCUE, ni Razer Synapse.");
@@ -794,7 +794,7 @@ public static class Diagnostics
               + (sys.AntiCheats.Count > 0 ? string.Join(" and ", sys.AntiCheats) : "your anti-cheat")
             : "With CS2 not running, there is no way to tell which ones will hook into it";
 
-        return new CheckResult("overlays", "Surcouches", apps.Count >= 3 ? Severity.Warn : Severity.Info,
+        return new CheckResult("overlays", "Overlays", apps.Count >= 3 ? Severity.Warn : Severity.Info,
             string.Join(", ", apps),
             $"{apps.Count} application(s) able to hook into the game are running right now. {why}.",
             "Each costs frames while its overlay is active. Switch off the ones you don't need in game: "

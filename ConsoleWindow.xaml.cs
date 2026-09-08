@@ -73,7 +73,7 @@ public partial class ConsoleWindow : Window
         _running = true;
         Spin(true);
         StatusText.Text = "Running…";
-        BtnClose.Content = "Interrompre";
+        BtnClose.Content = "Stop";
 
         if (!string.IsNullOrEmpty(_utility.Caution)) Append("· " + _utility.Caution + Environment.NewLine);
 
@@ -91,7 +91,7 @@ public partial class ConsoleWindow : Window
         }
         catch (OperationCanceledException)
         {
-            StatusText.Text = "Interrompu.";
+            StatusText.Text = "Stopped.";
             StatusText.Foreground = B("#7C8FA4");
         }
         catch (Exception ex)
@@ -104,7 +104,7 @@ public partial class ConsoleWindow : Window
         {
             _running = false;
             Spin(false);
-            BtnClose.Content = "Fermer";
+            BtnClose.Content = "Close";
         }
     }
 

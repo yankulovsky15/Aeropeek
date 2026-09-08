@@ -167,10 +167,10 @@ public static class Nvidia
     {
         (PowerModeId, v => (v switch
         {
-            0 => "Adaptatif",
+            0 => "Adaptive",
             1 => "Prefer maximum performance",
             2 => "Driver controlled",
-            3 => "Performances constantes",
+            3 => "Consistent performance",
             _ => $"valeur {v}"
         }, v == PowerModeMax,
            "In adaptive mode the card drops its clocks between frames and takes a moment to climb back. "
@@ -185,7 +185,7 @@ public static class Nvidia
             0x14 => "High quality",
             0x10 => "Quality",
             0x0A => "Performance",
-            0x00 => "Hautes performances",
+            0x00 => "High performance",
             _ => $"valeur {v}"
         }, true,
            "The difference is invisible in game, and free on a recent card.")),

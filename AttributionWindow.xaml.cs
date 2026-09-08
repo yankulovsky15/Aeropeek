@@ -65,7 +65,7 @@ public partial class AttributionWindow : Window
             HintText.Text = "It only takes effect after Windows restarts. A comparison "
                           + "within the same session would measure nothing. Measure first, restart, "
                           + "then measure again — the Benchmark tab handles that.";
-            BtnPrimary.Content = "Fermer";
+            BtnPrimary.Content = "Close";
             BtnSecondary.Visibility = Visibility.Collapsed;
             _phase = 3;
             return;
@@ -76,7 +76,7 @@ public partial class AttributionWindow : Window
             StepText.Text = "CS2 isn't running.";
             HintText.Text = "Start the game, get into a match, then open this window again. "
                           + "Both runs have to happen under comparable conditions.";
-            BtnPrimary.Content = "Fermer";
+            BtnPrimary.Content = "Close";
             BtnSecondary.Visibility = Visibility.Collapsed;
             _phase = 3;
             return;
@@ -131,17 +131,17 @@ public partial class AttributionWindow : Window
         }
         catch (OperationCanceledException)
         {
-            StepText.Text = "Mesure interrompue.";
+            StepText.Text = "Run stopped.";
             HintText.Text = "";
             _phase = 3;
-            BtnPrimary.Content = "Fermer";
+            BtnPrimary.Content = "Close";
         }
         catch (Exception ex)
         {
             StepText.Text = "The measurement failed.";
             HintText.Text = ex.Message;
             _phase = 3;
-            BtnPrimary.Content = "Fermer";
+            BtnPrimary.Content = "Close";
         }
         finally
         {

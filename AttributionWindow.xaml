@@ -67,9 +67,9 @@
       </Border>
 
       <DockPanel Margin="0,20,0,0">
-        <Button DockPanel.Dock="Right" x:Name="BtnPrimary" Content="Commencer"
+        <Button DockPanel.Dock="Right" x:Name="BtnPrimary" Content="Start"
                 Style="{StaticResource Primary}" Height="40" MinWidth="150" Click="Primary_Click"/>
-        <Button DockPanel.Dock="Right" x:Name="BtnSecondary" Content="Annuler"
+        <Button DockPanel.Dock="Right" x:Name="BtnSecondary" Content="Cancel"
                 Style="{StaticResource Ghost}" Height="40" MinWidth="110" Margin="0,0,10,0"
                 Click="Secondary_Click"/>
         <TextBlock x:Name="FootNote" Style="{StaticResource Sub}" FontSize="12"

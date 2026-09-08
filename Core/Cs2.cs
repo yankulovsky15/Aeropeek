@@ -167,10 +167,10 @@ public static class Cs2
         // --- synchronisation verticale ---
         int vsync = Int(v, "setting.mat_vsync");
         if (vsync == 0)
-            list.Add(new Cs2Finding("vsync", "Synchronisation verticale", "Off", Cs2Verdict.Bon,
+            list.Add(new Cs2Finding("vsync", "Vertical sync", "Off", Cs2Verdict.Bon,
                 "No frame waits for the display scan-out."));
         else if (vsync == 1)
-            list.Add(new Cs2Finding("vsync", "Synchronisation verticale", "On", Cs2Verdict.AAmeliorer,
+            list.Add(new Cs2Finding("vsync", "Vertical sync", "On", Cs2Verdict.AAmeliorer,
                 "Every frame waits for the display scan-out. It is the costliest source of latency among the video settings.",
                 "Settings → Video → Wait for Vertical Sync → Disabled."));
 
